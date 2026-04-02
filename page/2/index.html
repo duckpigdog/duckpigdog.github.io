@@ -152,15 +152,15 @@
 <div class="sidebar-state">
   <div class="sidebar-state-article">
     <div>文章</div>
-    <div class="sidebar-state-number">39</div>
+    <div class="sidebar-state-number">40</div>
   </div>
   <div class="sidebar-state-category">
     <div>分类</div>
-    <div class="sidebar-state-number">1</div>
+    <div class="sidebar-state-number">5</div>
   </div>
   <div class="sidebar-state-tag">
     <div>标签</div>
-    <div class="sidebar-state-number">22</div>
+    <div class="sidebar-state-number">35</div>
   </div>
 </div>
 <div class="sidebar-social" >
@@ -220,6 +220,9 @@
       <div class="widget">
         <ul>
             <li>
+              <a href="/2026/04/02/2024%20%E7%AC%AC%E4%B8%80%E5%B1%8A%20Solar%20%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94%E6%8C%91%E6%88%98%E8%B5%9B/" title="2024 第一届 Solar 应急响应挑战赛">2024 第一届 Solar 应急响应挑战赛</a>
+            </li>
+            <li>
               <a href="/2026/04/01/zico2%201/" title="VulnHub zico2：1">VulnHub zico2：1</a>
             </li>
             <li>
@@ -230,9 +233,6 @@
             </li>
             <li>
               <a href="/2026/04/01/DC416%202016-Fortress/" title="VulnHub DC416：2016-Fortress">VulnHub DC416：2016-Fortress</a>
-            </li>
-            <li>
-              <a href="/2026/04/01/pluck%201/" title="VulnHub pluck：1">VulnHub pluck：1</a>
             </li>
         </ul>
       </div>
@@ -245,8 +245,41 @@
 
           <section id="main" aria-label="Main content">      <div class="post-wrapper">
   <div class="post-wrap left" data-aos="fade-up">
-      <a class="post-link" href="/2026/04/01/Gibson%200.2/" aria-label="VulnHub Gibson：0.2" title="VulnHub Gibson：0.2"></a>
+      <a class="post-link" href="/2026/04/01/Milnet%201/" aria-label="VulnHub Milnet：1" title="VulnHub Milnet：1"></a>
     <div class="post-cover left">
+          <img data-src="/images/banner.webp" data-sizes="auto" alt="VulnHub Milnet：1" class="lazyload">
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2026-04-01</span>
+        <span><span class="icon-pencil"></span>1.1k 字</span>
+        <span><span class="icon-clock"></span>6 分钟</span>
+      </div>
+      <h2 class="post-title">VulnHub Milnet：1</h2>
+      <article class="post-article">
+          Milnet: 1项目地址：https://download.vulnhub.com/milnet/milnet-1.0-ova.tgz
+是一个打包好的镜像文件
+注意：导入 vmx 时一定要选择我已移动，否则没网
+使用 Nmap 扫描出开放服务及操作系统版本
+
+RCERFI（反弹 Shell）扫描目录发现 phpinfo 文件，开启了远程文件包含
+
+因为这个网站没有与明显的交互功能，于是开启抓包
+发现点击左边导航栏其实是发送的 POST 请求
+
+抓包导航栏的第三个包发现其值就是按钮名称，结合前面泄露的配置信息，推测这里是使用的文件包含函数
+
+替换掉值为 info 成功
+
+使用我们的 PHP 反
+      </article>
+    </div>
+  </div>
+</div>
+      <div class="post-wrapper">
+  <div class="post-wrap right" data-aos="fade-up">
+      <a class="post-link" href="/2026/04/01/Gibson%200.2/" aria-label="VulnHub Gibson：0.2" title="VulnHub Gibson：0.2"></a>
+    <div class="post-cover right">
           <img data-src="/images/banner.webp" data-sizes="auto" alt="VulnHub Gibson：0.2" class="lazyload">
     </div>
     <div class="post-info">
@@ -275,9 +308,9 @@
   </div>
 </div>
       <div class="post-wrapper">
-  <div class="post-wrap right" data-aos="fade-up">
+  <div class="post-wrap left" data-aos="fade-up">
       <a class="post-link" href="/2026/04/01/Droopy%20v0.2/" aria-label="VulnHub Droopy：v0.2" title="VulnHub Droopy：v0.2"></a>
-    <div class="post-cover right">
+    <div class="post-cover left">
           <img data-src="/images/banner.webp" data-sizes="auto" alt="VulnHub Droopy：v0.2" class="lazyload">
     </div>
     <div class="post-info">
@@ -305,9 +338,9 @@ RCEDrupalgeddon2（CVE-2018–7600）直接 MSF 打 NDay
   </div>
 </div>
       <div class="post-wrapper">
-  <div class="post-wrap left" data-aos="fade-up">
+  <div class="post-wrap right" data-aos="fade-up">
       <a class="post-link" href="/2026/04/01/SecTalks%20BNE0x03%20-%20Simple/" aria-label="VulnHub SecTalks：BNE0x03 - Simple" title="VulnHub SecTalks：BNE0x03 - Simple"></a>
-    <div class="post-cover left">
+    <div class="post-cover right">
           <img data-src="/images/banner.webp" data-sizes="auto" alt="VulnHub SecTalks：BNE0x03 - Simple" class="lazyload">
     </div>
     <div class="post-info">
@@ -341,9 +374,9 @@ RCEDrupalgeddon2（CVE-2018–7600）直接 MSF 打 NDay
   </div>
 </div>
       <div class="post-wrapper">
-  <div class="post-wrap right" data-aos="fade-up">
+  <div class="post-wrap left" data-aos="fade-up">
       <a class="post-link" href="/2026/04/01/Lord%20Of%20The%20Root%201.0.1/" aria-label="VulnHub Lord Of The Root：1.0.1" title="VulnHub Lord Of The Root：1.0.1"></a>
-    <div class="post-cover right">
+    <div class="post-cover left">
           <img data-src="/images/banner.webp" data-sizes="auto" alt="VulnHub Lord Of The Root：1.0.1" class="lazyload">
     </div>
     <div class="post-info">
@@ -372,9 +405,9 @@ CTFPort KnockingSSH 连接回显，提示 1，2，3
   </div>
 </div>
       <div class="post-wrapper">
-  <div class="post-wrap left" data-aos="fade-up">
+  <div class="post-wrap right" data-aos="fade-up">
       <a class="post-link" href="/2026/04/01/Acid%20Reloaded/" aria-label="VulnHub Acid：Reloaded" title="VulnHub Acid：Reloaded"></a>
-    <div class="post-cover left">
+    <div class="post-cover right">
           <img data-src="/images/banner.webp" data-sizes="auto" alt="VulnHub Acid：Reloaded" class="lazyload">
     </div>
     <div class="post-info">
@@ -409,9 +442,9 @@ CTFPort KnockingSSH 连接回显，提示 3，2，1
   </div>
 </div>
       <div class="post-wrapper">
-  <div class="post-wrap right" data-aos="fade-up">
+  <div class="post-wrap left" data-aos="fade-up">
       <a class="post-link" href="/2026/04/01/Acid%20Server/" aria-label="VulnHub Acid：Server" title="VulnHub Acid：Server"></a>
-    <div class="post-cover right">
+    <div class="post-cover left">
           <img data-src="/images/banner.webp" data-sizes="auto" alt="VulnHub Acid：Server" class="lazyload">
     </div>
     <div class="post-info">
@@ -452,9 +485,9 @@ CTFPort KnockingSSH 连接回显，提示 3，2，1
   </div>
 </div>
       <div class="post-wrapper">
-  <div class="post-wrap left" data-aos="fade-up">
+  <div class="post-wrap right" data-aos="fade-up">
       <a class="post-link" href="/2026/04/01/NullByte%201/" aria-label="VulnHub NullByte：1" title="VulnHub NullByte：1"></a>
-    <div class="post-cover left">
+    <div class="post-cover right">
           <img data-src="/images/banner.webp" data-sizes="auto" alt="VulnHub NullByte：1" class="lazyload">
     </div>
     <div class="post-info">
@@ -487,9 +520,9 @@ CTFgif 隐写发现 80 端口是一张图片
   </div>
 </div>
       <div class="post-wrapper">
-  <div class="post-wrap right" data-aos="fade-up">
+  <div class="post-wrap left" data-aos="fade-up">
       <a class="post-link" href="/2026/04/01/Darknet%201.0/" aria-label="VulnHub Darknet：1.0" title="VulnHub Darknet：1.0"></a>
-    <div class="post-cover right">
+    <div class="post-cover left">
           <img data-src="/images/banner.webp" data-sizes="auto" alt="VulnHub Darknet：1.0" class="lazyload">
     </div>
     <div class="post-info">
@@ -514,9 +547,9 @@ CTFgif 隐写发现 80 端口是一张图片
   </div>
 </div>
       <div class="post-wrapper">
-  <div class="post-wrap left" data-aos="fade-up">
+  <div class="post-wrap right" data-aos="fade-up">
       <a class="post-link" href="/2026/04/01/Tr0ll%201/" aria-label="VulnHub Tr0ll：1" title="VulnHub Tr0ll：1"></a>
-    <div class="post-cover left">
+    <div class="post-cover right">
           <img data-src="/images/banner.webp" data-sizes="auto" alt="VulnHub Tr0ll：1" class="lazyload">
     </div>
     <div class="post-info">
@@ -548,39 +581,6 @@ SSH查看文件发现有一个 lol.pacp
     </div>
   </div>
 </div>
-      <div class="post-wrapper">
-  <div class="post-wrap right" data-aos="fade-up">
-      <a class="post-link" href="/2026/04/01/Flick%201/" aria-label="VulnHub Flick：1" title="VulnHub Flick：1"></a>
-    <div class="post-cover right">
-          <img data-src="/images/banner.webp" data-sizes="auto" alt="VulnHub Flick：1" class="lazyload">
-    </div>
-    <div class="post-info">
-      <div class="post-meta">
-        <span><span class="icon-calendar"></span>2026-04-01</span>
-        <span><span class="icon-pencil"></span>183 字</span>
-        <span><span class="icon-clock"></span>1 分钟</span>
-      </div>
-      <h2 class="post-title">VulnHub Flick：1</h2>
-      <article class="post-article">
-          withErrors(&#39;You need to be logged in to access this page&#39;);
-
-        // 返回上传视图
-        return View::make(&#39;upload&#39;);
-    }
-
-    /**
-     * 处理上传表单提交
-     * @return mixed
-     */
-    public function postUpload()
-    {
-        // 检查是否有文件上传且文件存在
-        if(!Input::hasFile(&#39;file&#39;))
-            return Redi
-      </article>
-    </div>
-  </div>
-</div>
   <nav id="page-nav" aria-label="Pagination navigation" data-aos="fade-up">
     <a class="extend prev" rel="prev" href="/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">下一页 &raquo;</a>
   </nav>
@@ -604,10 +604,10 @@ SSH查看文件发现有一个 lol.pacp
       </div>
       <div>
         <span class="icon-brush"></span>
-        34.8k
+        39.2k
         &nbsp;|&nbsp;
         <span class="icon-coffee"></span>
-        02:56
+        03:17
       </div>
       <div>
         <span class="icon-eye"></span>
@@ -635,15 +635,15 @@ SSH查看文件发现有一个 lol.pacp
 <div class="sidebar-state">
   <div class="sidebar-state-article">
     <div>文章</div>
-    <div class="sidebar-state-number">39</div>
+    <div class="sidebar-state-number">40</div>
   </div>
   <div class="sidebar-state-category">
     <div>分类</div>
-    <div class="sidebar-state-number">1</div>
+    <div class="sidebar-state-number">5</div>
   </div>
   <div class="sidebar-state-tag">
     <div>标签</div>
-    <div class="sidebar-state-number">22</div>
+    <div class="sidebar-state-number">35</div>
   </div>
 </div>
 <div class="sidebar-social" >
