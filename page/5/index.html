@@ -152,7 +152,7 @@
 <div class="sidebar-state">
   <div class="sidebar-state-article">
     <div>文章</div>
-    <div class="sidebar-state-number">41</div>
+    <div class="sidebar-state-number">42</div>
   </div>
   <div class="sidebar-state-category">
     <div>分类</div>
@@ -160,7 +160,7 @@
   </div>
   <div class="sidebar-state-tag">
     <div>标签</div>
-    <div class="sidebar-state-number">35</div>
+    <div class="sidebar-state-number">83</div>
   </div>
 </div>
 <div class="sidebar-social" >
@@ -220,6 +220,9 @@
       <div class="widget">
         <ul>
             <li>
+              <a href="/2026/04/04/C0m80%201/" title="VulnHub C0m80：1">VulnHub C0m80：1</a>
+            </li>
+            <li>
               <a href="/2026/04/02/2024%20%E7%AC%AC%E4%B8%80%E5%B1%8A%20Solar%20%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94%E6%8C%91%E6%88%98%E8%B5%9B/" title="2024 第一届 Solar 应急响应挑战赛">2024 第一届 Solar 应急响应挑战赛</a>
             </li>
             <li>
@@ -230,9 +233,6 @@
             </li>
             <li>
               <a href="/2026/04/01/hackfest2016%20Sedna/" title="VulnHub hackfest2016：Sedna">VulnHub hackfest2016：Sedna</a>
-            </li>
-            <li>
-              <a href="/2026/04/01/DC416%202016-Fortress/" title="VulnHub DC416：2016-Fortress">VulnHub DC416：2016-Fortress</a>
             </li>
         </ul>
       </div>
@@ -245,8 +245,39 @@
 
           <section id="main" aria-label="Main content">      <div class="post-wrapper">
   <div class="post-wrap left" data-aos="fade-up">
-      <a class="post-link" href="/2026/04/01/Badstore%201.2.3/" aria-label="VulnHub Badstore：1.2.3" title="VulnHub Badstore：1.2.3"></a>
+      <a class="post-link" href="/2026/04/01/pWnOS%201.0/" aria-label="VulnHub pWnOS：1.0" title="VulnHub pWnOS：1.0"></a>
     <div class="post-cover left">
+          <img data-src="/images/banner.webp" data-sizes="auto" alt="VulnHub pWnOS：1.0" class="lazyload">
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2026-04-01</span>
+        <span><span class="icon-pencil"></span>1.4k 字</span>
+        <span><span class="icon-clock"></span>7 分钟</span>
+      </div>
+      <h2 class="post-title">VulnHub pWnOS：1.0</h2>
+      <article class="post-article">
+          pWnOS: 1.0项目地址：https://download.vulnhub.com/pwnos/pWnOS_v1.0.zip
+是一个打包好的镜像文件
+注意：导入 vmx 时一定要选择我已移动，否则没网
+使用 Nmap 扫描出开放服务及操作系统版本
+1nmap -sS -sV -sC -p- 192.168.41.202
+
+
+XSSname&amp;amp;level（两个反射）80 端口发现两个 XSS 漏洞，对应的参数是 name 以及 level
+1&amp;lt;script&amp;gt;alert(66)&amp;lt;/script&amp;gt;
+
+
+返回提交的页面，两个参数都默认为 true
+尝试改为 false
+      </article>
+    </div>
+  </div>
+</div>
+      <div class="post-wrapper">
+  <div class="post-wrap right" data-aos="fade-up">
+      <a class="post-link" href="/2026/04/01/Badstore%201.2.3/" aria-label="VulnHub Badstore：1.2.3" title="VulnHub Badstore：1.2.3"></a>
+    <div class="post-cover right">
           <img data-src="/images/banner.webp" data-sizes="auto" alt="VulnHub Badstore：1.2.3" class="lazyload">
     </div>
     <div class="post-info">
@@ -302,10 +333,10 @@ XSSSearch 搜索框（反射）对搜索框输入测试发现 SQL 报错语
       </div>
       <div>
         <span class="icon-brush"></span>
-        39.3k
+        50.2k
         &nbsp;|&nbsp;
         <span class="icon-coffee"></span>
-        03:18
+        04:17
       </div>
       <div>
         <span class="icon-eye"></span>
@@ -333,7 +364,7 @@ XSSSearch 搜索框（反射）对搜索框输入测试发现 SQL 报错语
 <div class="sidebar-state">
   <div class="sidebar-state-article">
     <div>文章</div>
-    <div class="sidebar-state-number">41</div>
+    <div class="sidebar-state-number">42</div>
   </div>
   <div class="sidebar-state-category">
     <div>分类</div>
@@ -341,7 +372,7 @@ XSSSearch 搜索框（反射）对搜索框输入测试发现 SQL 报错语
   </div>
   <div class="sidebar-state-tag">
     <div>标签</div>
-    <div class="sidebar-state-number">35</div>
+    <div class="sidebar-state-number">83</div>
   </div>
 </div>
 <div class="sidebar-social" >

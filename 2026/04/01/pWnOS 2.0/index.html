@@ -35,12 +35,13 @@
 <meta property="og:image" content="https://pic1.imgdb.cn/item/69771ec2a583b567209b7db8.png">
 <meta property="og:image" content="https://pic1.imgdb.cn/item/69767e436deeadc41a33f6b1.png">
 <meta property="article:published_time" content="2026-04-01T08:10:00.000Z">
-<meta property="article:modified_time" content="2026-04-01T09:06:09.210Z">
+<meta property="article:modified_time" content="2026-04-04T08:33:42.040Z">
 <meta property="article:author" content="ALL">
+<meta property="article:tag" content="PHP 反弹 Shell">
 <meta property="article:tag" content="RCE">
 <meta property="article:tag" content="SQL 注入">
+<meta property="article:tag" content="信息泄露">
 <meta property="article:tag" content="弱口令">
-<meta property="article:tag" content="提权">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://pic1.imgdb.cn/item/6976592f6deeadc41a33f580.png">
     <link rel="alternate" href="/atom.xml" title="雾島风起時" type="application/atom+xml">
@@ -171,7 +172,7 @@
 <div class="sidebar-state">
   <div class="sidebar-state-article">
     <div>文章</div>
-    <div class="sidebar-state-number">41</div>
+    <div class="sidebar-state-number">42</div>
   </div>
   <div class="sidebar-state-category">
     <div>分类</div>
@@ -179,7 +180,7 @@
   </div>
   <div class="sidebar-state-tag">
     <div>标签</div>
-    <div class="sidebar-state-number">35</div>
+    <div class="sidebar-state-number">83</div>
   </div>
 </div>
 <div class="sidebar-social" >
@@ -238,7 +239,7 @@
       <div class="article-date">
   <span class="article-date-link icon-calendar" data-aos="zoom-in">
     <time datetime="2026-04-01T08:10:00.000Z" itemprop="datePublished">2026-04-01</time>
-    <time style="display: none;" id="post-update-time">2026-04-01</time>
+    <time style="display: none;" id="post-update-time">2026-04-04</time>
   </span>
 </div>
 
@@ -281,7 +282,7 @@
     <footer class="article-footer">
         <a class="article-category-link" href="/categories/VulnHub/" title="VulnHub" data-aos="zoom-in">VulnHub</a>
 
-        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/RCE/" rel="tag" title="RCE">RCE</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/SQL-%E6%B3%A8%E5%85%A5/" rel="tag" title="SQL 注入">SQL 注入</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/%E5%BC%B1%E5%8F%A3%E4%BB%A4/" rel="tag" title="弱口令">弱口令</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/%E6%8F%90%E6%9D%83/" rel="tag" title="提权">提权</a></li></ul>
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/PHP-%E5%8F%8D%E5%BC%B9-Shell/" rel="tag" title="PHP 反弹 Shell">PHP 反弹 Shell</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/RCE/" rel="tag" title="RCE">RCE</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/SQL-%E6%B3%A8%E5%85%A5/" rel="tag" title="SQL 注入">SQL 注入</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/" rel="tag" title="信息泄露">信息泄露</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/%E5%BC%B1%E5%8F%A3%E4%BB%A4/" rel="tag" title="弱口令">弱口令</a></li></ul>
 
     </footer>
   </div>
@@ -326,10 +327,10 @@
       </div>
       <div>
         <span class="icon-brush"></span>
-        39.3k
+        50.2k
         &nbsp;|&nbsp;
         <span class="icon-coffee"></span>
-        03:18
+        04:17
       </div>
       <div>
         <span class="icon-eye"></span>
@@ -362,7 +363,7 @@
 <div class="sidebar-state">
   <div class="sidebar-state-article">
     <div>文章</div>
-    <div class="sidebar-state-number">41</div>
+    <div class="sidebar-state-number">42</div>
   </div>
   <div class="sidebar-state-category">
     <div>分类</div>
@@ -370,7 +371,7 @@
   </div>
   <div class="sidebar-state-tag">
     <div>标签</div>
-    <div class="sidebar-state-number">35</div>
+    <div class="sidebar-state-number">83</div>
   </div>
 </div>
 <div class="sidebar-social" >
@@ -485,7 +486,7 @@
           description: "",
           stripContent: "pWnOS: 2.0项目地址：https://download.vulnhub.com/pwnos/pWnOS_v2.0.7z 是一个打包好的镜像文件 注意：虚拟机网段必须是 10.10.10.0&amp;#x2F;24，靶机是固定 IP 地址：10.10.10.100 使用 Nmap 扫描出开放服务及操作系统版本  SQL 注入login在首页登陆处  SQLMap 最高强度梭哈出 email 注入点   弱口令IsIntS通过上面的 SQL 注入直接登录进去 1admin@isints.com:ki",
           date: "Wed Apr 01 2026 16:10:00 GMT+0800",
-          updated: "Wed Apr 01 2026 17:06:09 GMT+0800",
+          updated: "Sat Apr 04 2026 16:33:42 GMT+0800",
           cover: "/images/banner.webp",
         };
       </script>
