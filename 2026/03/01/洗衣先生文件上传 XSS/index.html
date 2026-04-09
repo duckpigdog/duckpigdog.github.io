@@ -17,24 +17,23 @@
     
 <link rel="stylesheet" href="/css/loader.css">
 
-    <meta name="description" content="洗衣先生文件上传 XSS信息收集 XSS修改上传头像的流量包改为后缀 .htm 发现可以上传在历史包中可以看到文件上传的路径分别是 ip 字段和 fileUrl 字段拼接起来到网页上访问弹窗">
+    <meta name="description" content="洗衣先生文件上传 XSS前言本次测试属于公益类型的 SRC XSS在上传头像处上传一个 PNG 类型的文件，里面是 HTML 类型的 XSS 代码并抓取上传头像的流量包改为后缀 .htm 发现可以上传在历史请求包中可以看到文件上传的路径分别是 ip 字段和 fileUrl 字段拼接起来到网页上访问弹窗">
 <meta property="og:type" content="article">
 <meta property="og:title" content="洗衣先生文件上传 XSS">
 <meta property="og:url" content="http://example.com/2026/03/01/%E6%B4%97%E8%A1%A3%E5%85%88%E7%94%9F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%20XSS/index.html">
 <meta property="og:site_name" content="雾島风起時">
-<meta property="og:description" content="洗衣先生文件上传 XSS信息收集 XSS修改上传头像的流量包改为后缀 .htm 发现可以上传在历史包中可以看到文件上传的路径分别是 ip 字段和 fileUrl 字段拼接起来到网页上访问弹窗">
+<meta property="og:description" content="洗衣先生文件上传 XSS前言本次测试属于公益类型的 SRC XSS在上传头像处上传一个 PNG 类型的文件，里面是 HTML 类型的 XSS 代码并抓取上传头像的流量包改为后缀 .htm 发现可以上传在历史请求包中可以看到文件上传的路径分别是 ip 字段和 fileUrl 字段拼接起来到网页上访问弹窗">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://pic1.imgdb.cn/item/69d7458d15908d0c2fa8632e.png">
-<meta property="og:image" content="https://pic1.imgdb.cn/item/69d745b115908d0c2fa863f2.png">
-<meta property="og:image" content="https://pic1.imgdb.cn/item/69d745e115908d0c2fa864c1.png">
-<meta property="og:image" content="https://pic1.imgdb.cn/item/69d7462015908d0c2fa86546.png">
-<meta property="og:image" content="https://pic1.imgdb.cn/item/69d7465e15908d0c2fa865c8.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69d74a2f15908d0c2fa869ee.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69d74a8a15908d0c2fa86a53.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69d74ac315908d0c2fa86dd3.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69d74aef15908d0c2fa86e0d.png">
 <meta property="article:published_time" content="2026-03-01T08:39:00.000Z">
-<meta property="article:modified_time" content="2026-04-09T06:23:59.858Z">
+<meta property="article:modified_time" content="2026-04-09T06:43:25.139Z">
 <meta property="article:author" content="ALL">
 <meta property="article:tag" content="XSS">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://pic1.imgdb.cn/item/69d7458d15908d0c2fa8632e.png">
+<meta name="twitter:image" content="https://pic1.imgdb.cn/item/69d74a2f15908d0c2fa869ee.png">
     <link rel="alternate" href="/atom.xml" title="雾島风起時" type="application/atom+xml">
     <link rel="shortcut icon" href="/images/favicon.ico">
   
@@ -152,7 +151,7 @@
     <div class="sidebar-wrap" data-aos="fade-up">
           <div class="sidebar-toc-sidebar"><h3 class="toc-title">文章目录</h3>
 <div class="sidebar-toc-wrapper toc-div-class" >
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B4%97%E8%A1%A3%E5%85%88%E7%94%9F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0-XSS"><span class="toc-number">1.</span> <span class="toc-text">洗衣先生文件上传 XSS</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">1.1.</span> <span class="toc-text">信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XSS"><span class="toc-number">1.2.</span> <span class="toc-text">XSS</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B4%97%E8%A1%A3%E5%85%88%E7%94%9F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0-XSS"><span class="toc-number">1.</span> <span class="toc-text">洗衣先生文件上传 XSS</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XSS"><span class="toc-number">1.2.</span> <span class="toc-text">XSS</span></a></li></ol></li></ol>
 </div>
 </div>
           <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
@@ -239,8 +238,8 @@
     <div class="hr-line"></div>
     
     <div class="e-content article-entry" itemprop="articleBody">
-        <h1 id="洗衣先生文件上传-XSS"><a href="#洗衣先生文件上传-XSS" class="headerlink" title="洗衣先生文件上传 XSS"></a>洗衣先生文件上传 XSS</h1><h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><p><img src="https://pic1.imgdb.cn/item/69d7458d15908d0c2fa8632e.png"></p>
-<h2 id="XSS"><a href="#XSS" class="headerlink" title="XSS"></a>XSS</h2><p>修改上传头像的流量包<br><img src="https://pic1.imgdb.cn/item/69d745b115908d0c2fa863f2.png"><br>改为后缀 <code>.htm</code> 发现可以上传<br><img src="https://pic1.imgdb.cn/item/69d745e115908d0c2fa864c1.png"><br>在历史包中可以看到文件上传的路径<br>分别是 <code>ip</code> 字段和 <code>fileUrl</code> 字段<br><img src="https://pic1.imgdb.cn/item/69d7462015908d0c2fa86546.png"><br>拼接起来到网页上访问弹窗<br><img src="https://pic1.imgdb.cn/item/69d7465e15908d0c2fa865c8.png"></p>
+        <h1 id="洗衣先生文件上传-XSS"><a href="#洗衣先生文件上传-XSS" class="headerlink" title="洗衣先生文件上传 XSS"></a>洗衣先生文件上传 XSS</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本次测试属于公益类型的 SRC</p>
+<h2 id="XSS"><a href="#XSS" class="headerlink" title="XSS"></a>XSS</h2><p>在上传头像处上传一个 PNG 类型的文件，里面是 HTML 类型的 XSS 代码并抓取上传头像的流量包<br><img src="https://pic1.imgdb.cn/item/69d74a2f15908d0c2fa869ee.png"><br>改为后缀 <code>.htm</code> 发现可以上传<br><img src="https://pic1.imgdb.cn/item/69d74a8a15908d0c2fa86a53.png"><br>在历史请求包中可以看到文件上传的路径<br>分别是 <code>ip</code> 字段和 <code>fileUrl</code> 字段<br><img src="https://pic1.imgdb.cn/item/69d74ac315908d0c2fa86dd3.png"><br>拼接起来到网页上访问弹窗<br><img src="https://pic1.imgdb.cn/item/69d74aef15908d0c2fa86e0d.png"></p>
 
     </div>
     <footer class="article-footer">
@@ -283,7 +282,7 @@
       </div>
       <div>
         <span class="icon-brush"></span>
-        50.9k
+        51k
         &nbsp;|&nbsp;
         <span class="icon-coffee"></span>
         04:22
@@ -308,7 +307,7 @@
   <div class="sidebar-wrap">
         <div class="sidebar-toc-sidebar"><h3 class="toc-title">文章目录</h3>
 <div class="sidebar-toc-wrapper toc-div-class" >
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B4%97%E8%A1%A3%E5%85%88%E7%94%9F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0-XSS"><span class="toc-number">1.</span> <span class="toc-text">洗衣先生文件上传 XSS</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">1.1.</span> <span class="toc-text">信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XSS"><span class="toc-number">1.2.</span> <span class="toc-text">XSS</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B4%97%E8%A1%A3%E5%85%88%E7%94%9F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0-XSS"><span class="toc-number">1.</span> <span class="toc-text">洗衣先生文件上传 XSS</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XSS"><span class="toc-number">1.2.</span> <span class="toc-text">XSS</span></a></li></ol></li></ol>
 </div>
 </div>
         <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
@@ -440,9 +439,9 @@
           url: "http://example.com/2026/03/01/%E6%B4%97%E8%A1%A3%E5%85%88%E7%94%9F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%20XSS/",
           excerpt: "",
           description: "",
-          stripContent: "洗衣先生文件上传 XSS信息收集 XSS修改上传头像的流量包改为后缀 .htm 发现可以上传在历史包中可以看到文件上传的路径分别是 ip 字段和 fileUrl 字段拼接起来到网页上访问弹窗 ",
+          stripContent: "洗衣先生文件上传 XSS前言本次测试属于公益类型的 SRC XSS在上传头像处上传一个 PNG 类型的文件，里面是 HTML 类型的 XSS 代码并抓取上传头像的流量包改为后缀 .htm 发现可以上传在历史请求包中可以看到文件上传的路径分别是 ip 字段和 fileUrl 字段拼接起来到网页上访问弹窗 ",
           date: "Sun Mar 01 2026 16:39:00 GMT+0800",
-          updated: "Thu Apr 09 2026 14:23:59 GMT+0800",
+          updated: "Thu Apr 09 2026 14:43:25 GMT+0800",
           cover: "/images/banner.webp",
         };
       </script>
