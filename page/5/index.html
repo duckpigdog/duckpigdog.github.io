@@ -439,29 +439,21 @@ XSS在上传头像处上传一个 PNG 类型的文件，里面是 HTML 类型的
     <div class="post-info">
       <div class="post-meta">
         <span><span class="icon-calendar"></span>2026-02-01</span>
-        <span><span class="icon-pencil"></span>172 字</span>
+        <span><span class="icon-pencil"></span>144 字</span>
         <span><span class="icon-clock"></span>1 分钟</span>
       </div>
       <h2 class="post-title">微信小程序抓包教程</h2>
       <article class="post-article">
-          SecTalks: BNE0x03 - Simple项目地址：https://download.vulnhub.com/lordoftheroot/LordOfTheRoot_1.0.1.ova
-是一个打包好的镜像文件
-注意：导入 vmx 时一定要选择我已移动，否则没网
-使用 Nmap 扫描出开放服务及操作系统版本
+          SecTalks: BNE0x03 - Simple前言本次使用的工具是 Proxifier + Yakit
+Proxifier去官网下载安装就行，然后注册码谷歌一下，邮箱随便填就可以破解了
+运行程序，选择 Profile –&amp;gt; Proxy Servers，配置如下
+然后再添加规则，Profile –&amp;gt; Proxification Rules，配置如下
+Yakit首先要启动劫持，下载证书
+下载到本地保存
+删除 .pem 后缀
+双击安装然后选择安装到受信任的机构中
+然后重启所有上面两个应用 + 微信即可抓包了**（注意：必须关梯子才行！！！）**
 
-访问 80 端口发现是一个通用的框架
-
-文件上传漏洞Avatar网上搜索到 NDay
-
-按照上图中的说明注册账号
-
-按照图中的要求的来到这里，发现有个头像上传的功能
-
-直接上传 PHP 反弹 Shell
-
-继续访问文件并开启监听拿到 Shell
-
-提权内核 overlayfs 文
       </article>
     </div>
   </div>
