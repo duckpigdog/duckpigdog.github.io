@@ -258,8 +258,16 @@
       <h2 class="post-title">iView Editor XSS（CVE-2025-10949）</h2>
       <article class="post-article">
           iView Editor XSS（CVE-2025-10949）原本是在给学生授课过程中讲解 XSS 时无意水了一个
+
 项目地址https://github.com/iview/iview-editor
-漏洞复现访问官方给出的在线案例：https://editor.iviewui.com/点击全屏编辑，从 a 标签输入，找到其 MarkDown 语法格式打 JavaScript 伪协议发现渲染时少了一个括号，推测是被过滤了使用反引号代替即可绕过
+漏洞复现访问官方给出的在线案例：https://editor.iviewui.com/
+
+点击全屏编辑，从 a 标签输入，找到其 MarkDown 语法格式
+
+打 JavaScript 伪协议发现渲染时少了一个括号，推测是被过滤了
+
+使用反引号代替即可绕过
+
 
       </article>
     </div>
