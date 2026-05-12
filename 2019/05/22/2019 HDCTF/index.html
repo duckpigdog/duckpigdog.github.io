@@ -1,0 +1,628 @@
+  <!DOCTYPE html>
+  <html lang="zh-CN"  
+      data-theme-mode="auto"
+  >
+  <head>
+  <meta charset="utf-8">
+  
+  
+  
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_a0oqhord1y';window.REIMU_CONFIG.clipboard_tips = {"success":{"zh-CN":"复制成功 (*^▽^*)"},"fail":{"zh-CN":"复制失败 (ﾟ⊿ﾟ)ﾂ"},"copyright":{"enable":false,"count":50,"license_type":"by-nc-sa"}};window.REIMU_CONFIG.clipboard_tips.copyright.content = '本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！';window.REIMU_CONFIG.code_block = {"expand":true};window.REIMU_CONFIG.base = 'http://example.com';</script>
+  <title>
+    2019 HDCTF WriteUp | 雾島风起時
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic|Noto Serif SC:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic|Noto Serif SC:400,400italic,700,700italic&display=swap" media="print" onload="this.media='all'">
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_a0oqhord1y.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+    <meta name="description" content="2019 HDCTF前言主办方：海南大学  Misc你能发现什么蛛丝马迹吗（Windows pslist 排查进程）下载附件是一个 .img，使用 vol2 进行取证，先查看操作系统 1python2 vol.py -f memory.img imageinfo  发现是 Windows 2003，给出了三个具体的版本  查看进程，Server 2003 生命周期中 SP2 是最普遍的版本，所以选">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2019 HDCTF WriteUp">
+<meta property="og:url" content="http://example.com/2019/05/22/2019%20HDCTF/index.html">
+<meta property="og:site_name" content="雾島风起時">
+<meta property="og:description" content="2019 HDCTF前言主办方：海南大学  Misc你能发现什么蛛丝马迹吗（Windows pslist 排查进程）下载附件是一个 .img，使用 vol2 进行取证，先查看操作系统 1python2 vol.py -f memory.img imageinfo  发现是 Windows 2003，给出了三个具体的版本  查看进程，Server 2003 生命周期中 SP2 是最普遍的版本，所以选">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6a02de62c05e72d9171c06bf.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6a02d943c05e72d9171bc434.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6a02dd35c05e72d9171bd193.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6a02e1e5c05e72d9171c1713.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6a02f8cfc05e72d9171cb2a1.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6a02f9d7c05e72d9171cb467.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6a02f9e1c05e72d9171cb47a.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6a02faa8c05e72d9171ce996.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6a035bb6c05e72d9171f369f.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6a035f2fc05e72d9171f4c7d.png">
+<meta property="article:published_time" content="2019-05-22T06:18:00.000Z">
+<meta property="article:modified_time" content="2026-05-12T18:08:10.146Z">
+<meta property="article:author" content="ALL">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="RSA">
+<meta property="article:tag" content="RSA-爆破 e">
+<meta property="article:tag" content="Windows plist 排查进程">
+<meta property="article:tag" content="内存取证">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic1.imgdb.cn/item/6a02de62c05e72d9171c06bf.png">
+    <link rel="alternate" href="/atom.xml" title="雾島风起時" type="application/atom+xml">
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" integrity="sha384-IfxC36XL/toUyJ939C73PcgMuRzAZuIzZxE38drsmO5p6jD7ei+Zx/1oA/0l8ysE" crossorigin="anonymous">
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.2/dist/aos.css" integrity="sha384-GMRP93c6Hkz9JVKGAuRR3nTS7M07RwPgTFenXiosjq2VbVgvdDNcz1g6Mkj8AONa" crossorigin="anonymous">
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+  <body>
+      <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi rotate">
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+      </div>
+      <div class="loading-word">少女祈祷中...</div>
+    </div>
+  </div>
+  <script>
+    var time = null;
+    var loaderEl = document.getElementById('loader');
+    var startLoading = () => {
+      time = Date.now();
+      loaderEl.classList.remove("loading");
+    }
+    var hideLoader = () => {
+      document.body.style.overflow = 'auto';
+      loader.classList.add('loading');
+    };
+
+    var endLoading = () => {
+      if (!time) {
+        hideLoader();
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          hideLoader();
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    loaderEl.addEventListener('click', endLoading);
+  </script>
+<div id="copy-tooltip"></div>
+<div id="heatmap-tooltip"></div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav" aria-label="Primary navigation">
+        <a class="main-nav-link-wrap" href="/">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">首页</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/archives">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">归档</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/about">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">关于</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/friend">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">友链</span>
+        </a>
+    <a id="main-nav-toggle" class="nav-icon" aria-label="Toggle navigation" role="button"></a>
+  </nav>
+  <nav id="sub-nav" aria-label="Secondary navigation">
+      <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅" aria-label="RSS 订阅" target="_blank"></a>
+  </nav>
+</div>
+<header id="header" aria-label="Site header">
+        <picture>
+        </picture>
+          <img  fetchpriority="high" src="/images/banner.webp" alt="2019 HDCTF WriteUp">
+  <div id="header-outer">
+    <div id="header-title">
+          <span id="logo">
+            <h1 data-aos="slide-up">2019 HDCTF WriteUp</h1>
+          </span>
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+        </h2>
+    </div>
+  </div>
+</header>
+
+        <div id="content" aria-label="Page content"  class="sidebar-right" >
+          <aside id="sidebar" aria-label="Sidebar">
+  <div class="sidebar-wrapper-container sticky">
+  <div class="sidebar-wrapper">
+    <div class="sidebar-wrap" data-aos="fade-up">
+          <div class="sidebar-toc-sidebar"><h3 class="toc-title">文章目录</h3>
+<div class="sidebar-toc-wrapper toc-div-class" >
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#2019-HDCTF"><span class="toc-number">1.</span> <span class="toc-text">2019 HDCTF</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Misc"><span class="toc-number">1.2.</span> <span class="toc-text">Misc</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%A0%E8%83%BD%E5%8F%91%E7%8E%B0%E4%BB%80%E4%B9%88%E8%9B%9B%E4%B8%9D%E9%A9%AC%E8%BF%B9%E5%90%97%EF%BC%88Windows-pslist-%E6%8E%92%E6%9F%A5%E8%BF%9B%E7%A8%8B%EF%BC%89"><span class="toc-number">1.2.1.</span> <span class="toc-text">你能发现什么蛛丝马迹吗（Windows pslist 排查进程）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%A1%E5%8F%B7%E5%88%86%E6%9E%90%EF%BC%88%E6%97%A0%E7%BA%BF%E7%94%B5%E5%9B%BA%E5%AE%9A%E7%A0%81%E4%BF%A1%E5%8F%B7%E5%88%86%E6%9E%90%EF%BC%89"><span class="toc-number">1.2.2.</span> <span class="toc-text">信号分析（无线电固定码信号分析）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Crypto"><span class="toc-number">1.3.</span> <span class="toc-text">Crypto</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#bbbbbbrsa%EF%BC%88%E7%88%86%E7%A0%B4-e%EF%BC%89"><span class="toc-number">1.3.1.</span> <span class="toc-text">bbbbbbrsa（爆破 e）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#basic-rsa%EF%BC%88RSA%EF%BC%89"><span class="toc-number">1.3.2.</span> <span class="toc-text">basic rsa（RSA）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#together%EF%BC%88%E5%85%AC%E9%92%A5%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90-%E5%85%B1%E6%A8%A1%E6%94%BB%E5%87%BB%EF%BC%89"><span class="toc-number">1.3.3.</span> <span class="toc-text">together（公钥文件解析 + 共模攻击）</span></a></li></ol></li></ol></li></ol>
+</div>
+</div>
+          <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="ALL" class="lazyload">
+  <div class="sidebar-author-name">ALL</div>
+  <div class="sidebar-description">雾島风起時の日常</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">80</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">13</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">139</div>
+  </div>
+</div>
+<div class="sidebar-social" >
+    <div class="icon-github sidebar-social-icon">
+      <a href=https://github.com/duckpigdog itemprop="url" target="_blank" aria-label="github" rel="noopener nofollow noreferrer"></a>
+    </div>
+    <div class="icon-bilibili sidebar-social-icon">
+      <a href=https://space.bilibili.com/1337537884?spm_id_from=333.1007.0.0 itemprop="url" target="_blank" aria-label="bilibili" rel="noopener nofollow noreferrer"></a>
+    </div>
+</div>
+<div class="sidebar-menu">
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+</div>
+</div>
+          <div class="sidebar-btn-wrapper" style="position:static">
+            <div class="sidebar-toc-btn current"></div>
+            <div class="sidebar-common-btn"></div>
+          </div>
+    </div>
+  </div>
+  <div class="sidebar-widget">
+  </div>
+  </div>
+</aside>
+
+          <section id="main" aria-label="Main content"><article id="post-2019 HDCTF" class="h-entry article" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <span class="article-date-link icon-calendar" data-aos="zoom-in">
+    <time datetime="2019-05-22T06:18:00.000Z" itemprop="datePublished">2019-05-22</time>
+    <time style="display: none;" id="post-update-time">2026-05-13</time>
+  </span>
+</div>
+
+    </div>
+    
+    <div class="hr-line"></div>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+        <h1 id="2019-HDCTF"><a href="#2019-HDCTF" class="headerlink" title="2019 HDCTF"></a>2019 HDCTF</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>主办方：海南大学</p>
+<p><img src="https://pic1.imgdb.cn/item/6a02de62c05e72d9171c06bf.png"></p>
+<h2 id="Misc"><a href="#Misc" class="headerlink" title="Misc"></a>Misc</h2><h3 id="你能发现什么蛛丝马迹吗（Windows-pslist-排查进程）"><a href="#你能发现什么蛛丝马迹吗（Windows-pslist-排查进程）" class="headerlink" title="你能发现什么蛛丝马迹吗（Windows pslist 排查进程）"></a>你能发现什么蛛丝马迹吗（Windows pslist 排查进程）</h3><p>下载附件是一个 <code>.img</code>，使用 vol2 进行取证，先查看操作系统</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python2 vol.py -f memory.img imageinfo</span><br></pre></td></tr></table></figure>
+
+<p>发现是 Windows 2003，给出了三个具体的版本</p>
+<p><img src="https://pic1.imgdb.cn/item/6a02d943c05e72d9171bc434.png"></p>
+<p>查看进程，Server 2003 生命周期中 SP2 是最普遍的版本，所以选择它</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python2 vol.py -f memory.img --profile=Win2003SP2x86 pslist</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/6a02dd35c05e72d9171bd193.png"></p>
+<p>dump 出 <code>explorer.exe</code>，它的内存里主要是与桌面、任务栏、文件夹浏览相关的代码和数据</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python2 vol.py -f memory.img --profile=Win2003SP2x86 memdump -p 1992 -D ../ </span><br></pre></td></tr></table></figure>
+
+<p>检查字符串发现有一个 <code>flag.png</code></p>
+<p><img src="https://pic1.imgdb.cn/item/6a02e1e5c05e72d9171c1713.png"></p>
+<p>foremost 提取出两个图片</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">key：Th1s_1s_K3y00000</span><br><span class="line">iv：1234567890123456</span><br><span class="line">jfXvUoypb8p3zvmPks8kJ5KtOvmEwOxUZyRG0icraY4=</span><br></pre></td></tr></table></figure>
+
+<p>解密拿到 flag</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag(FOuNd_s0m3th1ng_1n_M3mory&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="信号分析（无线电固定码信号分析）"><a href="#信号分析（无线电固定码信号分析）" class="headerlink" title="信号分析（无线电固定码信号分析）"></a>信号分析（无线电固定码信号分析）</h3><p><img src="https://pic1.imgdb.cn/item/6a02f8cfc05e72d9171cb2a1.png"></p>
+<p>固定码遥控信号的构成</p>
+<p>钥匙信号(PT224X) &#x3D; 同步引导码(8bit) + 地址位(20bit) + 数据位(4bit) + 停止码(1bit)</p>
+<p>钥匙信号(PT226X) &#x3D; 同步引导码(4bit) + 地址位(8bit) + 数据位(4bit) + 停止码(1bit)</p>
+<p><img src="https://pic1.imgdb.cn/item/6a02f9d7c05e72d9171cb467.png"></p>
+<p><img src="https://pic1.imgdb.cn/item/6a02f9e1c05e72d9171cb47a.png"></p>
+<p>PT2262 是一种常用的无线遥控编码芯片（与 PT2272 配对），广泛应用在车库门、报警器等 315&#x2F;433MHz 设备上</p>
+<p>其编码特点：每个数据位可以有三种状态——0、1、F（浮空）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">一长一短 → F</span><br><span class="line">两个都短 → 0</span><br><span class="line">两个都长 → 1</span><br></pre></td></tr></table></figure>
+
+<p>位宽表示：每位由两个脉冲周期组成</p>
+<p>用 Audacity 打开文件</p>
+<p><img src="https://pic1.imgdb.cn/item/6a02faa8c05e72d9171ce996.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">地址位 + 数据位 = FFFFFFFF0001</span><br><span class="line">所以：flag&#123;FFFFFFFF0001&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Crypto"><a href="#Crypto" class="headerlink" title="Crypto"></a>Crypto</h2><h3 id="bbbbbbrsa（爆破-e）"><a href="#bbbbbbrsa（爆破-e）" class="headerlink" title="bbbbbbrsa（爆破 e）"></a>bbbbbbrsa（爆破 e）</h3><p>题目源代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> base64 <span class="keyword">import</span> b64encode <span class="keyword">as</span> b32encode</span><br><span class="line"><span class="keyword">from</span> gmpy2 <span class="keyword">import</span> invert,gcd,iroot</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> binascii <span class="keyword">import</span> a2b_hex,b2a_hex</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line">flag = <span class="string">&quot;******************************&quot;</span></span><br><span class="line"></span><br><span class="line">nbit = <span class="number">128</span></span><br><span class="line"></span><br><span class="line">p = getPrime(nbit)</span><br><span class="line">q = getPrime(nbit)</span><br><span class="line">n = p*q</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> p</span><br><span class="line"><span class="built_in">print</span> n</span><br><span class="line"></span><br><span class="line">phi = (p-<span class="number">1</span>)*(q-<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">e = random.randint(<span class="number">50000</span>,<span class="number">70000</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">	<span class="keyword">if</span> gcd(e,phi) == <span class="number">1</span>:</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	<span class="keyword">else</span>:</span><br><span class="line">		e -= <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">c = <span class="built_in">pow</span>(<span class="built_in">int</span>(b2a_hex(flag),<span class="number">16</span>),e,n)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> b32encode(<span class="built_in">str</span>(c))[::-<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2373740699529364991763589324200093466206785561836101840381622237225512234632</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>已知条件：</p>
+<ul>
+<li><p>已知 <code>p</code> 和 <code>n</code>，可以直接求出 <code>q = n // p</code></p>
+</li>
+<li><p><code>e</code> 为 50000~70000 之间的随机数，并与 <code>φ(n)</code> 互素</p>
+</li>
+</ul>
+<p>反转字符串，得到正常 Base64 编码结果</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">c_rev = <span class="string">&quot;==gMzYDNzIjMxUTNyIzNzIjMyYTM4MDM0gTMwEjNzgTM2UTN4cjNwIjN2QzM5ADMwIDNyMTO4UzM2cTM5kDN2MTOyUTO5YDM0czM3MjM&quot;</span></span><br><span class="line">c_b64 = c_rev[::-<span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+
+<p>Base64 解码得到 <code>c</code> 的十进制字符串，再转整数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> base64 <span class="keyword">import</span> b64decode</span><br><span class="line">c_str = b64decode(c_b64).decode()</span><br><span class="line">c = <span class="built_in">int</span>(c_str)</span><br></pre></td></tr></table></figure>
+
+<p>计算基本参数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">p = <span class="number">177077389675257695042507998165006460849</span></span><br><span class="line">n = <span class="number">37421829509887796274897162249367329400988647145613325367337968063341372726061</span></span><br><span class="line">q = n // p</span><br><span class="line"><span class="keyword">assert</span> p * q == n</span><br><span class="line">phi = (p-<span class="number">1</span>)*(q-<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<p>爆破 e 并解密</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gmpy2</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> long_to_bytes</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> e <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">50000</span>, <span class="number">70001</span>):</span><br><span class="line">    <span class="keyword">if</span> gmpy2.gcd(e, phi) != <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">continue</span></span><br><span class="line">    d = gmpy2.invert(e, phi)</span><br><span class="line">    m = <span class="built_in">pow</span>(c, d, n)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 还原 flag：整数 -&gt; 十六进制字符串 -&gt; 字节</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        m_hex = <span class="built_in">hex</span>(m)[<span class="number">2</span>:]</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(m_hex) % <span class="number">2</span> == <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        flag_bytes = <span class="built_in">bytes</span>.fromhex(m_hex)</span><br><span class="line">        <span class="keyword">if</span> <span class="string">b&#x27;flag&#x27;</span> <span class="keyword">in</span> flag_bytes <span class="keyword">or</span> <span class="string">b&#x27;HDCTF&#x27;</span> <span class="keyword">in</span> flag_bytes:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;Found e:&quot;</span>, e)</span><br><span class="line">            <span class="built_in">print</span>(flag_bytes.decode())</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">continue</span></span><br></pre></td></tr></table></figure>
+
+<p>得到 <code>flag{rs4_1s_s1mpl3!}</code></p>
+<h3 id="basic-rsa（RSA）"><a href="#basic-rsa（RSA）" class="headerlink" title="basic rsa（RSA）"></a>basic rsa（RSA）</h3><p><img src="https://pic1.imgdb.cn/item/6a035bb6c05e72d9171f369f.png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gmpy2</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> binascii <span class="keyword">import</span> a2b_hex,b2a_hex</span><br><span class="line"></span><br><span class="line">flag = <span class="string">&quot;*****************&quot;</span></span><br><span class="line"></span><br><span class="line">p = <span class="number">262248800182277040650192055439906580479</span></span><br><span class="line">q = <span class="number">262854994239322828547925595487519915551</span></span><br><span class="line"></span><br><span class="line">e = <span class="number">65533</span></span><br><span class="line">n = p*q</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">c = <span class="built_in">pow</span>(<span class="built_in">int</span>(b2a_hex(flag),<span class="number">16</span>),e,n)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> c</span><br><span class="line"></span><br><span class="line"><span class="comment"># 27565231154623519221597938803435789010285480123476977081867877272451638645710</span></span><br></pre></td></tr></table></figure>
+
+<p>加密流程</p>
+<ul>
+<li><p>flag 字符串 → <code>b2a_hex(flag)</code> 转换为十六进制字符串</p>
+</li>
+<li><p>再 <code>int(..., 16)</code> 转为大整数 m</p>
+</li>
+<li><p>计算 <code>c = m^e mod n</code></p>
+</li>
+</ul>
+<p>所以解密只需逆回去</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gmpy2</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> long_to_bytes</span><br><span class="line"><span class="keyword">from</span> binascii <span class="keyword">import</span> a2b_hex, b2a_hex</span><br><span class="line"></span><br><span class="line">p = <span class="number">262248800182277040650192055439906580479</span></span><br><span class="line">q = <span class="number">262854994239322828547925595487519915551</span></span><br><span class="line">e = <span class="number">65533</span></span><br><span class="line">c = <span class="number">27565231154623519221597938803435789010285480123476977081867877272451638645710</span></span><br><span class="line"></span><br><span class="line">n = p * q</span><br><span class="line">phi = (p - <span class="number">1</span>) * (q - <span class="number">1</span>)</span><br><span class="line">d = gmpy2.invert(e, phi)   <span class="comment"># 计算私钥 d</span></span><br><span class="line">m = <span class="built_in">pow</span>(c, d, n)            <span class="comment"># 解密</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 将整数 m 还原为十六进制字符串，再解码得到 flag</span></span><br><span class="line">m_hex = <span class="built_in">hex</span>(m)[<span class="number">2</span>:]          <span class="comment"># 去掉 &#x27;0x&#x27; 前缀</span></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">len</span>(m_hex) % <span class="number">2</span> == <span class="number">1</span>:     <span class="comment"># 奇数位则补零</span></span><br><span class="line">    m_hex = <span class="string">&#x27;0&#x27;</span> + m_hex</span><br><span class="line">flag = <span class="built_in">bytes</span>.fromhex(m_hex).decode()</span><br><span class="line"><span class="built_in">print</span>(flag)</span><br></pre></td></tr></table></figure>
+
+<p>得到 <code>flag{B4by_Rs4_1s_3asy}</code></p>
+<h3 id="together（公钥文件解析-共模攻击）"><a href="#together（公钥文件解析-共模攻击）" class="headerlink" title="together（公钥文件解析 + 共模攻击）"></a>together（公钥文件解析 + 共模攻击）</h3><p><img src="https://pic1.imgdb.cn/item/6a035f2fc05e72d9171f4c7d.png"></p>
+<p>拿到题目后，解压附件会得到 4 个文件：</p>
+<ul>
+<li><p><code>pubkey1.pem</code> 和 <code>pubkey2.pem</code>公钥文件</p>
+</li>
+<li><p><code>myflag1</code> 和 <code>myflag2</code> 密文文件</p>
+</li>
+</ul>
+<p>解题的关键突破口在于对比两个公钥文件</p>
+<p>使用 openssl 命令分别提取两个公钥的模数 <code>N</code> 和指数 <code>e</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">openssl rsa -pubin -text -modulus -<span class="keyword">in</span> pubkey1.pem</span><br><span class="line">openssl rsa -pubin -text -modulus -<span class="keyword">in</span> pubkey2.pem</span><br></pre></td></tr></table></figure>
+
+<p>经过对比，得到两条核心信息：</p>
+<ul>
+<li><p>模数 <code>N</code> 完全相同</p>
+</li>
+<li><p>公钥指数 <code>e</code> 不同（例如 <code>e1=2333</code>, <code>e2=23333</code>）</p>
+</li>
+</ul>
+<p>两条不同的消息使用了相同的模数 <code>N</code> 进行加密，这是典型的<strong>共模攻击</strong>场景</p>
+<p>密文其实是 Base64 字符串，进行解码才能得到真正的密文数值 <code>c1</code> 和 <code>c2</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">import</span> gmpy2</span><br><span class="line"><span class="keyword">from</span> Crypto.PublicKey <span class="keyword">import</span> RSA</span><br><span class="line"></span><br><span class="line"><span class="comment"># ----------------- 1. 提取 n, e1, e2 -----------------</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;pubkey1.pem&#x27;</span>, <span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    key1 = RSA.import_key(f.read())</span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;pubkey2.pem&#x27;</span>, <span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    key2 = RSA.import_key(f.read())</span><br><span class="line"></span><br><span class="line">n = key1.n</span><br><span class="line">e1 = key1.e</span><br><span class="line">e2 = key2.e</span><br><span class="line"></span><br><span class="line"><span class="comment"># ----------------- 2. 读取密文并还原为整数 -----------------</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;myflag1&#x27;</span>, <span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    f1_str = f.read().strip()</span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;myflag2&#x27;</span>, <span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    f2_str = f.read().strip()</span><br><span class="line"></span><br><span class="line">c1_bytes = base64.b64decode(f1_str)</span><br><span class="line">c2_bytes = base64.b64decode(f2_str)</span><br><span class="line">c1 = <span class="built_in">int</span>.from_bytes(c1_bytes, byteorder=<span class="string">&#x27;big&#x27;</span>)</span><br><span class="line">c2 = <span class="built_in">int</span>.from_bytes(c2_bytes, byteorder=<span class="string">&#x27;big&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># ----------------- 3. 共模攻击 -----------------</span></span><br><span class="line">g, s1, s2 = gmpy2.gcdext(e1, e2)   <span class="comment"># g=1</span></span><br><span class="line"><span class="keyword">if</span> s1 &lt; <span class="number">0</span>:</span><br><span class="line">    s1 = -s1</span><br><span class="line">    c1 = gmpy2.invert(c1, n)       <span class="comment"># 求 c1 模 n 的逆元</span></span><br><span class="line"><span class="keyword">elif</span> s2 &lt; <span class="number">0</span>:</span><br><span class="line">    s2 = -s2</span><br><span class="line">    c2 = gmpy2.invert(c2, n)</span><br><span class="line"></span><br><span class="line">m = (gmpy2.powmod(c1, s1, n) * gmpy2.powmod(c2, s2, n)) % n</span><br><span class="line"></span><br><span class="line"><span class="comment"># ----------------- 4. 整数转 flag -----------------</span></span><br><span class="line">flag_bytes = <span class="built_in">int</span>(m).to_bytes((m.bit_length() + <span class="number">7</span>) // <span class="number">8</span>, byteorder=<span class="string">&#x27;big&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(flag_bytes.decode())</span><br></pre></td></tr></table></figure>
+
+<p>得到 <code>flag{23re_SDxF_y78hu_5rFgS}</code></p>
+
+    </div>
+    <footer class="article-footer">
+        <a class="article-category-link" href="/categories/CTF/" title="CTF" data-aos="zoom-in">CTF</a>
+
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/CTF/" rel="tag" title="CTF">CTF</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/RSA/" rel="tag" title="RSA">RSA</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/RSA-%E7%88%86%E7%A0%B4-e/" rel="tag" title="RSA-爆破 e">RSA-爆破 e</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/Windows-plist-%E6%8E%92%E6%9F%A5%E8%BF%9B%E7%A8%8B/" rel="tag" title="Windows plist 排查进程">Windows plist 排查进程</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E5%8F%96%E8%AF%81/" rel="tag" title="内存取证">内存取证</a></li></ul>
+
+    </footer>
+  </div>
+    <nav id="article-nav" aria-label="Article navigation" data-aos="fade-up">
+      <div class="article-nav-link-wrap left">
+            <img data-src="/images/banner.webp" data-sizes="auto" alt="2024 第一届 Solar 应急响应挑战赛" class="lazyload">
+        <a href="/2024/04/02/2024%20%E7%AC%AC%E4%B8%80%E5%B1%8A%20Solar%20%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94%E6%8C%91%E6%88%98%E8%B5%9B/" aria-label="前一篇: 2024 第一届 Solar 应急响应挑战赛" title="前一篇: 2024 第一届 Solar 应急响应挑战赛"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+            2024 第一届 Solar 应急响应挑战赛
+        </h3>
+      </div>
+    <div class="article-nav-link-wrap right">
+          <img data-src="/images/banner.webp" data-sizes="auto" alt="RSA 共模攻击" class="lazyload">
+      <a href="/2019/05/22/%E5%85%B1%E6%A8%A1%E6%94%BB%E5%87%BB/" aria-label="后一篇: RSA 共模攻击"  title="后一篇: RSA 共模攻击"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+          RSA 共模攻击
+      </h3>
+    </div>
+  </nav>
+
+</article>
+
+
+</section>
+        </div>
+        <footer id="footer" aria-label="Site footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    <div>
+      <span class="icon-copyright"></span>
+        2020-2026
+        <span class="footer-info-sep rotate"></span>
+      ALL
+    </div>
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+      <div>
+        <span class="icon-brush"></span>
+        69.9k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        06:02
+      </div>
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+  </div>
+</footer>
+
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav" aria-label="Mobile navigation">
+  <div class="sidebar-wrap">
+        <div class="sidebar-toc-sidebar"><h3 class="toc-title">文章目录</h3>
+<div class="sidebar-toc-wrapper toc-div-class" >
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#2019-HDCTF"><span class="toc-number">1.</span> <span class="toc-text">2019 HDCTF</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Misc"><span class="toc-number">1.2.</span> <span class="toc-text">Misc</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%A0%E8%83%BD%E5%8F%91%E7%8E%B0%E4%BB%80%E4%B9%88%E8%9B%9B%E4%B8%9D%E9%A9%AC%E8%BF%B9%E5%90%97%EF%BC%88Windows-pslist-%E6%8E%92%E6%9F%A5%E8%BF%9B%E7%A8%8B%EF%BC%89"><span class="toc-number">1.2.1.</span> <span class="toc-text">你能发现什么蛛丝马迹吗（Windows pslist 排查进程）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%A1%E5%8F%B7%E5%88%86%E6%9E%90%EF%BC%88%E6%97%A0%E7%BA%BF%E7%94%B5%E5%9B%BA%E5%AE%9A%E7%A0%81%E4%BF%A1%E5%8F%B7%E5%88%86%E6%9E%90%EF%BC%89"><span class="toc-number">1.2.2.</span> <span class="toc-text">信号分析（无线电固定码信号分析）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Crypto"><span class="toc-number">1.3.</span> <span class="toc-text">Crypto</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#bbbbbbrsa%EF%BC%88%E7%88%86%E7%A0%B4-e%EF%BC%89"><span class="toc-number">1.3.1.</span> <span class="toc-text">bbbbbbrsa（爆破 e）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#basic-rsa%EF%BC%88RSA%EF%BC%89"><span class="toc-number">1.3.2.</span> <span class="toc-text">basic rsa（RSA）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#together%EF%BC%88%E5%85%AC%E9%92%A5%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90-%E5%85%B1%E6%A8%A1%E6%94%BB%E5%87%BB%EF%BC%89"><span class="toc-number">1.3.3.</span> <span class="toc-text">together（公钥文件解析 + 共模攻击）</span></a></li></ol></li></ol></li></ol>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="ALL" class="lazyload">
+  <div class="sidebar-author-name">ALL</div>
+  <div class="sidebar-description">雾島风起時の日常</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">80</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">13</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">139</div>
+  </div>
+</div>
+<div class="sidebar-social" >
+    <div class="icon-github sidebar-social-icon">
+      <a href=https://github.com/duckpigdog itemprop="url" target="_blank" aria-label="github" rel="noopener nofollow noreferrer"></a>
+    </div>
+    <div class="icon-bilibili sidebar-social-icon">
+      <a href=https://space.bilibili.com/1337537884?spm_id_from=333.1007.0.0 itemprop="url" target="_blank" aria-label="bilibili" rel="noopener nofollow noreferrer"></a>
+    </div>
+</div>
+<div class="sidebar-menu">
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+</div>
+</div>
+  </div>
+      <div class="sidebar-btn-wrapper">
+        <div class="sidebar-toc-btn current"></div>
+        <div class="sidebar-common-btn"></div>
+      </div>
+</nav>
+
+    </div>
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+
+  <script>
+    var setupFirework = () => {
+      if (!false || !window.matchMedia('(max-width: 768px)').matches) {
+        window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["var(--red-1)","var(--red-2)","var(--red-3)","var(--red-4)"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["var(--red-0)"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'));
+      }
+    }
+  </script>
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.2.0/dist/index.umd.js" integrity="sha384-qi9WggRt19tv8Vc7pCHW3ulMNLwrn515zaLEWZjl1px07vz8+pUoWX8n1rgq282T" crossorigin="anonymous" onload="setupFirework()" defer></script>
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+      
+      
+      <script data-pjax>
+        window.REIMU_POST = {
+          author: "ALL",
+          title: "2019 HDCTF WriteUp",
+          url: "http://example.com/2019/05/22/2019%20HDCTF/",
+          excerpt: "",
+          description: "",
+          stripContent: "2019 HDCTF前言主办方：海南大学  Misc你能发现什么蛛丝马迹吗（Windows pslist 排查进程）下载附件是一个 .img，使用 vol2 进行取证，先查看操作系统 1python2 vol.py -f memory.img imageinfo  发现是 Windows 2003，给出了三个具体的版本  查看进程，Server 2003 生命周期中 SP2 是最普遍的版本，所以选择它 1python2 vol.py -f memory.img --profile=Win2003",
+          date: "Wed May 22 2019 14:18:00 GMT+0800",
+          updated: "Wed May 13 2026 02:08:10 GMT+0800",
+          cover: "/images/banner.webp",
+        };
+      </script>
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+<script src="/js/tabs.js" data-pjax defer></script>
+
+      <script type="module" data-pjax>
+        (async () => {
+          const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+          const initPswp = (gallery, children) => {
+            if (_$$(`${gallery} ${children}`).length > 0) {
+              new PhotoSwipeLightbox({
+                gallery,
+                children,
+                pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+              }).init();
+            }
+          }
+          const pswp = () => {
+            initPswp('.article-entry', 'a.article-gallery-item');
+            initPswp('.article-gallery', 'a.article-gallery-item');
+          }
+          pswp();
+        })();
+      </script>
+        
+
+
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.12.3' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+
+  </body>
+  </html>
