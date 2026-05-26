@@ -17,15 +17,15 @@
     
 <link rel="stylesheet" href="/css/loader.css">
 
-    <meta name="description" content="Asmuth-BloomAsmuth-Bloom 方案是一种基于中国剩余定理（CRT）的门限秘密共享方案 它的核心思想是：将一个秘密 S 拆分成 n 个份额，只有当凑齐至少 t 个份额时，才能恢复出 S；任意少于 t 个份额不会泄露关于 S 的任何信息 方案参数设定需要一组整数满足以下条件：  模数选择：m1, m2, ..., mn 两两互质  大小约束：对于门限 t，要求前 t 个最小的模数之">
+    <meta name="description" content="Asmuth-BloomAsmuth-Bloom 方案是一种基于中国剩余定理（CRT）的门限秘密共享方案 它的核心思想是：将一个秘密 S 拆分成 n 个份额，只有当凑齐至少 t 个份额时，才能恢复出 S；任意少于 t 个份额不会泄露关于 S 的任何信息 方案参数设定需要一组整数满足以下条件：   模数选择：m1, m2, ..., mn 两两互质    大小约束：对于门限 t，要求前 t 个最小的">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Asmuth-Bloom">
 <meta property="og:url" content="http://example.com/2019/05/22/Asmuth-Bloom/index.html">
 <meta property="og:site_name" content="雾島风起時">
-<meta property="og:description" content="Asmuth-BloomAsmuth-Bloom 方案是一种基于中国剩余定理（CRT）的门限秘密共享方案 它的核心思想是：将一个秘密 S 拆分成 n 个份额，只有当凑齐至少 t 个份额时，才能恢复出 S；任意少于 t 个份额不会泄露关于 S 的任何信息 方案参数设定需要一组整数满足以下条件：  模数选择：m1, m2, ..., mn 两两互质  大小约束：对于门限 t，要求前 t 个最小的模数之">
+<meta property="og:description" content="Asmuth-BloomAsmuth-Bloom 方案是一种基于中国剩余定理（CRT）的门限秘密共享方案 它的核心思想是：将一个秘密 S 拆分成 n 个份额，只有当凑齐至少 t 个份额时，才能恢复出 S；任意少于 t 个份额不会泄露关于 S 的任何信息 方案参数设定需要一组整数满足以下条件：   模数选择：m1, m2, ..., mn 两两互质    大小约束：对于门限 t，要求前 t 个最小的">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2019-05-22T06:18:00.000Z">
-<meta property="article:modified_time" content="2026-05-26T03:40:18.950Z">
+<meta property="article:modified_time" content="2026-05-26T06:07:27.289Z">
 <meta property="article:author" content="ALL">
 <meta property="article:tag" content="Asmuth-Bloom">
 <meta property="article:tag" content="Crypto">
@@ -147,7 +147,7 @@
     <div class="sidebar-wrap" data-aos="fade-up">
           <div class="sidebar-toc-sidebar"><h3 class="toc-title">文章目录</h3>
 <div class="sidebar-toc-wrapper toc-div-class" >
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Asmuth-Bloom"><span class="toc-number">1.</span> <span class="toc-text">Asmuth-Bloom</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%A1%88%E5%8F%82%E6%95%B0%E8%AE%BE%E5%AE%9A"><span class="toc-number">1.1.</span> <span class="toc-text">方案参数设定</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Asmuth-Bloom"><span class="toc-number">1.</span> <span class="toc-text">Asmuth-Bloom</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%A1%88%E5%8F%82%E6%95%B0%E8%AE%BE%E5%AE%9A"><span class="toc-number">1.1.</span> <span class="toc-text">方案参数设定</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%BD%E9%A2%9D%E7%94%9F%E6%88%90"><span class="toc-number">1.2.</span> <span class="toc-text">份额生成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A7%98%E5%AF%86%E6%81%A2%E5%A4%8D%EF%BC%88%E4%BB%BB%E6%84%8F-t-%E4%B8%AA%E4%BB%BD%E9%A2%9D%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">秘密恢复（任意 t 个份额）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%A6%E7%BB%86%E6%A1%88%E4%BE%8B"><span class="toc-number">1.4.</span> <span class="toc-text">详细案例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E5%AE%9A%E5%8F%82%E6%95%B0"><span class="toc-number">1.4.1.</span> <span class="toc-text">设定参数</span></a></li></ol></li></ol></li></ol>
 </div>
 </div>
           <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
@@ -238,15 +238,116 @@
 <p>它的核心思想是：将一个秘密 S 拆分成 n 个份额，只有当凑齐至少 t 个份额时，才能恢复出 S；任意少于 t 个份额不会泄露关于 S 的任何信息</p>
 <h2 id="方案参数设定"><a href="#方案参数设定" class="headerlink" title="方案参数设定"></a>方案参数设定</h2><p>需要一组整数满足以下条件：</p>
 <ul>
-<li><p>模数选择：<code>m1, m2, ..., mn</code> 两两互质</p>
+<li><ol>
+<li>模数选择：<code>m1, m2, ..., mn</code> 两两互质</li>
+</ol>
 </li>
-<li><p>大小约束：对于门限 <code>t</code>，要求前 <code>t</code> 个最小的模数之积大于 <code>m0</code> 乘以后 <code>t-1</code> 个最大的模数之积</p>
+<li><ol start="2">
+<li>大小约束：对于门限 <code>t</code>，要求前 <code>t</code> 个最小的模数之积大于 <code>m0</code> 乘以后 <code>t-1</code> 个最大的模数之积</li>
+</ol>
 </li>
 </ul>
-<figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">m<span class="built_in">_</span>1 <span class="keyword">\cdot</span> m<span class="built_in">_</span>2 <span class="keyword">\cdot</span> <span class="keyword">\ldots</span> <span class="keyword">\cdot</span> m<span class="built_in">_</span>t <span class="keyword">\;</span>&gt;<span class="keyword">\;</span> m<span class="built_in">_</span>0 <span class="keyword">\cdot</span> m<span class="built_in">_</span>&#123;n-t+2&#125; <span class="keyword">\cdot</span> m<span class="built_in">_</span>&#123;n-t+3&#125; <span class="keyword">\cdot</span> <span class="keyword">\ldots</span> <span class="keyword">\cdot</span> m<span class="built_in">_</span>n</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">m1 * m2 * ... * mt &gt; m0 * m_&#123;n-t+2&#125; * ... * m_n</span><br></pre></td></tr></table></figure>
 
-<p>这个条件保证了任何 <code>t</code> 个份额用 CRT 恢复的 x 落在正确范围内，且模 m0 后能唯一确定秘密；而任意 t-1 个份额会导致 x 的取值范围大于模数积，信息论上无法确定秘密</p>
+<p>这个条件保证了任何 <code>t</code> 个份额用 CRT 恢复的 <code>x</code> 落在正确范围内，且模 <code>m0</code> 后能唯一确定秘密；而任意 <code>t-1</code> 个份额会导致 <code>x</code> 的取值范围大于模数积，信息论上无法确定秘密</p>
+<ul>
+<li><ol start="3">
+<li>秘密范围：秘密 <code>S</code> 必须小于 <code>m0</code>：</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0 &lt;= S &lt; m0</span><br></pre></td></tr></table></figure>
 
+<h2 id="份额生成"><a href="#份额生成" class="headerlink" title="份额生成"></a>份额生成</h2><p>输入：秘密 <code>S</code>，公共参数 <code>m0, m1, ..., mn</code>，门限 <code>t</code></p>
+<ul>
+<li><ol>
+<li>随机选取一个整数 <code>A</code>，使得构造的 <code>x</code> 满足：</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x = S + A * m0</span><br></pre></td></tr></table></figure>
+
+<p>并且 <code>x</code> 落在区间 <code>[0, m1*m2*...*mt)</code> 内，通常取随机 <code>A</code> 足够大以保证安全性</p>
+<ul>
+<li><ol start="2">
+<li>为每个参与者计算份额 <code>s_i</code>：</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s_i = x mod m_i,  (i = 1, 2, ..., n)</span><br></pre></td></tr></table></figure>
+
+<p>每个份额就是一个余数对 <code>(s_i, m_i)</code></p>
+<h2 id="秘密恢复（任意-t-个份额）"><a href="#秘密恢复（任意-t-个份额）" class="headerlink" title="秘密恢复（任意 t 个份额）"></a>秘密恢复（任意 <code>t</code> 个份额）</h2><p>输入：任意 <code>t</code> 个份额，假设选择的是 <code>s_{i1}, s_{i2}, ..., s_{it}</code>，对应的模数为 <code>m_{i1}, ..., m_{it}</code></p>
+<ul>
+<li><ol>
+<li>用 CRT 求解同余方程组</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x ≡ s_&#123;i1&#125; (mod m_&#123;i1&#125;)</span><br><span class="line">x ≡ s_&#123;i2&#125; (mod m_&#123;i2&#125;)</span><br><span class="line">   ...</span><br><span class="line">x ≡ s_&#123;it&#125; (mod m_&#123;it&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>得到唯一解 <code>x&#39;</code> 在模 <code>M = m_{i1} * ... * m_{it}</code> 下</p>
+<ul>
+<li><ol start="2">
+<li>恢复秘密</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">S = x&#x27; mod m0</span><br></pre></td></tr></table></figure>
+
+<p>因为 <code>x&#39; = x（原构造值）</code>，而 <code>x = S + A*m0</code>，模 <code>m0</code> 自然得到 <code>S</code></p>
+<h2 id="详细案例"><a href="#详细案例" class="headerlink" title="详细案例"></a>详细案例</h2><h3 id="设定参数"><a href="#设定参数" class="headerlink" title="设定参数"></a>设定参数</h3><p>设定：门限 <code>t=2</code>，<code>n=3</code>，秘密 <code>S=42</code></p>
+<ul>
+<li><ol>
+<li>选取公开素数 <code>m0=7</code>（让 <code>S=5</code>，<code>m0=7</code>，满足 <code>0 &lt;= S &lt; 7</code>）</li>
+</ol>
+</li>
+<li><ol start="2">
+<li>选模数序列：找 3 个两两互质的整数且满足大小约束（取 <code>m1=11, m2=13, m3=17</code>）</li>
+</ol>
+</li>
+<li><ol start="3">
+<li>检查条件：<code>t=2</code>，前 2 个乘积 <code>11*13 = 143</code>，后 <code>t-1=1</code> 个最大模数乘积乘 <code>m0</code>：<code>m0 * m3 = 7 * 17 = 119</code>；因为 <code>143 &gt; 119</code>，满足条件，若小于则需重新选取</li>
+</ol>
+</li>
+<li><ol start="4">
+<li>构造 <code>x</code>：选取随机 <code>A</code>。通常 <code>A</code> 需要足够大使得 <code>x</code> 在 <code>[0, m1*m2)</code> 内且不可预测。这里简单起见取 <code>A=9</code></li>
+</ol>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x = S + A * m0 = 5 + 9 * 7 = 5 + 63 = 68</span><br><span class="line"></span><br><span class="line">检查：68 &lt; 143，在允许范围内</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><ol start="5">
+<li>生成份额</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">s1 = 68 mod 11 = 2</span><br><span class="line">s2 = 68 mod 13 = 3</span><br><span class="line">s3 = 68 mod 17 = 0</span><br><span class="line"></span><br><span class="line">份额为：(2,11), (3,13), (0,17)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><ol start="6">
+<li>恢复秘密（假设获得前两份额）</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x ≡ 2 (mod 11)</span><br><span class="line">x ≡ 3 (mod 13)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><ol start="7">
+<li>求 CRT 解</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">N1 = 143 / 11 = 13</span><br><span class="line"></span><br><span class="line">N1 = 143 / 11 = 13</span><br><span class="line"></span><br><span class="line">13 mod 11 = 2</span><br><span class="line"></span><br><span class="line">逆元：2 * 6 = 12 ≡ 1 mod 11</span><br><span class="line"></span><br><span class="line">基数：M1 = 13 * 6 = 78</span><br><span class="line"></span><br><span class="line">--------------------------------</span><br><span class="line"></span><br><span class="line">N2 = 143 / 13 = 11</span><br><span class="line"></span><br><span class="line">11 mod 13 = 11</span><br><span class="line"></span><br><span class="line">逆元：11 * 6 = 66 ≡ 1 mod 13</span><br><span class="line"></span><br><span class="line">基数：M2 = 11*6 = 66</span><br><span class="line"></span><br><span class="line">--------------------------------</span><br><span class="line"></span><br><span class="line">x&#x27; = 2*78 + 3*66</span><br><span class="line">   = 156 + 198</span><br><span class="line">   = 354 ≡ 354 mod 143</span><br><span class="line">   = 354 - 2*143</span><br><span class="line">   = 354 - 286</span><br><span class="line">   = 68</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><ol start="8">
+<li>提取秘密</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">S = x&#x27; mod 7</span><br><span class="line">  = 68 mod 7</span><br><span class="line">  = 5</span><br></pre></td></tr></table></figure>
     </div>
     <footer class="article-footer">
         <a class="article-category-link" href="/categories/Crypto/" title="Crypto" data-aos="zoom-in">Crypto</a>
@@ -296,10 +397,10 @@
       </div>
       <div>
         <span class="icon-brush"></span>
-        91.8k
+        92.4k
         &nbsp;|&nbsp;
         <span class="icon-coffee"></span>
-        07:39
+        07:42
       </div>
       <div>
         <span class="icon-eye"></span>
@@ -321,7 +422,7 @@
   <div class="sidebar-wrap">
         <div class="sidebar-toc-sidebar"><h3 class="toc-title">文章目录</h3>
 <div class="sidebar-toc-wrapper toc-div-class" >
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Asmuth-Bloom"><span class="toc-number">1.</span> <span class="toc-text">Asmuth-Bloom</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%A1%88%E5%8F%82%E6%95%B0%E8%AE%BE%E5%AE%9A"><span class="toc-number">1.1.</span> <span class="toc-text">方案参数设定</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Asmuth-Bloom"><span class="toc-number">1.</span> <span class="toc-text">Asmuth-Bloom</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%A1%88%E5%8F%82%E6%95%B0%E8%AE%BE%E5%AE%9A"><span class="toc-number">1.1.</span> <span class="toc-text">方案参数设定</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%BD%E9%A2%9D%E7%94%9F%E6%88%90"><span class="toc-number">1.2.</span> <span class="toc-text">份额生成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A7%98%E5%AF%86%E6%81%A2%E5%A4%8D%EF%BC%88%E4%BB%BB%E6%84%8F-t-%E4%B8%AA%E4%BB%BD%E9%A2%9D%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">秘密恢复（任意 t 个份额）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%A6%E7%BB%86%E6%A1%88%E4%BE%8B"><span class="toc-number">1.4.</span> <span class="toc-text">详细案例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E5%AE%9A%E5%8F%82%E6%95%B0"><span class="toc-number">1.4.1.</span> <span class="toc-text">设定参数</span></a></li></ol></li></ol></li></ol>
 </div>
 </div>
         <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
@@ -453,9 +554,9 @@
           url: "http://example.com/2019/05/22/Asmuth-Bloom/",
           excerpt: "",
           description: "",
-          stripContent: "Asmuth-BloomAsmuth-Bloom 方案是一种基于中国剩余定理（CRT）的门限秘密共享方案 它的核心思想是：将一个秘密 S 拆分成 n 个份额，只有当凑齐至少 t 个份额时，才能恢复出 S；任意少于 t 个份额不会泄露关于 S 的任何信息 方案参数设定需要一组整数满足以下条件：  模数选择：m1, m2, ..., mn 两两互质  大小约束：对于门限 t，要求前 t 个最小的模数之积大于 m0 乘以后 t-1 个最大的模数之积   1m_1 \cdot m_2 \cdot \ld",
+          stripContent: "Asmuth-BloomAsmuth-Bloom 方案是一种基于中国剩余定理（CRT）的门限秘密共享方案 它的核心思想是：将一个秘密 S 拆分成 n 个份额，只有当凑齐至少 t 个份额时，才能恢复出 S；任意少于 t 个份额不会泄露关于 S 的任何信息 方案参数设定需要一组整数满足以下条件：   模数选择：m1, m2, ..., mn 两两互质    大小约束：对于门限 t，要求前 t 个最小的模数之积大于 m0 乘以后 t-1 个最大的模数之积    1m1 * m2 * ... * mt ",
           date: "Wed May 22 2019 14:18:00 GMT+0800",
-          updated: "Tue May 26 2026 11:40:18 GMT+0800",
+          updated: "Tue May 26 2026 14:07:27 GMT+0800",
           cover: "/images/banner.webp",
         };
       </script>
