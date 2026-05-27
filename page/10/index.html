@@ -220,7 +220,7 @@
       <div class="widget">
         <ul>
             <li>
-              <a href="/2026/05/27/Draft%20List%20plugin%20for%20WordPress%EF%BC%88CVE-2026-9104%EF%BC%89/" title="(no title)">(no title)</a>
+              <a href="/2026/05/26/Draft%20List%20plugin%20for%20WordPress%EF%BC%88CVE-2026-9104%EF%BC%89/" title="Draft List plugin for WordPress（CVE-2026-9104）">Draft List plugin for WordPress（CVE-2026-9104）</a>
             </li>
             <li>
               <a href="/2026/05/25/Tomcat%20%E5%AE%9E%E6%88%98/" title="实战——Tomcat 站点渗透">实战——Tomcat 站点渗透</a>
@@ -252,12 +252,21 @@
     <div class="post-info">
       <div class="post-meta">
         <span><span class="icon-calendar"></span>2019-05-22</span>
-        <span><span class="icon-pencil"></span>20 字</span>
-        <span><span class="icon-clock"></span>1 分钟</span>
+        <span><span class="icon-pencil"></span>556 字</span>
+        <span><span class="icon-clock"></span>4 分钟</span>
       </div>
       <h2 class="post-title">2019 GXYCTF WriteUp</h2>
       <article class="post-article">
           2019 GXYCTF WriteUpWebBabysqliV3.0（弱口令 + 文件包含 + filter 伪协议 + Phar 反序列化）
+打开网页
+
+使用弱口令登录成功
+
+发现 URL 是 ?file=upload，尝试读取 etc/passwd 文件
+
+使用 filter 绕过读取 Base64 编码后的 upload 源码
+
+1234567&amp;lt;meta http-equiv=&amp;quot;Content-Type&amp;quot; content=&amp;quot;text/html; charset=utf-8&amp;quot; /&amp;gt; &amp;lt;form action=&amp;quot;&amp;quot;
       </article>
     </div>
   </div>
@@ -507,10 +516,10 @@ Crypto你能看出这是什么加密么（RSA）
       </div>
       <div>
         <span class="icon-brush"></span>
-        94.5k
+        96.4k
         &nbsp;|&nbsp;
         <span class="icon-coffee"></span>
-        07:53
+        08:02
       </div>
       <div>
         <span class="icon-eye"></span>
