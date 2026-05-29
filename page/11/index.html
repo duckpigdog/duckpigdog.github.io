@@ -220,9 +220,6 @@
       <div class="widget">
         <ul>
             <li>
-              <a href="/2026/05/28/2014%20Hitcon/" title="(no title)">(no title)</a>
-            </li>
-            <li>
               <a href="/2026/05/26/Draft%20List%20plugin%20for%20WordPress%EF%BC%88CVE-2026-9104%EF%BC%89/" title="Draft List plugin for WordPress（CVE-2026-9104）">Draft List plugin for WordPress（CVE-2026-9104）</a>
             </li>
             <li>
@@ -233,6 +230,9 @@
             </li>
             <li>
               <a href="/2026/05/22/Kilo-Org%20kilocode%EF%BC%88CVE-2026-8766%EF%BC%89/" title="Kilo-Org kilocode （CVE-2026-8766）">Kilo-Org kilocode （CVE-2026-8766）</a>
+            </li>
+            <li>
+              <a href="/2026/05/21/%E8%9A%81%E5%89%91%E6%B5%81%E9%87%8F%E7%89%B9%E5%BE%81/" title="蚁剑流量特征">蚁剑流量特征</a>
             </li>
         </ul>
       </div>
@@ -252,8 +252,8 @@
     <div class="post-info">
       <div class="post-meta">
         <span><span class="icon-calendar"></span>2010-05-26</span>
-        <span><span class="icon-pencil"></span>610 字</span>
-        <span><span class="icon-clock"></span>3 分钟</span>
+        <span><span class="icon-pencil"></span>674 字</span>
+        <span><span class="icon-clock"></span>4 分钟</span>
       </div>
       <h2 class="post-title">Discuz 7.x/6.x 全局变量防御绕过导致代码执行漏洞（wooyun-2010-080723）</h2>
       <article class="post-article">
@@ -264,12 +264,17 @@
 影响版本：Discuz 6.x&amp;#x2F;7.x
 
 
-漏洞复现漏洞代码PHP 配置PHP 5.3.x 版本中 request_order 默认值变为 GP（GET+POST）
-1request_order = &amp;quot;GP&amp;quot;  // 不再包含Cookie
+漏洞复现环境搭建源码百度网盘下载位置：https://pan.baidu.com/s/1BC1L_QL3Gi0GXYQoR_Wqsg?pwd=2tjy
+PHP 推荐使用 5.3 版本
+PHPStudy 搭建好后访问 /uc_server/install/ 安装 UCenter
 
-全局变量处理机制include/common.inc.php
-这段代码模拟 register_globals 功能，对用户输入进行过滤
-检查变量名首字符是否为 _，防止覆
+安装完效果如下
+
+访问 /install/ 安装 Discuz 7.2
+
+安装成功界面
+
+漏洞代码PHP 配
       </article>
     </div>
   </div>
@@ -297,10 +302,10 @@
       </div>
       <div>
         <span class="icon-brush"></span>
-        98.6k
+        99.7k
         &nbsp;|&nbsp;
         <span class="icon-coffee"></span>
-        08:11
+        08:17
       </div>
       <div>
         <span class="icon-eye"></span>
