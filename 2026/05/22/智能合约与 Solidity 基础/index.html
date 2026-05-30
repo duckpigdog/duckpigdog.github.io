@@ -9,7 +9,7 @@
   
   <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_a0oqhord1y';window.REIMU_CONFIG.clipboard_tips = {"success":{"zh-CN":"复制成功 (*^▽^*)"},"fail":{"zh-CN":"复制失败 (ﾟ⊿ﾟ)ﾂ"},"copyright":{"enable":false,"count":50,"license_type":"by-nc-sa"}};window.REIMU_CONFIG.clipboard_tips.copyright.content = '本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！';window.REIMU_CONFIG.code_block = {"expand":true};window.REIMU_CONFIG.base = 'http://example.com';</script>
   <title>
-    智能合约与 Solidity 基础 | 雾島风起時
+    区块链基础 | 雾島风起時
   </title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic|Noto Serif SC:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic|Noto Serif SC:400,400italic,700,700italic&display=swap" media="print" onload="this.media='all'">
@@ -17,12 +17,12 @@
     
 <link rel="stylesheet" href="/css/loader.css">
 
-    <meta name="description" content="智能合约与 Solidity 基础智能合约生活类比：自动售货机  传统的买卖：你给老板钱，老板给你水  智能合约：一台自动售货机  你把钱塞进去，按下按钮，水自动掉下来  它的规则是写死在机器里的（代码）  只要条件满足，就一定会执行（吐水）  没有人能中途反悔（去中心化）     总结：智能合约就是运行在区块链上的、自动执行的计算机程序 而 Solidity，就是用来写这种程序的编程语言 Sol">
+    <meta name="description" content="区块链基础智能合约生活类比：自动售货机  传统的买卖：你给老板钱，老板给你水  智能合约：一台自动售货机  你把钱塞进去，按下按钮，水自动掉下来  它的规则是写死在机器里的（代码）  只要条件满足，就一定会执行（吐水）  没有人能中途反悔（去中心化）     总结：智能合约就是运行在区块链上的、自动执行的计算机程序 而 Solidity，就是用来写这种程序的编程语言 Solidity 基础变量类型">
 <meta property="og:type" content="article">
-<meta property="og:title" content="智能合约与 Solidity 基础">
+<meta property="og:title" content="区块链基础">
 <meta property="og:url" content="http://example.com/2026/05/22/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6%E4%B8%8E%20Solidity%20%E5%9F%BA%E7%A1%80/index.html">
 <meta property="og:site_name" content="雾島风起時">
-<meta property="og:description" content="智能合约与 Solidity 基础智能合约生活类比：自动售货机  传统的买卖：你给老板钱，老板给你水  智能合约：一台自动售货机  你把钱塞进去，按下按钮，水自动掉下来  它的规则是写死在机器里的（代码）  只要条件满足，就一定会执行（吐水）  没有人能中途反悔（去中心化）     总结：智能合约就是运行在区块链上的、自动执行的计算机程序 而 Solidity，就是用来写这种程序的编程语言 Sol">
+<meta property="og:description" content="区块链基础智能合约生活类比：自动售货机  传统的买卖：你给老板钱，老板给你水  智能合约：一台自动售货机  你把钱塞进去，按下按钮，水自动掉下来  它的规则是写死在机器里的（代码）  只要条件满足，就一定会执行（吐水）  没有人能中途反悔（去中心化）     总结：智能合约就是运行在区块链上的、自动执行的计算机程序 而 Solidity，就是用来写这种程序的编程语言 Solidity 基础变量类型">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://pic1.imgdb.cn/item/6a19f288dd7746a9b033ab98.png">
 <meta property="og:image" content="https://pic1.imgdb.cn/item/6a19f34add7746a9b033abc2.png">
@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://pic1.imgdb.cn/item/6a19f40bdd7746a9b033abec.png">
 <meta property="og:image" content="https://pic1.imgdb.cn/item/6a1a438ddd7746a9b0345060.png">
 <meta property="article:published_time" content="2026-05-22T06:18:00.000Z">
-<meta property="article:modified_time" content="2026-05-30T02:00:43.424Z">
+<meta property="article:modified_time" content="2026-05-30T05:13:49.686Z">
 <meta property="article:author" content="ALL">
 <meta property="article:tag" content="区块链">
 <meta name="twitter:card" content="summary">
@@ -133,11 +133,11 @@
 <header id="header" aria-label="Site header">
         <picture>
         </picture>
-          <img  fetchpriority="high" src="/images/banner.webp" alt="智能合约与 Solidity 基础">
+          <img  fetchpriority="high" src="/images/banner.webp" alt="区块链基础">
   <div id="header-outer">
     <div id="header-title">
           <span id="logo">
-            <h1 data-aos="slide-up">智能合约与 Solidity 基础</h1>
+            <h1 data-aos="slide-up">区块链基础</h1>
           </span>
         <h2 id="subtitle-wrap" data-aos="slide-down">
         </h2>
@@ -152,7 +152,7 @@
     <div class="sidebar-wrap" data-aos="fade-up">
           <div class="sidebar-toc-sidebar"><h3 class="toc-title">文章目录</h3>
 <div class="sidebar-toc-wrapper toc-div-class" >
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6%E4%B8%8E-Solidity-%E5%9F%BA%E7%A1%80"><span class="toc-number">1.</span> <span class="toc-text">智能合约与 Solidity 基础</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6"><span class="toc-number">1.1.</span> <span class="toc-text">智能合约</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Solidity-%E5%9F%BA%E7%A1%80"><span class="toc-number">1.2.</span> <span class="toc-text">Solidity 基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.2.1.</span> <span class="toc-text">变量类型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#uint%EF%BC%88%E6%97%A0%E7%AC%A6%E5%8F%B7%E6%95%B4%E6%95%B0%EF%BC%89"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">uint（无符号整数）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#address%EF%BC%88%E5%9C%B0%E5%9D%80%EF%BC%89"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">address（地址）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#mapping%EF%BC%88%E6%98%A0%E5%B0%84%EF%BC%89"><span class="toc-number">1.2.1.3.</span> <span class="toc-text">mapping（映射）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%BD%E6%95%B0"><span class="toc-number">1.2.2.</span> <span class="toc-text">函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#payable"><span class="toc-number">1.2.3.</span> <span class="toc-text">payable</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BD%AC%E8%B4%A6"><span class="toc-number">1.2.4.</span> <span class="toc-text">转账</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6"><span class="toc-number">1.2.5.</span> <span class="toc-text">事件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E9%A5%B0%E7%AC%A6"><span class="toc-number">1.2.6.</span> <span class="toc-text">修饰符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%88%E7%BA%A6%E8%B0%83%E7%94%A8"><span class="toc-number">1.2.7.</span> <span class="toc-text">合约调用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E6%88%98"><span class="toc-number">1.3.</span> <span class="toc-text">实战</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8C%BA%E5%9D%97%E9%93%BE%E5%9F%BA%E7%A1%80"><span class="toc-number">1.</span> <span class="toc-text">区块链基础</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6"><span class="toc-number">1.1.</span> <span class="toc-text">智能合约</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Solidity-%E5%9F%BA%E7%A1%80"><span class="toc-number">1.2.</span> <span class="toc-text">Solidity 基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.2.1.</span> <span class="toc-text">变量类型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#uint%EF%BC%88%E6%97%A0%E7%AC%A6%E5%8F%B7%E6%95%B4%E6%95%B0%EF%BC%89"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">uint（无符号整数）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#address%EF%BC%88%E5%9C%B0%E5%9D%80%EF%BC%89"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">address（地址）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#mapping%EF%BC%88%E6%98%A0%E5%B0%84%EF%BC%89"><span class="toc-number">1.2.1.3.</span> <span class="toc-text">mapping（映射）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%BD%E6%95%B0"><span class="toc-number">1.2.2.</span> <span class="toc-text">函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#payable"><span class="toc-number">1.2.3.</span> <span class="toc-text">payable</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BD%AC%E8%B4%A6"><span class="toc-number">1.2.4.</span> <span class="toc-text">转账</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6"><span class="toc-number">1.2.5.</span> <span class="toc-text">事件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E9%A5%B0%E7%AC%A6"><span class="toc-number">1.2.6.</span> <span class="toc-text">修饰符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%88%E7%BA%A6%E8%B0%83%E7%94%A8"><span class="toc-number">1.2.7.</span> <span class="toc-text">合约调用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E6%88%98"><span class="toc-number">1.2.8.</span> <span class="toc-text">实战</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%A4%E6%98%93"><span class="toc-number">1.3.</span> <span class="toc-text">交易</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8C%BA%E5%9D%97"><span class="toc-number">1.4.</span> <span class="toc-text">区块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F"><span class="toc-number">1.5.</span> <span class="toc-text">全局变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Gas"><span class="toc-number">1.6.</span> <span class="toc-text">Gas</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%BF%E5%B7%A5-%E9%AA%8C%E8%AF%81%E8%80%85"><span class="toc-number">1.7.</span> <span class="toc-text">矿工&#x2F;验证者</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EOA-%E5%92%8C%E5%90%88%E7%BA%A6%E8%B4%A6%E6%88%B7"><span class="toc-number">1.8.</span> <span class="toc-text">EOA 和合约账户</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3"><span class="toc-number">1.9.</span> <span class="toc-text">接口</span></a></li></ol></li></ol>
 </div>
 </div>
           <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
@@ -239,7 +239,7 @@
     <div class="hr-line"></div>
     
     <div class="e-content article-entry" itemprop="articleBody">
-        <h1 id="智能合约与-Solidity-基础"><a href="#智能合约与-Solidity-基础" class="headerlink" title="智能合约与 Solidity 基础"></a>智能合约与 Solidity 基础</h1><h2 id="智能合约"><a href="#智能合约" class="headerlink" title="智能合约"></a>智能合约</h2><p><strong>生活类比：自动售货机</strong></p>
+        <h1 id="区块链基础"><a href="#区块链基础" class="headerlink" title="区块链基础"></a>区块链基础</h1><h2 id="智能合约"><a href="#智能合约" class="headerlink" title="智能合约"></a>智能合约</h2><p><strong>生活类比：自动售货机</strong></p>
 <ul>
 <li><p>传统的买卖：你给老板钱，老板给你水</p>
 </li>
@@ -309,7 +309,7 @@
 <h3 id="合约调用"><a href="#合约调用" class="headerlink" title="合约调用"></a>合约调用</h3><p>一个合约可以去使用另一个合约的功能</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &quot;./微信支付合约.sol&quot;; // 引入工具包</span><br></pre></td></tr></table></figure>
 
-<h2 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h2><p>简单的存取款本</p>
+<h3 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h3><p>简单的存取款本</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.8.0;</span><br><span class="line"></span><br><span class="line">contract SimpleLedger &#123;</span><br><span class="line">    // ① uint：记录总存款金额（不能为负）</span><br><span class="line">    uint256 public totalBalance;</span><br><span class="line"></span><br><span class="line">    // ② address：记录合约部署者（管理员）地址</span><br><span class="line">    address public owner;</span><br><span class="line"></span><br><span class="line">    // ③ mapping：地址 -&gt; 该地址的存款余额</span><br><span class="line">    mapping(address =&gt; uint256) public balances;</span><br><span class="line"></span><br><span class="line">    // 事件，便于在浏览器/控制台观察存款行为</span><br><span class="line">    event Deposited(address indexed who, uint256 amount);</span><br><span class="line"></span><br><span class="line">    // 构造函数：初始化 owner 为合约创建者</span><br><span class="line">    constructor() &#123;</span><br><span class="line">        owner = msg.sender;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 存款函数：调用者向合约存入一定数量的 wei（以太币最小单位）</span><br><span class="line">    // payable：允许函数在调用时接收以太币</span><br><span class="line">    function deposit() external payable &#123;</span><br><span class="line">        require(msg.value &gt; 0, &quot;Deposit amount must be positive&quot;);</span><br><span class="line">        // 从账本中取出当前余额，加上本次存款金额。将新余额写回账本</span><br><span class="line">        balances[msg.sender] += msg.value;</span><br><span class="line">        // 统计所有用户存入的总金额</span><br><span class="line">        totalBalance += msg.value;</span><br><span class="line">        emit Deposited(msg.sender, msg.value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 查询任意地址的余额</span><br><span class="line">    function getBalance(address who) external view returns (uint256) &#123;</span><br><span class="line">        return balances[who];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 仅管理员可以查看合约总余额（另一种只读方式）</span><br><span class="line">    function getTotalBalance() external view returns (uint256) &#123;</span><br><span class="line">        return totalBalance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>打开 <a target="_blank" rel="noopener" href="https://remix.ethereum.org/">https://remix.ethereum.org/</a> 在线部署</p>
@@ -358,7 +358,129 @@
 <p><img src="https://pic1.imgdb.cn/item/6a19f40bdd7746a9b033abec.png"></p>
 <p>通过 <code>getBalance</code> 函数可以查询交易发起者的存款</p>
 <p><img src="https://pic1.imgdb.cn/item/6a1a438ddd7746a9b0345060.png"></p>
-
+<h2 id="交易"><a href="#交易" class="headerlink" title="交易"></a>交易</h2><p>交易就是 “你让区块链做一件事的请求”</p>
+<p>在我们上面的实战中：</p>
+<ul>
+<li><p>你点了 <code>deposit</code> 按钮，填了金额 1 ETH，然后点击发送</p>
+</li>
+<li><p>那一瞬间，你就发起了一笔交易</p>
+</li>
+<li><p>这笔交易的内容是：调用 SimpleLedger 合约的 deposit 函数，并附带 1 ETH</p>
+</li>
+</ul>
+<p>交易包含的最核心信息：</p>
+<ul>
+<li><p><code>from</code> 地址</p>
+</li>
+<li><p><code>to</code> 地址，可以是普通账户或合约</p>
+</li>
+<li><p><code>value</code>，单位 ETH &#x2F; wei</p>
+</li>
+<li><p>调用哪个函数、带什么参数</p>
+</li>
+</ul>
+<h2 id="区块"><a href="#区块" class="headerlink" title="区块"></a>区块</h2><p>区块就是 “装了很多交易的篮子”</p>
+<p>每个区块里主要装着：</p>
+<ul>
+<li><p>一大堆交易（比如几十上百笔）</p>
+</li>
+<li><p>这一块的 “编号”（区块高度）</p>
+</li>
+<li><p>这一块产生的时间戳</p>
+</li>
+<li><p>上一块的 “指纹”（哈希值）—— 这就是 “链” 的来源</p>
+</li>
+</ul>
+<p>在上面的实战中，我们的交易被打包进了 “Block 3”（如 debug 信息里的 Block: 3）</p>
+<p>区块链就是所有区块前后链接形成的历史总账</p>
+<h2 id="全局变量"><a href="#全局变量" class="headerlink" title="全局变量"></a>全局变量</h2><p>每个区块被打包出来的时候，都会自带一组固定的 “出厂参数” 叫——全局变量</p>
+<ul>
+<li><p>block.number	区块高度</p>
+</li>
+<li><p>block.timestamp	时间戳</p>
+</li>
+<li><p>block.prevrandao（合并后）	伪随机数 (合并后)</p>
+</li>
+<li><p>block.coinbase	出块者地址</p>
+</li>
+</ul>
+<h2 id="Gas"><a href="#Gas" class="headerlink" title="Gas"></a>Gas</h2><p>Gas 是你在以太坊上做任何操作需要燃烧的燃料</p>
+<p>以太坊上执行 <code>deposit</code> 代码 → 每步计算要烧 Gas，Gas 费付给矿工&#x2F;验证者</p>
+<ul>
+<li><p>Gas Limit：你愿意为这笔交易支付的最大手续费</p>
+</li>
+<li><p>Gas Used：这笔交易实际手续费多少</p>
+</li>
+<li><p>Gas Price	单位价格（单位：Gwei）</p>
+</li>
+</ul>
+<p>如果没有 Gas：</p>
+<ul>
+<li><p>某人写一个无限死循环的合约，所有节点就会永远执行下去，卡死</p>
+</li>
+<li><p>或者有人发海量交易，网络堵塞</p>
+</li>
+</ul>
+<p>有了 Gas：</p>
+<ul>
+<li>每个操作都有成本，你的代码执行超过 Gas Limit → 自动停止，已消耗的 Gas 不退</li>
+</ul>
+<h2 id="矿工-验证者"><a href="#矿工-验证者" class="headerlink" title="矿工&#x2F;验证者"></a>矿工&#x2F;验证者</h2><p>矿工（PoW 时代）或验证者（PoS 时代）是负责打包区块、执行交易、维护网络安全的人</p>
+<p>合并前（PoW）：</p>
+<ul>
+<li><p>矿工用电脑算数学题，谁先算出谁有权打包下一个区块</p>
+</li>
+<li><p>赚取：区块奖励 + 交易费（Gas）</p>
+</li>
+</ul>
+<p>合并后（PoS）：</p>
+<ul>
+<li><p>验证者质押 32 ETH 换取出块权</p>
+</li>
+<li><p>赚取：提议者奖励 + 交易费</p>
+</li>
+</ul>
+<h2 id="EOA-和合约账户"><a href="#EOA-和合约账户" class="headerlink" title="EOA 和合约账户"></a>EOA 和合约账户</h2><table>
+<thead>
+<tr>
+<th align="left">对比维度</th>
+<th align="left">EOA（外部拥有账户）</th>
+<th align="left">合约账户</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">一句话定义</td>
+<td align="left">你自己手里的银行卡&#x2F;钥匙</td>
+<td align="left">自动售货机 &#x2F; 程序机器人</td>
+</tr>
+<tr>
+<td align="left">有没有私钥</td>
+<td align="left">✅ 有（你保管）</td>
+<td align="left">❌ 没有（代码控制）</td>
+</tr>
+<tr>
+<td align="left">能不能主动发起交易</td>
+<td align="left">✅ 能（你签名发送）</td>
+<td align="left">❌ 不能（只能被动响应）</td>
+</tr>
+<tr>
+<td align="left">有没有代码</td>
+<td align="left">❌ 没有</td>
+<td align="left">✅ 有（Solidity 编译后的字节码）</td>
+</tr>
+<tr>
+<td align="left">有没有存储（storage）</td>
+<td align="left">❌ 没有（只有余额和 nonce）</td>
+<td align="left">✅ 有（可以存数据，比如 balances mapping）</td>
+</tr>
+<tr>
+<td align="left">典型例子</td>
+<td align="left">你的 MetaMask 地址、交易所提现地址</td>
+<td align="left">我们写的 SimpleLedger 合约地址</td>
+</tr>
+</tbody></table>
+<h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><p>接口 &#x3D; 只声明函数的名字、参数、返回值，不写函数体</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">// IERC20.sol</span><br><span class="line">// 只声明，不实现</span><br><span class="line">interface IERC20 &#123;</span><br><span class="line">    // 查询某个地址的余额</span><br><span class="line">    function balanceOf(address account) external view returns (uint256);</span><br><span class="line">    </span><br><span class="line">    // 转账</span><br><span class="line">    function transfer(address to, uint256 amount) external returns (bool);</span><br><span class="line">    </span><br><span class="line">    // 允许别人代你转账</span><br><span class="line">    function approve(address spender, uint256 amount) external returns (bool);</span><br><span class="line">    </span><br><span class="line">    // 查询授权额度</span><br><span class="line">    function allowance(address owner, address spender) external view returns (uint256);</span><br><span class="line">    </span><br><span class="line">    // 事件（接口里也可以有事件声明）</span><br><span class="line">    event Transfer(address indexed from, address indexed to, uint256 value);</span><br><span class="line">    event Approval(address indexed owner, address indexed spender, uint256 value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
     </div>
     <footer class="article-footer">
         <a class="article-category-link" href="/categories/%E5%8C%BA%E5%9D%97%E9%93%BE/" title="区块链" data-aos="zoom-in">区块链</a>
@@ -408,10 +530,10 @@
       </div>
       <div>
         <span class="icon-brush"></span>
-        101.6k
+        102.5k
         &nbsp;|&nbsp;
         <span class="icon-coffee"></span>
-        08:25
+        08:29
       </div>
       <div>
         <span class="icon-eye"></span>
@@ -433,7 +555,7 @@
   <div class="sidebar-wrap">
         <div class="sidebar-toc-sidebar"><h3 class="toc-title">文章目录</h3>
 <div class="sidebar-toc-wrapper toc-div-class" >
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6%E4%B8%8E-Solidity-%E5%9F%BA%E7%A1%80"><span class="toc-number">1.</span> <span class="toc-text">智能合约与 Solidity 基础</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6"><span class="toc-number">1.1.</span> <span class="toc-text">智能合约</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Solidity-%E5%9F%BA%E7%A1%80"><span class="toc-number">1.2.</span> <span class="toc-text">Solidity 基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.2.1.</span> <span class="toc-text">变量类型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#uint%EF%BC%88%E6%97%A0%E7%AC%A6%E5%8F%B7%E6%95%B4%E6%95%B0%EF%BC%89"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">uint（无符号整数）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#address%EF%BC%88%E5%9C%B0%E5%9D%80%EF%BC%89"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">address（地址）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#mapping%EF%BC%88%E6%98%A0%E5%B0%84%EF%BC%89"><span class="toc-number">1.2.1.3.</span> <span class="toc-text">mapping（映射）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%BD%E6%95%B0"><span class="toc-number">1.2.2.</span> <span class="toc-text">函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#payable"><span class="toc-number">1.2.3.</span> <span class="toc-text">payable</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BD%AC%E8%B4%A6"><span class="toc-number">1.2.4.</span> <span class="toc-text">转账</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6"><span class="toc-number">1.2.5.</span> <span class="toc-text">事件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E9%A5%B0%E7%AC%A6"><span class="toc-number">1.2.6.</span> <span class="toc-text">修饰符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%88%E7%BA%A6%E8%B0%83%E7%94%A8"><span class="toc-number">1.2.7.</span> <span class="toc-text">合约调用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E6%88%98"><span class="toc-number">1.3.</span> <span class="toc-text">实战</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8C%BA%E5%9D%97%E9%93%BE%E5%9F%BA%E7%A1%80"><span class="toc-number">1.</span> <span class="toc-text">区块链基础</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6"><span class="toc-number">1.1.</span> <span class="toc-text">智能合约</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Solidity-%E5%9F%BA%E7%A1%80"><span class="toc-number">1.2.</span> <span class="toc-text">Solidity 基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.2.1.</span> <span class="toc-text">变量类型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#uint%EF%BC%88%E6%97%A0%E7%AC%A6%E5%8F%B7%E6%95%B4%E6%95%B0%EF%BC%89"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">uint（无符号整数）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#address%EF%BC%88%E5%9C%B0%E5%9D%80%EF%BC%89"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">address（地址）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#mapping%EF%BC%88%E6%98%A0%E5%B0%84%EF%BC%89"><span class="toc-number">1.2.1.3.</span> <span class="toc-text">mapping（映射）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%BD%E6%95%B0"><span class="toc-number">1.2.2.</span> <span class="toc-text">函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#payable"><span class="toc-number">1.2.3.</span> <span class="toc-text">payable</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BD%AC%E8%B4%A6"><span class="toc-number">1.2.4.</span> <span class="toc-text">转账</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6"><span class="toc-number">1.2.5.</span> <span class="toc-text">事件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E9%A5%B0%E7%AC%A6"><span class="toc-number">1.2.6.</span> <span class="toc-text">修饰符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%88%E7%BA%A6%E8%B0%83%E7%94%A8"><span class="toc-number">1.2.7.</span> <span class="toc-text">合约调用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E6%88%98"><span class="toc-number">1.2.8.</span> <span class="toc-text">实战</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%A4%E6%98%93"><span class="toc-number">1.3.</span> <span class="toc-text">交易</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8C%BA%E5%9D%97"><span class="toc-number">1.4.</span> <span class="toc-text">区块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F"><span class="toc-number">1.5.</span> <span class="toc-text">全局变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Gas"><span class="toc-number">1.6.</span> <span class="toc-text">Gas</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%BF%E5%B7%A5-%E9%AA%8C%E8%AF%81%E8%80%85"><span class="toc-number">1.7.</span> <span class="toc-text">矿工&#x2F;验证者</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EOA-%E5%92%8C%E5%90%88%E7%BA%A6%E8%B4%A6%E6%88%B7"><span class="toc-number">1.8.</span> <span class="toc-text">EOA 和合约账户</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3"><span class="toc-number">1.9.</span> <span class="toc-text">接口</span></a></li></ol></li></ol>
 </div>
 </div>
         <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
@@ -561,13 +683,13 @@
       <script data-pjax>
         window.REIMU_POST = {
           author: "ALL",
-          title: "智能合约与 Solidity 基础",
+          title: "区块链基础",
           url: "http://example.com/2026/05/22/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6%E4%B8%8E%20Solidity%20%E5%9F%BA%E7%A1%80/",
           excerpt: "",
           description: "",
-          stripContent: "智能合约与 Solidity 基础智能合约生活类比：自动售货机  传统的买卖：你给老板钱，老板给你水  智能合约：一台自动售货机  你把钱塞进去，按下按钮，水自动掉下来  它的规则是写死在机器里的（代码）  只要条件满足，就一定会执行（吐水）  没有人能中途反悔（去中心化）     总结：智能合约就是运行在区块链上的、自动执行的计算机程序 而 Solidity，就是用来写这种程序的编程语言 Solidity 基础变量类型在 Solidity 中，有几种最常用的变量 uint（无符号整数）12ui",
+          stripContent: "区块链基础智能合约生活类比：自动售货机  传统的买卖：你给老板钱，老板给你水  智能合约：一台自动售货机  你把钱塞进去，按下按钮，水自动掉下来  它的规则是写死在机器里的（代码）  只要条件满足，就一定会执行（吐水）  没有人能中途反悔（去中心化）     总结：智能合约就是运行在区块链上的、自动执行的计算机程序 而 Solidity，就是用来写这种程序的编程语言 Solidity 基础变量类型在 Solidity 中，有几种最常用的变量 uint（无符号整数）12uint256 public",
           date: "Fri May 22 2026 14:18:00 GMT+0800",
-          updated: "Sat May 30 2026 10:00:43 GMT+0800",
+          updated: "Sat May 30 2026 13:13:49 GMT+0800",
           cover: "/images/banner.webp",
         };
       </script>
