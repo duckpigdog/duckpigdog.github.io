@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://pic1.imgdb.cn/item/6a19f40bdd7746a9b033abec.png">
 <meta property="og:image" content="https://pic1.imgdb.cn/item/6a1a438ddd7746a9b0345060.png">
 <meta property="article:published_time" content="2026-05-22T06:18:00.000Z">
-<meta property="article:modified_time" content="2026-05-30T05:13:49.686Z">
+<meta property="article:modified_time" content="2026-05-30T06:51:11.578Z">
 <meta property="article:author" content="ALL">
 <meta property="article:tag" content="区块链">
 <meta name="twitter:card" content="summary">
@@ -163,7 +163,7 @@
 <div class="sidebar-state">
   <div class="sidebar-state-article">
     <div>文章</div>
-    <div class="sidebar-state-number">103</div>
+    <div class="sidebar-state-number">104</div>
   </div>
   <div class="sidebar-state-category">
     <div>分类</div>
@@ -310,7 +310,7 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &quot;./微信支付合约.sol&quot;; // 引入工具包</span><br></pre></td></tr></table></figure>
 
 <h3 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h3><p>简单的存取款本</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.8.0;</span><br><span class="line"></span><br><span class="line">contract SimpleLedger &#123;</span><br><span class="line">    // ① uint：记录总存款金额（不能为负）</span><br><span class="line">    uint256 public totalBalance;</span><br><span class="line"></span><br><span class="line">    // ② address：记录合约部署者（管理员）地址</span><br><span class="line">    address public owner;</span><br><span class="line"></span><br><span class="line">    // ③ mapping：地址 -&gt; 该地址的存款余额</span><br><span class="line">    mapping(address =&gt; uint256) public balances;</span><br><span class="line"></span><br><span class="line">    // 事件，便于在浏览器/控制台观察存款行为</span><br><span class="line">    event Deposited(address indexed who, uint256 amount);</span><br><span class="line"></span><br><span class="line">    // 构造函数：初始化 owner 为合约创建者</span><br><span class="line">    constructor() &#123;</span><br><span class="line">        owner = msg.sender;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 存款函数：调用者向合约存入一定数量的 wei（以太币最小单位）</span><br><span class="line">    // payable：允许函数在调用时接收以太币</span><br><span class="line">    function deposit() external payable &#123;</span><br><span class="line">        require(msg.value &gt; 0, &quot;Deposit amount must be positive&quot;);</span><br><span class="line">        // 从账本中取出当前余额，加上本次存款金额。将新余额写回账本</span><br><span class="line">        balances[msg.sender] += msg.value;</span><br><span class="line">        // 统计所有用户存入的总金额</span><br><span class="line">        totalBalance += msg.value;</span><br><span class="line">        emit Deposited(msg.sender, msg.value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 查询任意地址的余额</span><br><span class="line">    function getBalance(address who) external view returns (uint256) &#123;</span><br><span class="line">        return balances[who];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 仅管理员可以查看合约总余额（另一种只读方式）</span><br><span class="line">    function getTotalBalance() external view returns (uint256) &#123;</span><br><span class="line">        return totalBalance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">// SPDX-License-Identifier: UNLICENSED</span><br><span class="line">pragma solidity ^0.8.0;</span><br><span class="line"></span><br><span class="line">contract SimpleLedger &#123;</span><br><span class="line">    // ① uint：记录总存款金额（不能为负）</span><br><span class="line">    uint256 public totalBalance;</span><br><span class="line"></span><br><span class="line">    // ② address：记录合约部署者（管理员）地址</span><br><span class="line">    address public owner;</span><br><span class="line"></span><br><span class="line">    // ③ mapping：地址 -&gt; 该地址的存款余额</span><br><span class="line">    mapping(address =&gt; uint256) public balances;</span><br><span class="line"></span><br><span class="line">    // 事件，便于在浏览器/控制台观察存款行为</span><br><span class="line">    event Deposited(address indexed who, uint256 amount);</span><br><span class="line"></span><br><span class="line">    // 构造函数：初始化 owner 为合约创建者</span><br><span class="line">    constructor() &#123;</span><br><span class="line">        owner = msg.sender;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 存款函数：调用者向合约存入一定数量的 wei（以太币最小单位）</span><br><span class="line">    // payable：允许函数在调用时接收以太币</span><br><span class="line">    function deposit() external payable &#123;</span><br><span class="line">        require(msg.value &gt; 0, &quot;Deposit amount must be positive&quot;);</span><br><span class="line">        // 从账本中取出当前余额，加上本次存款金额。将新余额写回账本</span><br><span class="line">        balances[msg.sender] += msg.value;</span><br><span class="line">        // 统计所有用户存入的总金额</span><br><span class="line">        totalBalance += msg.value;</span><br><span class="line">        emit Deposited(msg.sender, msg.value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 查询任意地址的余额</span><br><span class="line">    function getBalance(address who) external view returns (uint256) &#123;</span><br><span class="line">        return balances[who];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 仅管理员可以查看合约总余额（另一种只读方式）</span><br><span class="line">    function getTotalBalance() external view returns (uint256) &#123;</span><br><span class="line">        return totalBalance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>打开 <a target="_blank" rel="noopener" href="https://remix.ethereum.org/">https://remix.ethereum.org/</a> 在线部署</p>
 <p>新建一个 <code>SimpleLedger.sol</code> 文件在 <code>contracts</code> 文件夹中，把代码粘贴进去</p>
@@ -530,10 +530,10 @@
       </div>
       <div>
         <span class="icon-brush"></span>
-        102.5k
+        102.6k
         &nbsp;|&nbsp;
         <span class="icon-coffee"></span>
-        08:29
+        08:30
       </div>
       <div>
         <span class="icon-eye"></span>
@@ -566,7 +566,7 @@
 <div class="sidebar-state">
   <div class="sidebar-state-article">
     <div>文章</div>
-    <div class="sidebar-state-number">103</div>
+    <div class="sidebar-state-number">104</div>
   </div>
   <div class="sidebar-state-category">
     <div>分类</div>
@@ -689,7 +689,7 @@
           description: "",
           stripContent: "区块链基础智能合约生活类比：自动售货机  传统的买卖：你给老板钱，老板给你水  智能合约：一台自动售货机  你把钱塞进去，按下按钮，水自动掉下来  它的规则是写死在机器里的（代码）  只要条件满足，就一定会执行（吐水）  没有人能中途反悔（去中心化）     总结：智能合约就是运行在区块链上的、自动执行的计算机程序 而 Solidity，就是用来写这种程序的编程语言 Solidity 基础变量类型在 Solidity 中，有几种最常用的变量 uint（无符号整数）12uint256 public",
           date: "Fri May 22 2026 14:18:00 GMT+0800",
-          updated: "Sat May 30 2026 13:13:49 GMT+0800",
+          updated: "Sat May 30 2026 14:51:11 GMT+0800",
           cover: "/images/banner.webp",
         };
       </script>

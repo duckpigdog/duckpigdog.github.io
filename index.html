@@ -152,7 +152,7 @@
 <div class="sidebar-state">
   <div class="sidebar-state-article">
     <div>文章</div>
-    <div class="sidebar-state-number">103</div>
+    <div class="sidebar-state-number">104</div>
   </div>
   <div class="sidebar-state-category">
     <div>分类</div>
@@ -229,10 +229,10 @@
               <a href="/2026/05/24/Matrix-Breakout%202%20Morpheus/" title="VulnHub Matrix-Breakout：2 Morpheus">VulnHub Matrix-Breakout：2 Morpheus</a>
             </li>
             <li>
-              <a href="/2026/05/22/Kilo-Org%20kilocode%EF%BC%88CVE-2026-8766%EF%BC%89/" title="Kilo-Org kilocode （CVE-2026-8766）">Kilo-Org kilocode （CVE-2026-8766）</a>
+              <a href="/2026/05/23/pgAdmin%204%20%E5%AD%98%E5%82%A8%E5%9E%8B%20XSS%EF%BC%88CVE-2026-7814%EF%BC%89/" title="pgAdmin 4 存储型 XSS（CVE-2026-7814）">pgAdmin 4 存储型 XSS（CVE-2026-7814）</a>
             </li>
             <li>
-              <a href="/2026/05/22/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6%E4%B8%8E%20Solidity%20%E5%9F%BA%E7%A1%80/" title="区块链基础">区块链基础</a>
+              <a href="/2026/05/22/Kilo-Org%20kilocode%EF%BC%88CVE-2026-8766%EF%BC%89/" title="Kilo-Org kilocode （CVE-2026-8766）">Kilo-Org kilocode （CVE-2026-8766）</a>
             </li>
         </ul>
       </div>
@@ -344,8 +344,54 @@ RCENebuchadnezzar Graffiti Wall扫描目录来到这个页面，要求我们输�
 </div>
       <div class="post-wrapper">
   <div class="post-wrap right" data-aos="fade-up">
-      <a class="post-link" href="/2026/05/22/Kilo-Org%20kilocode%EF%BC%88CVE-2026-8766%EF%BC%89/" aria-label="Kilo-Org kilocode （CVE-2026-8766）" title="Kilo-Org kilocode （CVE-2026-8766）"></a>
+      <a class="post-link" href="/2026/05/23/pgAdmin%204%20%E5%AD%98%E5%82%A8%E5%9E%8B%20XSS%EF%BC%88CVE-2026-7814%EF%BC%89/" aria-label="pgAdmin 4 存储型 XSS（CVE-2026-7814）" title="pgAdmin 4 存储型 XSS（CVE-2026-7814）"></a>
     <div class="post-cover right">
+          <img data-src="/images/banner.webp" data-sizes="auto" alt="pgAdmin 4 存储型 XSS（CVE-2026-7814）" class="lazyload">
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2026-05-23</span>
+        <span><span class="icon-pencil"></span>116 字</span>
+        <span><span class="icon-clock"></span>1 分钟</span>
+      </div>
+      <h2 class="post-title">pgAdmin 4 存储型 XSS（CVE-2026-7814）</h2>
+      <article class="post-article">
+          pgAdmin 4 存储型 XSS（CVE-2026-7814）前言参考披露的报告复现
+
+影响产品：pgAdmin 4
+
+受影响版本：&amp;lt; 9.15
+
+
+漏洞复现环境搭建主要如下：
+
+pgAdmin 9.14（受影响版）
+
+PostgreSQL 17
+
+Python3
+
+Node.js 18+
+
+
+漏洞代码参考官网给出的 fix 部分
+
+利用链新建一个数据库，然后在 Schemas 中创建表
+表名为 XSS Payload
+
+右键表选择 Reset …… 选项
+
+弹窗发现 a 标签被加载渲染
+
+
+      </article>
+    </div>
+  </div>
+</div>
+      <div class="post-wrapper">
+  <div class="post-wrap left" data-aos="fade-up">
+      <a class="post-link" href="/2026/05/22/Kilo-Org%20kilocode%EF%BC%88CVE-2026-8766%EF%BC%89/" aria-label="Kilo-Org kilocode （CVE-2026-8766）" title="Kilo-Org kilocode （CVE-2026-8766）"></a>
+    <div class="post-cover left">
           <img data-src="/images/banner.webp" data-sizes="auto" alt="Kilo-Org kilocode （CVE-2026-8766）" class="lazyload">
     </div>
     <div class="post-info">
@@ -375,9 +421,9 @@ RCENebuchadnezzar Graffiti Wall扫描目录来到这个页面，要求我们输�
   </div>
 </div>
       <div class="post-wrapper">
-  <div class="post-wrap left" data-aos="fade-up">
+  <div class="post-wrap right" data-aos="fade-up">
       <a class="post-link" href="/2026/05/22/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6%E4%B8%8E%20Solidity%20%E5%9F%BA%E7%A1%80/" aria-label="区块链基础" title="区块链基础"></a>
-    <div class="post-cover left">
+    <div class="post-cover right">
           <img data-src="/images/banner.webp" data-sizes="auto" alt="区块链基础" class="lazyload">
     </div>
     <div class="post-info">
@@ -416,9 +462,9 @@ address（地址）以太坊里每
   </div>
 </div>
       <div class="post-wrapper">
-  <div class="post-wrap right" data-aos="fade-up">
+  <div class="post-wrap left" data-aos="fade-up">
       <a class="post-link" href="/2026/05/21/%E8%9A%81%E5%89%91%E6%B5%81%E9%87%8F%E7%89%B9%E5%BE%81/" aria-label="蚁剑流量特征" title="蚁剑流量特征"></a>
-    <div class="post-cover right">
+    <div class="post-cover left">
           <img data-src="/images/banner.webp" data-sizes="auto" alt="蚁剑流量特征" class="lazyload">
     </div>
     <div class="post-info">
@@ -442,9 +488,9 @@ address（地址）以太坊里每
   </div>
 </div>
       <div class="post-wrapper">
-  <div class="post-wrap left" data-aos="fade-up">
+  <div class="post-wrap right" data-aos="fade-up">
       <a class="post-link" href="/2026/05/20/%E6%9F%90%E5%85%85%E7%94%B5%E6%A1%A9%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%95%86%E5%AE%B6%E5%90%8E%E5%8F%B0%20XSS/" aria-label="某充电桩小程序商家后台 XSS" title="某充电桩小程序商家后台 XSS"></a>
-    <div class="post-cover left">
+    <div class="post-cover right">
           <img data-src="/images/banner.webp" data-sizes="auto" alt="某充电桩小程序商家后台 XSS" class="lazyload">
     </div>
     <div class="post-info">
@@ -470,9 +516,9 @@ XSS设置管理是查看功能，只能测越权，可惜有鉴权
   </div>
 </div>
       <div class="post-wrapper">
-  <div class="post-wrap right" data-aos="fade-up">
+  <div class="post-wrap left" data-aos="fade-up">
       <a class="post-link" href="/2026/05/19/%E5%85%85%E7%94%B5%E6%A1%A9%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%89%93%E7%A9%BF/" aria-label="某充电桩小程序后台接管&amp;越权修改他人信息以及密码（可遍历）" title="某充电桩小程序后台接管&amp;越权修改他人信息以及密码（可遍历）"></a>
-    <div class="post-cover right">
+    <div class="post-cover left">
           <img data-src="/images/banner.webp" data-sizes="auto" alt="某充电桩小程序后台接管&amp;越权修改他人信息以及密码（可遍历）" class="lazyload">
     </div>
     <div class="post-info">
@@ -503,9 +549,9 @@ XSS设置管理是查看功能，只能测越权，可惜有鉴权
   </div>
 </div>
       <div class="post-wrapper">
-  <div class="post-wrap left" data-aos="fade-up">
+  <div class="post-wrap right" data-aos="fade-up">
       <a class="post-link" href="/2026/05/19/XMCVE--%E9%82%AE%E4%BB%B6%E9%92%93%E9%B1%BC%201/" aria-label="出题——XMCVE--邮件钓鱼 1" title="出题——XMCVE--邮件钓鱼 1"></a>
-    <div class="post-cover left">
+    <div class="post-cover right">
           <img data-src="/images/banner.webp" data-sizes="auto" alt="出题——XMCVE--邮件钓鱼 1" class="lazyload">
     </div>
     <div class="post-info">
@@ -527,32 +573,6 @@ XSS设置管理是查看功能，只能测越权，可惜有鉴权
 
 访问过去后可以看到与 PHPStudy 中搭建的网站是一样的
 至于为什么 Jason 能克隆，是因为 H1c
-      </article>
-    </div>
-  </div>
-</div>
-      <div class="post-wrapper">
-  <div class="post-wrap right" data-aos="fade-up">
-      <a class="post-link" href="/2026/05/18/%E9%93%BE%E6%8E%A5%E9%92%93%E9%B1%BC--%E5%85%8B%E9%9A%86%E9%A1%B5%E9%9D%A2/" aria-label="链接钓鱼--克隆页面获取凭证" title="链接钓鱼--克隆页面获取凭证"></a>
-    <div class="post-cover right">
-          <img data-src="/images/banner.webp" data-sizes="auto" alt="链接钓鱼--克隆页面获取凭证" class="lazyload">
-    </div>
-    <div class="post-info">
-      <div class="post-meta">
-        <span><span class="icon-calendar"></span>2026-05-18</span>
-        <span><span class="icon-pencil"></span>975 字</span>
-        <span><span class="icon-clock"></span>5 分钟</span>
-      </div>
-      <h2 class="post-title">链接钓鱼--克隆页面获取凭证</h2>
-      <article class="post-article">
-          链接钓鱼–克隆页面获取凭证这是最经典且使用最广泛的链接钓鱼方式
-攻击者会克隆目标组织的 VPN、邮箱（如 OWA）、CRM 等系统登录页，并在相似域名上部署，通过邮件诱导用户输入凭证
-更具欺骗性的是，现代钓鱼工具包（如 PoisonSeed 或 Tycoon）已实现 “精准验证” 机制：它们会将受害者的邮箱地址嵌入 URL 作为唯一标识，后端验证匹配后才展示登录界面，无效访客则被重定向至 Google，从而有效过滤掉安全人员的蜜罐邮箱
-克隆页面假设我们要克隆的登录页面如下
-
-首先，使用插件 SingleFile 保存页面
-
-修改 CSP 策略打开 login.html 源代码，搜索 &amp;lt;m
       </article>
     </div>
   </div>
@@ -580,10 +600,10 @@ XSS设置管理是查看功能，只能测越权，可惜有鉴权
       </div>
       <div>
         <span class="icon-brush"></span>
-        102.5k
+        102.6k
         &nbsp;|&nbsp;
         <span class="icon-coffee"></span>
-        08:29
+        08:30
       </div>
       <div>
         <span class="icon-eye"></span>
@@ -611,7 +631,7 @@ XSS设置管理是查看功能，只能测越权，可惜有鉴权
 <div class="sidebar-state">
   <div class="sidebar-state-article">
     <div>文章</div>
-    <div class="sidebar-state-number">103</div>
+    <div class="sidebar-state-number">104</div>
   </div>
   <div class="sidebar-state-category">
     <div>分类</div>
