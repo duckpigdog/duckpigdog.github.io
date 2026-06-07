@@ -40,7 +40,7 @@
 <meta property="og:image" content="https://pic1.imgdb.cn/item/69f8c096b681ce9bfd1ffa20.png">
 <meta property="og:image" content="https://pic1.imgdb.cn/item/69f8c146b681ce9bfd1ffa23.png">
 <meta property="article:published_time" content="2026-05-04T14:20:00.000Z">
-<meta property="article:modified_time" content="2026-05-04T15:56:38.997Z">
+<meta property="article:modified_time" content="2026-06-07T12:14:55.207Z">
 <meta property="article:author" content="ALL">
 <meta property="article:tag" content="Brainfuck 解密">
 <meta property="article:tag" content="CTF">
@@ -177,7 +177,7 @@
 <div class="sidebar-state">
   <div class="sidebar-state-article">
     <div>文章</div>
-    <div class="sidebar-state-number">119</div>
+    <div class="sidebar-state-number">120</div>
   </div>
   <div class="sidebar-state-category">
     <div>分类</div>
@@ -244,7 +244,7 @@
       <div class="article-date">
   <span class="article-date-link icon-calendar" data-aos="zoom-in">
     <time datetime="2026-05-04T14:20:00.000Z" itemprop="datePublished">2026-05-04</time>
-    <time style="display: none;" id="post-update-time">2026-05-04</time>
+    <time style="display: none;" id="post-update-time">2026-06-07</time>
   </span>
 </div>
 
@@ -278,24 +278,24 @@
 <p><img src="https://pic1.imgdb.cn/item/69f8b71eb681ce9bfd1ff950.png"></p>
 <p>执行命令 <code>getcap -r / 2&gt;/dev/null</code></p>
 <ul>
-<li><p><strong><code>getcap</code></strong><br>用于查看文件的“能力”（capabilities）</p>
+<li><p><code>getcap</code>：用于查看文件的 “能力”（capabilities）</p>
 </li>
-<li><p><strong><code>-r</code></strong><br>递归查询</p>
+<li><p><code>-r</code>：递归查询</p>
 </li>
-<li><p><strong><code>/</code></strong><br>指定搜索的根目录</p>
+<li><p><code>/</code>：指定搜索的根目录</p>
 </li>
-<li><p><strong><code>2&gt;/dev/null</code></strong><br>将所有报错信息直接丢弃</p>
+<li><p><code>2&gt;/dev/null</code>：将所有报错信息直接丢弃</p>
 </li>
 </ul>
 <p>当一个文件被设置了能力，它的行为会受到特殊影响。例如：</p>
 <ul>
-<li><p><strong><code>cap_setuid</code></strong><br>允许程序修改自己的UID，即把自己变成 root</p>
+<li><p><code>cap_setuid</code>：允许程序修改自己的UID，即把自己变成 root</p>
 </li>
-<li><p><strong><code>cap_net_bind_service</code></strong><br>允许程序绑定小于1024的特权端口</p>
+<li><p><code>cap_net_bind_service</code>：允许程序绑定小于1024的特权端口</p>
 </li>
-<li><p><strong><code>cap_sys_ptrace</code></strong><br>允许程序读写其他进程的内存，可用于注入代码</p>
+<li><p><code>cap_sys_ptrace</code>：允许程序读写其他进程的内存，可用于注入代码</p>
 </li>
-<li><p><strong><code>cap_dac_read_search</code></strong><br>允许程序绕过文件系统的所有读权限检查，直接读取任何文件（包括 &#x2F;etc&#x2F;shadow 密码文件）</p>
+<li><p><code>cap_dac_read_search</code>：允许程序绕过文件系统的所有读权限检查，直接读取任何文件</p>
 </li>
 </ul>
 <p><code>/usr/bin/ping</code> 带有 <code>cap_net_raw</code> 是正常系统配置，用于发送 ICMP 包</p>
@@ -365,10 +365,10 @@
       </div>
       <div>
         <span class="icon-brush"></span>
-        116.4k
+        116.8k
         &nbsp;|&nbsp;
         <span class="icon-coffee"></span>
-        09:39
+        09:41
       </div>
       <div>
         <span class="icon-eye"></span>
@@ -401,7 +401,7 @@
 <div class="sidebar-state">
   <div class="sidebar-state-article">
     <div>文章</div>
-    <div class="sidebar-state-number">119</div>
+    <div class="sidebar-state-number">120</div>
   </div>
   <div class="sidebar-state-category">
     <div>分类</div>
@@ -524,7 +524,7 @@
           description: "",
           stripContent: "Empire：Breakout项目地址：https://download.vulnhub.com/empire/02-Breakout.zip 是一个打包好的镜像文件 注意：导入 vmx 时一定要选择我已移动，否则没网 使用 Nmap 扫描出开放服务及操作系统版本  80、10000、20000 都是 Web 服务  敏感信息泄露Apache2 Debian Default Page: It works在 80 端口首页中发现注释  SMB 用户枚举前面扫描发现一个开放的 SMB 端口，使用 e",
           date: "Mon May 04 2026 22:20:00 GMT+0800",
-          updated: "Mon May 04 2026 23:56:38 GMT+0800",
+          updated: "Sun Jun 07 2026 20:14:55 GMT+0800",
           cover: "/images/banner.webp",
         };
       </script>
