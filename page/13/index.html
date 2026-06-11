@@ -152,7 +152,7 @@
 <div class="sidebar-state">
   <div class="sidebar-state-article">
     <div>文章</div>
-    <div class="sidebar-state-number">132</div>
+    <div class="sidebar-state-number">133</div>
   </div>
   <div class="sidebar-state-category">
     <div>分类</div>
@@ -220,6 +220,9 @@
       <div class="widget">
         <ul>
             <li>
+              <a href="/2026/06/10/Deathnote%201/" title="VulnHub Deathnote：1">VulnHub Deathnote：1</a>
+            </li>
+            <li>
               <a href="/2026/06/09/doubletrouble%201/" title="VulnHub doubletrouble：1">VulnHub doubletrouble：1</a>
             </li>
             <li>
@@ -230,9 +233,6 @@
             </li>
             <li>
               <a href="/2026/06/09/digitalworld.local%20electrical/" title="VulnHub digitalworld.local：electrical">VulnHub digitalworld.local：electrical</a>
-            </li>
-            <li>
-              <a href="/2026/06/08/ICA%201/" title="VulnHub ICA：1">VulnHub ICA：1</a>
             </li>
         </ul>
       </div>
@@ -245,8 +245,41 @@
 
           <section id="main" aria-label="Main content">      <div class="post-wrapper">
   <div class="post-wrap left" data-aos="fade-up">
-      <a class="post-link" href="/2025/04/01/Gift/" aria-label="MazeSec Gift" title="MazeSec Gift"></a>
+      <a class="post-link" href="/2025/04/01/Conection/" aria-label="MazeSec Conection" title="MazeSec Conection"></a>
     <div class="post-cover left">
+          <img data-src="/images/banner.webp" data-sizes="auto" alt="MazeSec Conection" class="lazyload">
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2025-04-01</span>
+        <span><span class="icon-pencil"></span>265 字</span>
+        <span><span class="icon-clock"></span>2 分钟</span>
+      </div>
+      <h2 class="post-title">MazeSec Conection</h2>
+      <article class="post-article">
+          Conection项目地址：https://downloads.hackmyvm.eu/connection.zip
+是一个打包好的镜像文件
+注意：导入 ova 时一定要选择我已移动，否则没网
+使用 Nmap 扫描出开放服务及操作系统版本
+
+RCESMB139 445 端口全开，使用 enum4linux 枚举信息
+
+发现一个共享文件夹 share
+
+使用 smbclient 加上 -N 参数匿名访问发现是分享的 Web 目录
+
+上传一个反弹 Shell PHP 上去
+
+提权&amp;#x2F;etc&amp;#x2F;sudoers 配置不当寻找提权点
+1find / -user root -perm /4
+      </article>
+    </div>
+  </div>
+</div>
+      <div class="post-wrapper">
+  <div class="post-wrap right" data-aos="fade-up">
+      <a class="post-link" href="/2025/04/01/Gift/" aria-label="MazeSec Gift" title="MazeSec Gift"></a>
+    <div class="post-cover right">
           <img data-src="/images/banner.webp" data-sizes="auto" alt="MazeSec Gift" class="lazyload">
     </div>
     <div class="post-info">
@@ -270,9 +303,9 @@
   </div>
 </div>
       <div class="post-wrapper">
-  <div class="post-wrap right" data-aos="fade-up">
+  <div class="post-wrap left" data-aos="fade-up">
       <a class="post-link" href="/2025/04/01/Pwned/" aria-label="MazeSec Pwned" title="MazeSec Pwned"></a>
-    <div class="post-cover right">
+    <div class="post-cover left">
           <img data-src="/images/banner.webp" data-sizes="auto" alt="MazeSec Pwned" class="lazyload">
     </div>
     <div class="post-info">
@@ -308,9 +341,9 @@ SSH发现有私钥
   </div>
 </div>
       <div class="post-wrapper">
-  <div class="post-wrap left" data-aos="fade-up">
+  <div class="post-wrap right" data-aos="fade-up">
       <a class="post-link" href="/2024/04/02/2024%20%E7%AC%AC%E4%B8%80%E5%B1%8A%20Solar%20%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94%E6%8C%91%E6%88%98%E8%B5%9B/" aria-label="2024 第一届 Solar 应急响应挑战赛 WriteUp" title="2024 第一届 Solar 应急响应挑战赛 WriteUp"></a>
-    <div class="post-cover left">
+    <div class="post-cover right">
           <img data-src="/images/banner.webp" data-sizes="auto" alt="2024 第一届 Solar 应急响应挑战赛 WriteUp" class="lazyload">
     </div>
     <div class="post-info">
@@ -338,9 +371,9 @@ newxmmxszc6-1.qq.com
   </div>
 </div>
       <div class="post-wrapper">
-  <div class="post-wrap right" data-aos="fade-up">
+  <div class="post-wrap left" data-aos="fade-up">
       <a class="post-link" href="/2021/05/26/b2evolution%20CMS%20SQL%20%E6%B3%A8%E5%85%A5%EF%BC%88CVE-2021-28242%EF%BC%89/" aria-label="b2evolution CMS SQL 注入（CVE-2021-28242）" title="b2evolution CMS SQL 注入（CVE-2021-28242）"></a>
-    <div class="post-cover right">
+    <div class="post-cover left">
           <img data-src="/images/banner.webp" data-sizes="auto" alt="b2evolution CMS SQL 注入（CVE-2021-28242）" class="lazyload">
     </div>
     <div class="post-info">
@@ -374,9 +407,9 @@ newxmmxszc6-1.qq.com
   </div>
 </div>
       <div class="post-wrapper">
-  <div class="post-wrap left" data-aos="fade-up">
+  <div class="post-wrap right" data-aos="fade-up">
       <a class="post-link" href="/2020/04/14/2020%200xGame/" aria-label="2020 0xGame WriteUp" title="2020 0xGame WriteUp"></a>
-    <div class="post-cover left">
+    <div class="post-cover right">
           <img data-src="/images/banner.webp" data-sizes="auto" alt="2020 0xGame WriteUp" class="lazyload">
     </div>
     <div class="post-info">
@@ -405,9 +438,9 @@ ZIP 需要密码，使用 Audacity 打开 MP3
   </div>
 </div>
       <div class="post-wrapper">
-  <div class="post-wrap right" data-aos="fade-up">
+  <div class="post-wrap left" data-aos="fade-up">
       <a class="post-link" href="/2019/05/22/2019%20HDCTF/" aria-label="2019 HDCTF WriteUp" title="2019 HDCTF WriteUp"></a>
-    <div class="post-cover right">
+    <div class="post-cover left">
           <img data-src="/images/banner.webp" data-sizes="auto" alt="2019 HDCTF WriteUp" class="lazyload">
     </div>
     <div class="post-info">
@@ -435,9 +468,9 @@ dump 出 explorer.exe，它的内存里主
   </div>
 </div>
       <div class="post-wrapper">
-  <div class="post-wrap left" data-aos="fade-up">
+  <div class="post-wrap right" data-aos="fade-up">
       <a class="post-link" href="/2018/05/22/2018%20ACTF/" aria-label="2018 ACTF WriteUp" title="2018 ACTF WriteUp"></a>
-    <div class="post-cover left">
+    <div class="post-cover right">
           <img data-src="/images/banner.webp" data-sizes="auto" alt="2018 ACTF WriteUp" class="lazyload">
     </div>
     <div class="post-info">
@@ -456,9 +489,9 @@ Crypto你能看出这是什么加密么（RSA）
   </div>
 </div>
       <div class="post-wrapper">
-  <div class="post-wrap right" data-aos="fade-up">
+  <div class="post-wrap left" data-aos="fade-up">
       <a class="post-link" href="/2018/03/01/%E9%A1%B9%E7%9B%AE/" aria-label="攻防演练" title="攻防演练"></a>
-    <div class="post-cover right">
+    <div class="post-cover left">
           <img data-src="/images/banner.webp" data-sizes="auto" alt="攻防演练" class="lazyload">
     </div>
     <div class="post-info">
@@ -478,9 +511,9 @@ Crypto你能看出这是什么加密么（RSA）
   </div>
 </div>
       <div class="post-wrapper">
-  <div class="post-wrap left" data-aos="fade-up">
+  <div class="post-wrap right" data-aos="fade-up">
       <a class="post-link" href="/2014/05/26/ElasticSearch%20RCE%EF%BC%88CVE-2014-3120%EF%BC%89/" aria-label="ElasticSearch RCE（CVE-2014-3120）" title="ElasticSearch RCE（CVE-2014-3120）"></a>
-    <div class="post-cover left">
+    <div class="post-cover right">
           <img data-src="/images/banner.webp" data-sizes="auto" alt="ElasticSearch RCE（CVE-2014-3120）" class="lazyload">
     </div>
     <div class="post-info">
@@ -500,37 +533,6 @@ Crypto你能看出这是什么加密么（RSA）
 
 漏洞复现漏洞代码通过源码审计发现，该漏洞的核心问题在于默认配置下 script.disable_dynamic 参数为 false，导致动态脚本功能完全开放
 1234567// ElasticSearch 1.1.x 版本中 ScriptService.java 的关键代码if (settings.getAsBoolean(&amp;quot;script.disable_dynamic&amp;quot;, false)) &amp;#123;
-      </article>
-    </div>
-  </div>
-</div>
-      <div class="post-wrapper">
-  <div class="post-wrap right" data-aos="fade-up">
-      <a class="post-link" href="/2014/05/22/Drupalgeddon%20SQL%20%E6%B3%A8%E5%85%A5%EF%BC%88CVE-2014-3704%EF%BC%89/" aria-label="Drupal SQL 注入（CVE-2014-3704）" title="Drupal SQL 注入（CVE-2014-3704）"></a>
-    <div class="post-cover right">
-          <img data-src="/images/banner.webp" data-sizes="auto" alt="Drupal SQL 注入（CVE-2014-3704）" class="lazyload">
-    </div>
-    <div class="post-info">
-      <div class="post-meta">
-        <span><span class="icon-calendar"></span>2014-05-22</span>
-        <span><span class="icon-pencil"></span>597 字</span>
-        <span><span class="icon-clock"></span>3 分钟</span>
-      </div>
-      <h2 class="post-title">Drupal SQL 注入（CVE-2014-3704）</h2>
-      <article class="post-article">
-          Drupal SQL 注入（CVE-2014-3704）前言参考披露的报告复现
-
-影响版本： Drupal 7.0 ~ 7.31
-
-漏洞类型： SQL Injection (无需认证)
-
-漏洞文件： includes&amp;#x2F;database&amp;#x2F;database.inc
-
-漏洞函数： DatabaseConnection::expandArguments()
-
-
-漏洞复现漏洞代码文件路径： includes/database/database.inc
-123456789101112131415161718192021222324protected function expandArg
       </article>
     </div>
   </div>
@@ -558,10 +560,10 @@ Crypto你能看出这是什么加密么（RSA）
       </div>
       <div>
         <span class="icon-brush"></span>
-        124.4k
+        124.6k
         &nbsp;|&nbsp;
         <span class="icon-coffee"></span>
-        10:22
+        10:23
       </div>
       <div>
         <span class="icon-eye"></span>
@@ -589,7 +591,7 @@ Crypto你能看出这是什么加密么（RSA）
 <div class="sidebar-state">
   <div class="sidebar-state-article">
     <div>文章</div>
-    <div class="sidebar-state-number">132</div>
+    <div class="sidebar-state-number">133</div>
   </div>
   <div class="sidebar-state-category">
     <div>分类</div>
