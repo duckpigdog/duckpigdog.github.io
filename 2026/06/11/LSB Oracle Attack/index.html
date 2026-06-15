@@ -1,0 +1,662 @@
+  <!DOCTYPE html>
+  <html lang="zh-CN"  
+      data-theme-mode="auto"
+  >
+  <head>
+  <meta charset="utf-8">
+  
+  
+  
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_a0oqhord1y';window.REIMU_CONFIG.clipboard_tips = {"success":{"zh-CN":"复制成功 (*^▽^*)"},"fail":{"zh-CN":"复制失败 (ﾟ⊿ﾟ)ﾂ"},"copyright":{"enable":false,"count":50,"license_type":"by-nc-sa"}};window.REIMU_CONFIG.clipboard_tips.copyright.content = '本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！';window.REIMU_CONFIG.code_block = {"expand":true};window.REIMU_CONFIG.base = 'http://example.com';</script>
+  <title>
+    LSB Oracle Attack | 雾島风起時
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic|Noto Serif SC:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic|Noto Serif SC:400,400italic,700,700italic&display=swap" media="print" onload="this.media='all'">
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_a0oqhord1y.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+    <meta name="description" content="LSB Oracle Attack原理LSB Oracle Attack（最低有效位预言机攻击）是一种针对非对称加密（特别是 RSA）的侧信道攻击。其核心是利用一个能够返回明文最低有效位（即奇偶性，LSB &#x3D; m mod 2）的解密预言机，逐步恢复完整明文 攻击原理：  假设有密文 c &#x3D; m^e mod N，攻击者拥有一个 Oracle，对任意输入的密文 c&#39; 可以返回 m&#39; m">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LSB Oracle Attack">
+<meta property="og:url" content="http://example.com/2026/06/11/LSB%20Oracle%20Attack/index.html">
+<meta property="og:site_name" content="雾島风起時">
+<meta property="og:description" content="LSB Oracle Attack原理LSB Oracle Attack（最低有效位预言机攻击）是一种针对非对称加密（特别是 RSA）的侧信道攻击。其核心是利用一个能够返回明文最低有效位（即奇偶性，LSB &#x3D; m mod 2）的解密预言机，逐步恢复完整明文 攻击原理：  假设有密文 c &#x3D; m^e mod N，攻击者拥有一个 Oracle，对任意输入的密文 c&#39; 可以返回 m&#39; m">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-06-11T06:18:00.000Z">
+<meta property="article:modified_time" content="2026-06-15T08:05:18.518Z">
+<meta property="article:author" content="ALL">
+<meta property="article:tag" content="LSB Oracle Attack">
+<meta property="article:tag" content="现代密码">
+<meta name="twitter:card" content="summary">
+    <link rel="alternate" href="/atom.xml" title="雾島风起時" type="application/atom+xml">
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" integrity="sha384-IfxC36XL/toUyJ939C73PcgMuRzAZuIzZxE38drsmO5p6jD7ei+Zx/1oA/0l8ysE" crossorigin="anonymous">
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.2/dist/aos.css" integrity="sha384-GMRP93c6Hkz9JVKGAuRR3nTS7M07RwPgTFenXiosjq2VbVgvdDNcz1g6Mkj8AONa" crossorigin="anonymous">
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+  <body>
+      <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi rotate">
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+      </div>
+      <div class="loading-word">少女祈祷中...</div>
+    </div>
+  </div>
+  <script>
+    var time = null;
+    var loaderEl = document.getElementById('loader');
+    var startLoading = () => {
+      time = Date.now();
+      loaderEl.classList.remove("loading");
+    }
+    var hideLoader = () => {
+      document.body.style.overflow = 'auto';
+      loader.classList.add('loading');
+    };
+
+    var endLoading = () => {
+      if (!time) {
+        hideLoader();
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          hideLoader();
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    loaderEl.addEventListener('click', endLoading);
+  </script>
+<div id="copy-tooltip"></div>
+<div id="heatmap-tooltip"></div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav" aria-label="Primary navigation">
+        <a class="main-nav-link-wrap" href="/">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">首页</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/archives">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">归档</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/about">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">关于</span>
+        </a>
+        <a class="main-nav-link-wrap" href="/friend">
+            <div class="main-nav-icon icon rotate">
+                &#xe62b;
+            </div>
+          <span class="main-nav-link">友链</span>
+        </a>
+    <a id="main-nav-toggle" class="nav-icon" aria-label="Toggle navigation" role="button"></a>
+  </nav>
+  <nav id="sub-nav" aria-label="Secondary navigation">
+      <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅" aria-label="RSS 订阅" target="_blank"></a>
+  </nav>
+</div>
+<header id="header" aria-label="Site header">
+        <picture>
+        </picture>
+          <img  fetchpriority="high" src="/images/banner.webp" alt="LSB Oracle Attack">
+  <div id="header-outer">
+    <div id="header-title">
+          <span id="logo">
+            <h1 data-aos="slide-up">LSB Oracle Attack</h1>
+          </span>
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+        </h2>
+    </div>
+  </div>
+</header>
+
+        <div id="content" aria-label="Page content"  class="sidebar-right" >
+          <aside id="sidebar" aria-label="Sidebar">
+  <div class="sidebar-wrapper-container sticky">
+  <div class="sidebar-wrapper">
+    <div class="sidebar-wrap" data-aos="fade-up">
+          <div class="sidebar-toc-sidebar"><h3 class="toc-title">文章目录</h3>
+<div class="sidebar-toc-wrapper toc-div-class" >
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#LSB-Oracle-Attack"><span class="toc-number">1.</span> <span class="toc-text">LSB Oracle Attack</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">1.1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E6%88%98%E6%A1%88%E4%BE%8B"><span class="toc-number">1.2.</span> <span class="toc-text">实战案例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#parityOracle%EF%BC%88LSB-Oracle-Attack%EF%BC%89"><span class="toc-number">1.2.1.</span> <span class="toc-text">parityOracle（LSB Oracle Attack）</span></a></li></ol></li></ol></li></ol>
+</div>
+</div>
+          <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="ALL" class="lazyload">
+  <div class="sidebar-author-name">ALL</div>
+  <div class="sidebar-description">雾島风起時の日常</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">143</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">20</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">171</div>
+  </div>
+</div>
+<div class="sidebar-social" >
+    <div class="icon-github sidebar-social-icon">
+      <a href=https://github.com/duckpigdog itemprop="url" target="_blank" aria-label="github" rel="noopener nofollow noreferrer"></a>
+    </div>
+    <div class="icon-bilibili sidebar-social-icon">
+      <a href=https://space.bilibili.com/1337537884?spm_id_from=333.1007.0.0 itemprop="url" target="_blank" aria-label="bilibili" rel="noopener nofollow noreferrer"></a>
+    </div>
+</div>
+<div class="sidebar-menu">
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+</div>
+</div>
+          <div class="sidebar-btn-wrapper" style="position:static">
+            <div class="sidebar-toc-btn current"></div>
+            <div class="sidebar-common-btn"></div>
+          </div>
+    </div>
+  </div>
+  <div class="sidebar-widget">
+  </div>
+  </div>
+</aside>
+
+          <section id="main" aria-label="Main content"><article id="post-LSB Oracle Attack" class="h-entry article" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <span class="article-date-link icon-calendar" data-aos="zoom-in">
+    <time datetime="2026-06-11T06:18:00.000Z" itemprop="datePublished">2026-06-11</time>
+    <time style="display: none;" id="post-update-time">2026-06-15</time>
+  </span>
+</div>
+
+    </div>
+    
+    <div class="hr-line"></div>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+        <h1 id="LSB-Oracle-Attack"><a href="#LSB-Oracle-Attack" class="headerlink" title="LSB Oracle Attack"></a>LSB Oracle Attack</h1><h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>LSB Oracle Attack（最低有效位预言机攻击）是一种针对非对称加密（特别是 RSA）的侧信道攻击。其核心是利用一个能够返回明文最低有效位（即奇偶性，<code>LSB = m mod 2</code>）的解密预言机，逐步恢复完整明文</p>
+<p>攻击原理：</p>
+<ul>
+<li><p>假设有密文 <code>c = m^e mod N</code>，攻击者拥有一个 Oracle，对任意输入的密文 <code>c&#39;</code> 可以返回 <code>m&#39; mod 2</code></p>
+</li>
+<li><p>RSA 具有同态性质：<code>(c * 2^e) mod N</code> 对应的明文是 <code>(2m) mod N</code></p>
+</li>
+<li><p>如果 Oracle 返回 <code>(2m mod N) mod 2 = 0</code>，说明 <code>2m &lt; N</code>，即 <code>m &lt; N/2</code>；如果返回 1，则 <code>2m &gt;= N</code>，即 <code>m &gt;= N/2</code></p>
+</li>
+<li><p>反复构造 <code>c * (2^k)^e</code>，每次缩小明文的可能范围（二分法），经过 <code>log2(N)</code> 次查询即可恢复完整明文</p>
+</li>
+</ul>
+<h2 id="实战案例"><a href="#实战案例" class="headerlink" title="实战案例"></a>实战案例</h2><h3 id="parityOracle（LSB-Oracle-Attack）"><a href="#parityOracle（LSB-Oracle-Attack）" class="headerlink" title="parityOracle（LSB Oracle Attack）"></a>parityOracle（LSB Oracle Attack）</h3><p>传统的 LSB Oracle 每次泄露 1 个比特，而本题的 Oracle 每次泄露 2 个比特</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 关键约束</span></span><br><span class="line"><span class="keyword">while</span> p*q%<span class="number">4</span>-<span class="number">3</span>:</span><br><span class="line">    p, q = getPrime(<span class="number">1024</span>), getPrime(<span class="number">1024</span>)</span><br><span class="line">...</span><br><span class="line"><span class="comment"># Oracle 行为</span></span><br><span class="line">result = <span class="built_in">pow</span>(cip, <span class="variable language_">self</span>.d, <span class="variable language_">self</span>.n) % <span class="number">4</span></span><br><span class="line"><span class="variable language_">self</span>.send(<span class="built_in">hex</span>(result)[<span class="number">2</span>:].encode())</span><br></pre></td></tr></table></figure>
+
+<p>这段代码暴露了两个致命的问题：</p>
+<ul>
+<li><p>循环条件确保了 <code>p × q mod 4 ≠ 3</code> 时不断重试，直到 <code>p × q mod 4 == 3</code>。也就是说，该分发实例中的 RSA 模数 <code>n ≡ 3 (mod 4)</code></p>
+</li>
+<li><p>用户输入任意密文 <code>cip</code>，服务端用私钥 <code>d</code> 将其解密为 <code>m&#39;</code>，但只返回 <code>m&#39; mod 4</code> 的值（结果为 <code>0, 1, 2, 3</code> 中的一个）</p>
+</li>
+</ul>
+<p><strong>第一轮交互（<code>i=1</code>）的完整代数推导</strong></p>
+<p>我们向服务器发送构造密文 <code>c1 = c * 4^e (mod n)</code>。下面是服务器内部解密并取模的完整步骤</p>
+<p><strong>步骤 1：解密同态变换</strong></p>
+<p>服务器计算 <code>m1 ≡ (c1)^d (mod n)</code>。将 <code>c1</code> 的定义代入：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">m1 ≡ (c * 4^e)^d (mod n)</span><br></pre></td></tr></table></figure>
+
+<p>根据模幂的积同态性质 <code>(A * B)^d ≡ A^d * B^d (mod n)</code>，将指数 <code>d</code> 分配进去：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">m1 ≡ (c^d) * (4^e)^d (mod n)</span><br></pre></td></tr></table></figure>
+
+<p>因为 <code>c ≡ m^e (mod n)</code>，所以 <code>c^d ≡ m^(e*d)</code></p>
+<p>同理 <code>(4^e)^d ≡ 4^(e*d)</code>。代入上式得到：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">m1 ≡ m^(e*d) * 4^(e*d) (mod n)</span><br></pre></td></tr></table></figure>
+
+<p>又因为 <code>m^(e·d) = m^(1 + k·φ(n)) = m · (m^φ(n))^k ≡ m · 1^k = m (mod n)</code></p>
+<p>所以得到 <code>m1 ≡ m * 4 (mod n)</code></p>
+<p><strong>步骤 2：消除模运算</strong></p>
+<p>根据模运算的定义，若 <code>A ≡ B (mod n)</code>，则必然存在一个整数 <code>k</code>，使得 <code>A = k*n + B</code>。这里将 <code>A = 4m，B = m1</code> 代入，得到：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4m = k1 * n + m1</span><br></pre></td></tr></table></figure>
+
+<p><strong>步骤 3：限定 <code>k1</code> 的取值范围</strong></p>
+<p>已知明文边界为：<code>0 ≤ m &lt; n</code></p>
+<p>不等式各项同时乘以 <code>4：0 ≤ 4m &lt; 4n</code></p>
+<p>将步骤 2 的等式 <code>4m = k1*n + m1</code> 代入上式中间：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0 ≤ k1*n + m1 &lt; 4n</span><br></pre></td></tr></table></figure>
+
+<p>因为 <code>m1</code> 是模 <code>n</code> 的余数，所以必然满足 <code>0 ≤ m1 &lt; n</code>。为了让上述不等式成立，整数 <code>k1</code> 只能在以下集合中取值：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">k1 ∈ &#123;0, 1, 2, 3&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>步骤 4：两边同时取模 4</strong></p>
+<p>将步骤 2 的等式 <code>4m = k1*n + m1</code> 两边同时进行 (<code>mod 4</code>) 运算：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4m (mod 4) = (k1*n + m1) (mod 4)</span><br></pre></td></tr></table></figure>
+
+<p>由于 <code>4m</code> 显然是 <code>4</code> 的倍数，所以 <code>4m (mod 4) = 0</code>。左边化简为 <code>0</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0 ≡ k1*n + m1 (mod 4)</span><br></pre></td></tr></table></figure>
+
+<p>移项，将 <code>m1</code> 孤立在等式一边</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">m1 ≡ -k1 * n (mod 4)</span><br></pre></td></tr></table></figure>
+
+<p><strong>步骤 5：代入服务器特有条件 <code>n ≡ 3 (mod 4)</code></strong></p>
+<p>已知条件中 <code>n ≡ 3 (mod 4)</code>，在模 4 运算中，<code>3 ≡ -1 (mod 4)</code>。因此我们可以把 <code>n</code> 替换为 <code>-1</code>：</p>
+<p>将 <code>n ≡ -1</code> 代入步骤 4 结尾的方程中：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">m1 ≡ -k1 * (-1) (mod 4)</span><br><span class="line"></span><br><span class="line">m1 ≡ k1 (mod 4)</span><br></pre></td></tr></table></figure>
+
+<p><strong>步骤 6：建立预言机输出与 <code>k1</code> 的等价关系</strong></p>
+<p>预言机返回的结果定义为 <code>R1 = m1 (mod 4)</code>。根据步骤 5 的结论，<code>m1 (mod 4) = k1 (mod 4)</code></p>
+<p>由于我们在步骤 3 中已经严格证明了 <code>k1 ∈ {0,1,2,3}</code>，且预言机返回值 R1 也必然在 <code>{0,1,2,3}</code> 之间。两个位于 <code>[0,3]</code> 区间内的整数如果模 4 同余，则它们必然严格相等：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">R1 = k1</span><br></pre></td></tr></table></figure>
+
+<p><strong>任意一轮（第 <code>i</code> 轮）的递推数学证明</strong></p>
+<p>在第 <code>i</code> 轮，我们发送 <code>ci = c * (4^i)^e (mod n)</code>，解密得到：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Xi ≡ 4^i * m (mod n)</span><br></pre></td></tr></table></figure>
+
+<p>写成等式形式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4^i * m = Ki * n + Xi   (0 ≤ Xi &lt; n)</span><br></pre></td></tr></table></figure>
+
+<p>我们同样将上一轮（第 <code>i-1</code> 轮）的等式列出来：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4^(i-1) * m = K_(i-1) * n + X_(i-1)   (0 ≤ X_(i-1) &lt; n)</span><br></pre></td></tr></table></figure>
+
+<p><strong>步骤 1：寻找上下两轮之间的递推关系</strong></p>
+<p>我们将第 <code>i-1</code> 轮的等式两边同时乘以 4：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4 * (4^(i-1) * m) = 4 * (K_(i-1) * n + X_(i-1))</span><br></pre></td></tr></table></figure>
+
+<p>左边合并幂次，右边展开括号：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4^i * m = 4K_(i-1) * n + 4X_(i-1)</span><br></pre></td></tr></table></figure>
+
+<p>现在，我们单独对 <code>4X_(i-1)</code> 这一项进行除以 <code>n</code> 的操作，假设其余数为 <code>Xi</code>，不完全商为 <code>k&#39;</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4X_(i-1) = k&#x27; * n + Xi</span><br></pre></td></tr></table></figure>
+
+<p>由于 <code>0 ≤ X_(i-1) &lt; n</code>，同理可得这个局部商的范围也是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">k&#x27; ∈ &#123;0, 1, 2, 3&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将 <code>4X_(i-1) = k&#39;*n + Xi</code> 代入上面展开的递推式中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4^i * m = 4K_(i-1) * n + (k&#x27;*n + Xi)</span><br></pre></td></tr></table></figure>
+
+<p>提取公因数 <code>n</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4^i * m = (4K_(i-1) + k&#x27;) * n + Xi</span><br></pre></td></tr></table></figure>
+
+<p><strong>步骤 2：对比系数</strong></p>
+<p>对比本节开头的定义式 <code>4^i * m = Ki * n + Xi</code>，由于余数 <code>Xi</code> 具有唯一性，我们可以直接对应出 <code>n</code> 的系数相等：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Ki = 4K_(i-1) + k&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><strong>步骤 3：对总商 <code>Ki</code> 取模 4</strong></p>
+<p>将上式两边同时 <code>(mod 4)</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Ki (mod 4) = (4K_(i-1) + k&#x27;) (mod 4)</span><br></pre></td></tr></table></figure>
+
+<p>由于 <code>4K_(i-1)</code> 是 4 的倍数，模 4 为 0，因此式子化简为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Ki ≡ k&#x27; (mod 4)</span><br></pre></td></tr></table></figure>
+
+<p>因为 <code>k&#39; ∈ {0,1,2,3}</code>，所以：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Ki (mod 4) = k&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><strong>步骤 4：计算预言机回显与 <code>k&#39;</code> 的关系</strong></p>
+<p>第 <code>i</code> 轮预言机收到的解密结果是 <code>Xi</code>，它返回 <code>Ri = Xi (mod 4)</code>。根据本节开头定义式 <code>4^i * m = Ki * n + Xi</code>，变形可得</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Xi = 4^i * m - Ki * n</span><br></pre></td></tr></table></figure>
+
+<p>两边同时取模 4</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Xi (mod 4) = (4^i * m - Ki * n) (mod 4)</span><br></pre></td></tr></table></figure>
+
+<p>由于 <code>i ≥ 1，4^i * m (mod 4) = 0</code>。式子化简为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Xi ≡ -Ki * n (mod 4)</span><br></pre></td></tr></table></figure>
+
+<p>再次代入 <code>n ≡ -1 (mod 4)</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Xi ≡ -Ki * (-1) ≡ Ki (mod 4)</span><br></pre></td></tr></table></figure>
+
+<p>将步骤 3 的结论 <code>Ki ≡ k&#39; (mod 4)</code> 代入上式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Xi ≡ k&#x27; (mod 4)</span><br></pre></td></tr></table></figure>
+
+<p>因为 <code>Ri = Xi (mod 4)</code>，且 <code>Ri</code> 和 <code>k&#39;</code> 都在 [0,3] 范围内，所以它们严格相等</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Ri = k&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>最终递推结论：第 <code>i</code> 轮预言机返回的 <code>Ri</code>，正是 <code>4X_(i-1)</code> 除以 <code>n</code> 的商 <code>k&#39;</code>。也就是说，它反应的是上一轮的余数 <code>X_(i-1)</code> 落在 <code>n</code> 的哪一个四分之一区间内</p>
+<p>既然知道了 <code>Ri = k&#39; = floor(4X_(i-1) / n)</code>，我们就可以据此来对明文真实空间 <code>[lower, upper]</code> 实施精准切分。根据 <code>k&#39;</code> 的值，上一轮的余数空间被划分为四个区间：</p>
+<ul>
+<li><p>当 <code>k&#39; = 0</code> 时：<code>0 ≤ 4X_(i-1) &lt; n  =&gt;  X_(i-1) ∈ [0, n/4)</code></p>
+</li>
+<li><p>当 <code>k&#39; = 1</code> 时：<code>n ≤ 4X_(i-1) &lt; 2n =&gt; X_(i-1) ∈ [n/4, 2n/4)</code></p>
+</li>
+<li><p>当 <code>k&#39; = 2</code> 时：<code>2n ≤ 4X_(i-1) &lt; 3n =&gt; X_(i-1) ∈ [2n/4, 3n/4)</code></p>
+</li>
+<li><p>当 <code>k&#39; = 3</code> 时：<code>3n ≤ 4X_(i-1) &lt; 4n =&gt; X_(i-1) ∈ [3n/4, n)</code></p>
+</li>
+</ul>
+<p>映射回当前动态维护的明文全局边界 <code>[lower, upper]</code>，其物理跨度为 <code>W = upper - lower</code>。我们将这个跨度四等分，每一份的权重为 <code>(upper - lower) / 4</code></p>
+<ul>
+<li><p>当 <code>rev == 0 (k&#39;=0)</code>，说明真实值位于当前区间的第一个四分之一。下界不变：<code>lower = lower</code>。上界缩减：<code>upper = lower + 1 * (upper - lower) // 4</code></p>
+</li>
+<li><p>当 <code>rev == 1 (k&#39;=1)</code>，说明真实值位于当前区间的第二个四分之一。下界右移：<code>lower = lower + 1 * (upper - lower) // 4</code>。上界左移：<code>upper = lower + 2 * (upper - lower) // 4</code></p>
+</li>
+<li><p>当 <code>rev == 2 (k&#39;=2)</code>，说明真实值位于当前区间的第三个四分之一。下界右移：<code>lower = lower + 2 * (upper - lower) // 4</code>。上界左移：<code>upper = lower + 3 * (upper - lower) // 4</code></p>
+</li>
+<li><p>当 <code>rev == 3 (k&#39;=3)</code>，说明真实值位于当前区间的第四个四分之一。上界不变：<code>upper = upper</code>。下界右移：<code>lower = lower + 3 * (upper - lower) // 4</code></p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> long_to_bytes</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置日志级别为 info，如果需要看底层原始交互数据可改为 &#x27;debug&#x27;</span></span><br><span class="line">context.log_level = <span class="string">&#x27;info&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 目标服务器配置</span></span><br><span class="line">HOST = <span class="string">&quot;127.0.0.1&quot;</span></span><br><span class="line">PORT = <span class="number">10001</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">solve_pow</span>(<span class="params">r</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    自动化求解工作量证明 (Proof of Work)</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        r.recvuntil(<span class="string">b&quot;sha256(XXXX+&quot;</span>)</span><br><span class="line">        suffix = r.recvuntil(<span class="string">b&quot;)&quot;</span>, drop=<span class="literal">True</span>).decode()</span><br><span class="line">        r.recvuntil(<span class="string">b&quot;== &quot;</span>)</span><br><span class="line">        target = r.recvline().strip().decode()</span><br><span class="line">        </span><br><span class="line">        log.info(<span class="string">f&quot;PoW 挑战参数 -&gt; 后缀: <span class="subst">&#123;suffix&#125;</span>, 目标哈希: <span class="subst">&#123;target&#125;</span>&quot;</span>)</span><br><span class="line">        </span><br><span class="line">        alphabet = string.ascii_letters + string.digits</span><br><span class="line">        prefix = util.iters.mbruteforce(</span><br><span class="line">            <span class="keyword">lambda</span> x: hashlib.sha256((x + suffix).encode()).hexdigest() == target,</span><br><span class="line">            alphabet, </span><br><span class="line">            <span class="number">4</span>, </span><br><span class="line">            <span class="string">&#x27;exact&#x27;</span></span><br><span class="line">        )</span><br><span class="line">        </span><br><span class="line">        log.success(<span class="string">f&quot;成功爆破出 PoW 前缀: <span class="subst">&#123;prefix&#125;</span>&quot;</span>)</span><br><span class="line">        r.sendlineafter(<span class="string">b&quot;Give me XXXX: &quot;</span>, prefix.encode())</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        log.error(<span class="string">f&quot;PoW 爆破失败: <span class="subst">&#123;e&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_oracle_mod4</span>(<span class="params">r, cipher_int</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    与服务端交互，利用 Modulo-4 Oracle 获取解密明文的最后 2 个比特</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># 选择菜单 1. decrypt</span></span><br><span class="line">    r.sendlineafter(<span class="string">b&quot;&gt; &quot;</span>, <span class="string">b&quot;1&quot;</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 发送十六进制格式的密文</span></span><br><span class="line">    cipher_hex = <span class="built_in">hex</span>(cipher_int)[<span class="number">2</span>:].encode()</span><br><span class="line">    r.sendlineafter(<span class="string">b&quot;Your cipher (in hex): &quot;</span>, cipher_hex)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 接收预言机返回的单行结果 (0, 1, 2, 3)</span></span><br><span class="line">    response = r.recvline().decode().strip()</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">int</span>(response, <span class="number">16</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">pwn_start</span>():</span><br><span class="line">    <span class="comment"># 建立网络连接</span></span><br><span class="line">    r = remote(HOST, PORT)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 1. 绕过验证码</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> solve_pow(r):</span><br><span class="line">        r.close()</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 2. 接收初始化 RSA 公钥与目标密文</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        r.recvuntil(<span class="string">b&quot;e = &quot;</span>)</span><br><span class="line">        e = <span class="built_in">int</span>(r.recvline().decode().strip())</span><br><span class="line">        r.recvuntil(<span class="string">b&quot;n = &quot;</span>)</span><br><span class="line">        n = <span class="built_in">int</span>(r.recvline().decode().strip())</span><br><span class="line">        r.recvuntil(<span class="string">b&quot;c = &quot;</span>)</span><br><span class="line">        c = <span class="built_in">int</span>(r.recvline().decode().strip())</span><br><span class="line">        </span><br><span class="line">        log.success(<span class="string">f&quot;成功获取公钥与密文:&quot;</span>)</span><br><span class="line">        log.info(<span class="string">f&quot;n 的模数位长: <span class="subst">&#123;n.bit_length()&#125;</span> bits&quot;</span>)</span><br><span class="line">        log.info(<span class="string">f&quot;验证特殊条件 (n % 4): <span class="subst">&#123;n % <span class="number">4</span>&#125;</span> (预期应为 3)&quot;</span>)</span><br><span class="line">        <span class="keyword">assert</span> n % <span class="number">4</span> == <span class="number">3</span>, <span class="string">&quot;模数 n 不满足定理条件 n ≡ 3 (mod 4)！&quot;</span></span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        log.error(<span class="string">f&quot;公钥/密文解析异常: <span class="subst">&#123;e&#125;</span>&quot;</span>)</span><br><span class="line">        r.close()</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 3. 初始化四分查找的全局物理边界</span></span><br><span class="line">    <span class="comment"># 明文 m 必然处于 [0, n] 之间</span></span><br><span class="line">    lower = <span class="number">0</span></span><br><span class="line">    upper = n</span><br><span class="line">    i = <span class="number">1</span>  <span class="comment"># 放大因子指数</span></span><br><span class="line"></span><br><span class="line">    log.info(<span class="string">&quot;开始执行基于 Modulo-4 Oracle 的四分查找...&quot;</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 进度条初始化（2048位模数，每次恢复2位，约需1024次）</span></span><br><span class="line">    progress = log.progress(<span class="string">&quot;明文空间逼近进度&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 当区间宽度小于 2 时停止收敛</span></span><br><span class="line">    <span class="keyword">while</span> (upper - lower) &gt;= <span class="number">2</span>:</span><br><span class="line">        progress.status(<span class="string">f&quot;当前区间跨度: <span class="subst">&#123;upper - lower&#125;</span>&quot;</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 构造选择密文: c&#x27; = c * (4^i)^e </span></span><br><span class="line">        <span class="comment"># 根据同态性，这会在解密时将明文放大 4^i 倍： m&#x27; = m * 4^i</span></span><br><span class="line">        power = <span class="built_in">pow</span>(<span class="number">4</span>, i, n)</span><br><span class="line">        chosen_c = (<span class="built_in">pow</span>(power, e, n) * c) % n</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 获得本轮放大后对应的商数（当前真实值落在上一轮空间的哪个四分之一区间）</span></span><br><span class="line">        rev = get_oracle_mod4(r, chosen_c)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 暂存当前边界快照，以防计算公式时上下界互相污染</span></span><br><span class="line">        old_upper = upper</span><br><span class="line">        old_lower = lower</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 严格执行前文推导的四分搜索状态机</span></span><br><span class="line">        <span class="keyword">if</span> rev == <span class="number">0</span>:</span><br><span class="line">            <span class="comment"># 落在第 1 个四分之一区间: [lower, lower + W/4]</span></span><br><span class="line">            upper = (<span class="number">3</span> * old_lower + old_upper) // <span class="number">4</span></span><br><span class="line">        <span class="keyword">elif</span> rev == <span class="number">1</span>:</span><br><span class="line">            <span class="comment"># 落在第 2 个四分之一区间: [lower + W/4, lower + 2W/4]</span></span><br><span class="line">            upper = (old_lower + old_upper) // <span class="number">2</span></span><br><span class="line">            lower = (<span class="number">3</span> * old_lower + old_upper) // <span class="number">4</span></span><br><span class="line">        <span class="keyword">elif</span> rev == <span class="number">2</span>:</span><br><span class="line">            <span class="comment"># 落在第 3 个四分之一区间: [lower + 2W/4, lower + 3W/4]</span></span><br><span class="line">            upper = (old_lower + <span class="number">3</span> * old_upper) // <span class="number">4</span></span><br><span class="line">            lower = (old_lower + old_upper) // <span class="number">2</span></span><br><span class="line">        <span class="keyword">elif</span> rev == <span class="number">3</span>:</span><br><span class="line">            <span class="comment"># 落在第 4 个四分之一区间: [lower + 3W/4, upper]</span></span><br><span class="line">            lower = (old_lower + <span class="number">3</span> * old_upper) // <span class="number">4</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            log.error(<span class="string">f&quot;预言机异常返回非法值: <span class="subst">&#123;rev&#125;</span>&quot;</span>)</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">            </span><br><span class="line">        i += <span class="number">1</span>  <span class="comment"># 步进到下一个 4 的更高幂次</span></span><br><span class="line"></span><br><span class="line">    progress.success(<span class="string">&quot;区间收敛完毕！&quot;</span>)</span><br><span class="line">    log.info(<span class="string">f&quot;收敛结束。最终下界 (lower): <span class="subst">&#123;lower&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 4. 消除整数除法带来的截断误差（边界微调）</span></span><br><span class="line">    log.info(<span class="string">&quot;正在对收敛边界邻域进行精确匹配校验...&quot;</span>)</span><br><span class="line">    found = <span class="literal">False</span></span><br><span class="line">    <span class="comment"># 在最终下界附件上下 100 整数范围内做精确的 RSA 加密比对</span></span><br><span class="line">    <span class="keyword">for</span> candidate <span class="keyword">in</span> <span class="built_in">range</span>(lower - <span class="number">100</span>, lower + <span class="number">100</span>):</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">pow</span>(candidate, e, n) == c:</span><br><span class="line">            flag = long_to_bytes(candidate)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;\n&quot;</span> + <span class="string">&quot;=&quot;</span>*<span class="number">50</span>)</span><br><span class="line">            log.success(<span class="string">&quot;成功完美恢复 Flag 原始明文:&quot;</span>)</span><br><span class="line">            <span class="built_in">print</span>(flag.decode(<span class="string">&#x27;utf-8&#x27;</span>, errors=<span class="string">&#x27;ignore&#x27;</span>))</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;=&quot;</span>*<span class="number">50</span> + <span class="string">&quot;\n&quot;</span>)</span><br><span class="line">            found = <span class="literal">True</span></span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">            </span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> found:</span><br><span class="line">        log.error(<span class="string">&quot;未能在边界邻域内匹配到有效明文，请检查推导公式截断行为。&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 安全关闭连接</span></span><br><span class="line">    r.sendlineafter(<span class="string">b&quot;&gt; &quot;</span>, <span class="string">b&quot;2&quot;</span>)</span><br><span class="line">    r.close()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    pwn_start()</span><br></pre></td></tr></table></figure>
+
+    </div>
+    <footer class="article-footer">
+        <a class="article-category-link" href="/categories/%E7%8E%B0%E4%BB%A3%E5%AF%86%E7%A0%81/" title="现代密码" data-aos="zoom-in">现代密码</a>
+
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/LSB-Oracle-Attack/" rel="tag" title="LSB Oracle Attack">LSB Oracle Attack</a></li><li class="article-tag-list-item" data-aos="zoom-in"><a class="article-tag-list-link" href="/tags/%E7%8E%B0%E4%BB%A3%E5%AF%86%E7%A0%81/" rel="tag" title="现代密码">现代密码</a></li></ul>
+
+    </footer>
+  </div>
+    <nav id="article-nav" aria-label="Article navigation" data-aos="fade-up">
+    <div class="article-nav-link-wrap right">
+          <img data-src="/images/banner.webp" data-sizes="auto" alt="VulnHub DarkHole：2" class="lazyload">
+      <a href="/2026/06/10/DarkHole%202/" aria-label="后一篇: VulnHub DarkHole：2"  title="后一篇: VulnHub DarkHole：2"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+          VulnHub DarkHole：2
+      </h3>
+    </div>
+  </nav>
+
+</article>
+
+
+</section>
+        </div>
+        <footer id="footer" aria-label="Site footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    <div>
+      <span class="icon-copyright"></span>
+        2020-2026
+        <span class="footer-info-sep rotate"></span>
+      ALL
+    </div>
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+      <div>
+        <span class="icon-brush"></span>
+        145.8k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        12:08
+      </div>
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+  </div>
+</footer>
+
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav" aria-label="Mobile navigation">
+  <div class="sidebar-wrap">
+        <div class="sidebar-toc-sidebar"><h3 class="toc-title">文章目录</h3>
+<div class="sidebar-toc-wrapper toc-div-class" >
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#LSB-Oracle-Attack"><span class="toc-number">1.</span> <span class="toc-text">LSB Oracle Attack</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">1.1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E6%88%98%E6%A1%88%E4%BE%8B"><span class="toc-number">1.2.</span> <span class="toc-text">实战案例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#parityOracle%EF%BC%88LSB-Oracle-Attack%EF%BC%89"><span class="toc-number">1.2.1.</span> <span class="toc-text">parityOracle（LSB Oracle Attack）</span></a></li></ol></li></ol></li></ol>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="ALL" class="lazyload">
+  <div class="sidebar-author-name">ALL</div>
+  <div class="sidebar-description">雾島风起時の日常</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">143</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">20</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">171</div>
+  </div>
+</div>
+<div class="sidebar-social" >
+    <div class="icon-github sidebar-social-icon">
+      <a href=https://github.com/duckpigdog itemprop="url" target="_blank" aria-label="github" rel="noopener nofollow noreferrer"></a>
+    </div>
+    <div class="icon-bilibili sidebar-social-icon">
+      <a href=https://space.bilibili.com/1337537884?spm_id_from=333.1007.0.0 itemprop="url" target="_blank" aria-label="bilibili" rel="noopener nofollow noreferrer"></a>
+    </div>
+</div>
+<div class="sidebar-menu">
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+          <div class="sidebar-menu-icon icon rotate">
+              &#xe62b;
+          </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+</div>
+</div>
+  </div>
+      <div class="sidebar-btn-wrapper">
+        <div class="sidebar-toc-btn current"></div>
+        <div class="sidebar-common-btn"></div>
+      </div>
+</nav>
+
+    </div>
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+
+  <script>
+    var setupFirework = () => {
+      if (!false || !window.matchMedia('(max-width: 768px)').matches) {
+        window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["var(--red-1)","var(--red-2)","var(--red-3)","var(--red-4)"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["var(--red-0)"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'));
+      }
+    }
+  </script>
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.2.0/dist/index.umd.js" integrity="sha384-qi9WggRt19tv8Vc7pCHW3ulMNLwrn515zaLEWZjl1px07vz8+pUoWX8n1rgq282T" crossorigin="anonymous" onload="setupFirework()" defer></script>
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+      
+      
+      <script data-pjax>
+        window.REIMU_POST = {
+          author: "ALL",
+          title: "LSB Oracle Attack",
+          url: "http://example.com/2026/06/11/LSB%20Oracle%20Attack/",
+          excerpt: "",
+          description: "",
+          stripContent: "LSB Oracle Attack原理LSB Oracle Attack（最低有效位预言机攻击）是一种针对非对称加密（特别是 RSA）的侧信道攻击。其核心是利用一个能够返回明文最低有效位（即奇偶性，LSB = m mod 2）的解密预言机，逐步恢复完整明文 攻击原理：  假设有密文 c = m^e mod N，攻击者拥有一个 Oracle，对任意输入的密文 c&amp;#39; 可以返回 m&amp;#39; mod 2  RSA 具有同态性质：(c * 2^e) mod N 对应的明文是 (2m) mod N",
+          date: "Thu Jun 11 2026 14:18:00 GMT+0800",
+          updated: "Mon Jun 15 2026 16:05:18 GMT+0800",
+          cover: "/images/banner.webp",
+        };
+      </script>
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+<script src="/js/tabs.js" data-pjax defer></script>
+
+      <script type="module" data-pjax>
+        (async () => {
+          const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+          const initPswp = (gallery, children) => {
+            if (_$$(`${gallery} ${children}`).length > 0) {
+              new PhotoSwipeLightbox({
+                gallery,
+                children,
+                pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+              }).init();
+            }
+          }
+          const pswp = () => {
+            initPswp('.article-entry', 'a.article-gallery-item');
+            initPswp('.article-gallery', 'a.article-gallery-item');
+          }
+          pswp();
+        })();
+      </script>
+        
+
+
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.12.3' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+
+  </body>
+  </html>
