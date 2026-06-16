@@ -17,18 +17,27 @@
     
 <link rel="stylesheet" href="/css/loader.css">
 
-    <meta name="description" content="2019 工业信息安全技能大赛-深圳站赛 WriteUp组织架构  指导单位：由国家工业信息安全发展研究中心、中国网络空间安全协会竞评演练工作委员会、中国网络空间安全人才教育联盟、中国中文信息学会评测工作委员会共同指导  主办与承办：由鹏城实验室主办，其网络空间安全研究中心具体承办  技术支持：烽台科技（北京）有限公司（灯塔实验室）为大赛提供技术支持   Misc组态软件安全分析">
+    <meta name="description" content="2019 工业信息安全技能大赛-深圳站赛 WriteUp组织架构  指导单位：由国家工业信息安全发展研究中心、中国网络空间安全协会竞评演练工作委员会、中国网络空间安全人才教育联盟、中国中文信息学会评测工作委员会共同指导  主办与承办：由鹏城实验室主办，其网络空间安全研究中心具体承办  技术支持：烽台科技（北京）有限公司（灯塔实验室）为大赛提供技术支持   MiscModbus 协议分析（Modbu">
 <meta property="og:type" content="article">
 <meta property="og:title" content="2019 工业信息安全技能大赛-深圳站 WriteUp">
 <meta property="og:url" content="http://example.com/2019/04/14/2019%20%E5%B7%A5%E4%B8%9A%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%8A%80%E8%83%BD%E5%A4%A7%E8%B5%9B-%E6%B7%B1%E5%9C%B3%E7%AB%99/index.html">
 <meta property="og:site_name" content="雾島风起時">
-<meta property="og:description" content="2019 工业信息安全技能大赛-深圳站赛 WriteUp组织架构  指导单位：由国家工业信息安全发展研究中心、中国网络空间安全协会竞评演练工作委员会、中国网络空间安全人才教育联盟、中国中文信息学会评测工作委员会共同指导  主办与承办：由鹏城实验室主办，其网络空间安全研究中心具体承办  技术支持：烽台科技（北京）有限公司（灯塔实验室）为大赛提供技术支持   Misc组态软件安全分析">
+<meta property="og:description" content="2019 工业信息安全技能大赛-深圳站赛 WriteUp组织架构  指导单位：由国家工业信息安全发展研究中心、中国网络空间安全协会竞评演练工作委员会、中国网络空间安全人才教育联盟、中国中文信息学会评测工作委员会共同指导  主办与承办：由鹏城实验室主办，其网络空间安全研究中心具体承办  技术支持：烽台科技（北京）有限公司（灯塔实验室）为大赛提供技术支持   MiscModbus 协议分析（Modbu">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6a30209bb755a1449d6a3e85.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6a3020b5b755a1449d6a3ea2.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6a30a9ffb755a1449d6b8825.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6a30aa80b755a1449d6b8838.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6a30ab9ab755a1449d6b8851.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6a30af41b755a1449d6ba8a3.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6a30afc2b755a1449d6ba918.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6a30b83fb755a1449d6bafbc.png">
 <meta property="article:published_time" content="2019-04-14T05:18:00.000Z">
-<meta property="article:modified_time" content="2026-06-15T13:54:57.728Z">
+<meta property="article:modified_time" content="2026-06-16T03:06:25.251Z">
 <meta property="article:author" content="ALL">
 <meta property="article:tag" content="CTF">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic1.imgdb.cn/item/6a30209bb755a1449d6a3e85.png">
     <link rel="alternate" href="/atom.xml" title="雾島风起時" type="application/atom+xml">
     <link rel="shortcut icon" href="/images/favicon.ico">
   
@@ -146,7 +155,7 @@
     <div class="sidebar-wrap" data-aos="fade-up">
           <div class="sidebar-toc-sidebar"><h3 class="toc-title">文章目录</h3>
 <div class="sidebar-toc-wrapper toc-div-class" >
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#2019-%E5%B7%A5%E4%B8%9A%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%8A%80%E8%83%BD%E5%A4%A7%E8%B5%9B-%E6%B7%B1%E5%9C%B3%E7%AB%99%E8%B5%9B-WriteUp"><span class="toc-number">1.</span> <span class="toc-text">2019 工业信息安全技能大赛-深圳站赛 WriteUp</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Misc"><span class="toc-number">1.1.</span> <span class="toc-text">Misc</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E6%80%81%E8%BD%AF%E4%BB%B6%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90"><span class="toc-number">1.1.1.</span> <span class="toc-text">组态软件安全分析</span></a></li></ol></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#2019-%E5%B7%A5%E4%B8%9A%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%8A%80%E8%83%BD%E5%A4%A7%E8%B5%9B-%E6%B7%B1%E5%9C%B3%E7%AB%99%E8%B5%9B-WriteUp"><span class="toc-number">1.</span> <span class="toc-text">2019 工业信息安全技能大赛-深圳站赛 WriteUp</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Misc"><span class="toc-number">1.1.</span> <span class="toc-text">Misc</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Modbus-%E5%8D%8F%E8%AE%AE%E5%88%86%E6%9E%90%EF%BC%88Modbus-%E5%8D%8F%E8%AE%AE%EF%BC%89"><span class="toc-number">1.1.1.</span> <span class="toc-text">Modbus 协议分析（Modbus 协议）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E4%B8%9A%E5%8D%8F%E8%AE%AE%E5%88%86%E6%9E%90-1%EF%BC%88TCP-%E5%8D%8F%E8%AE%AE%EF%BC%89"><span class="toc-number">1.1.2.</span> <span class="toc-text">工业协议分析 1（TCP 协议）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E4%B8%9A%E5%8D%8F%E8%AE%AE%E5%88%86%E6%9E%90-2%EF%BC%88UDP-%E5%8D%8F%E8%AE%AE%EF%BC%89"><span class="toc-number">1.1.3.</span> <span class="toc-text">工业协议分析 2（UDP 协议）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E6%80%81%E8%BD%AF%E4%BB%B6%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%EF%BC%88%E5%B7%A5%E7%A8%8B%E6%96%87%E4%BB%B6%E5%8F%96%E8%AF%81%EF%BC%89"><span class="toc-number">1.1.4.</span> <span class="toc-text">组态软件安全分析（工程文件取证）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E6%8E%A7%E8%9C%9C%E7%BD%90%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90%EF%BC%88%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90%EF%BC%89"><span class="toc-number">1.1.5.</span> <span class="toc-text">工控蜜罐日志分析（日志分析）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9A%90%E4%BF%A1%E9%81%93%E6%95%B0%E6%8D%AE%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%EF%BC%88MP3-Private-Bit-%E9%9A%90%E5%86%99%EF%BC%89"><span class="toc-number">1.1.6.</span> <span class="toc-text">隐信道数据安全分析（MP3 Private Bit 隐写）</span></a></li></ol></li></ol></li></ol>
 </div>
 </div>
           <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
@@ -224,7 +233,7 @@
       <div class="article-date">
   <span class="article-date-link icon-calendar" data-aos="zoom-in">
     <time datetime="2019-04-14T05:18:00.000Z" itemprop="datePublished">2019-04-14</time>
-    <time style="display: none;" id="post-update-time">2026-06-15</time>
+    <time style="display: none;" id="post-update-time">2026-06-16</time>
   </span>
 </div>
 
@@ -242,7 +251,222 @@
 <li><p>技术支持：烽台科技（北京）有限公司（灯塔实验室）为大赛提供技术支持</p>
 </li>
 </ul>
-<h2 id="Misc"><a href="#Misc" class="headerlink" title="Misc"></a>Misc</h2><h3 id="组态软件安全分析"><a href="#组态软件安全分析" class="headerlink" title="组态软件安全分析"></a>组态软件安全分析</h3>
+<h2 id="Misc"><a href="#Misc" class="headerlink" title="Misc"></a>Misc</h2><h3 id="Modbus-协议分析（Modbus-协议）"><a href="#Modbus-协议分析（Modbus-协议）" class="headerlink" title="Modbus 协议分析（Modbus 协议）"></a>Modbus 协议分析（Modbus 协议）</h3><p>链接: <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1RcC1VTPusecH9OqTvRPnPA?pwd=4wv3">https://pan.baidu.com/s/1RcC1VTPusecH9OqTvRPnPA?pwd=4wv3</a> 提取码: 4wv3 </p>
+<p>题目：黑客通过外网进入一家工厂的控制网络，之后对工控网络中的操作员站系统进行了攻击，最终通过工控协议破坏了正常的业务。我们得到了操作员站在攻击前后的网络流量数据包，我们需要分析流量中的蛛丝马迹，找到 FLAG</p>
+<p>首先打开流量包，数据包都是关于 <code>Modbus/TCP</code> 的流量，下面的流量解析</p>
+<p>MBAP Header（报文头，共 7 字节）</p>
+<ul>
+<li><p>Transaction ID（事务标识符，2 字节）：类似序号，请求和响应的 ID 必须一致</p>
+</li>
+<li><p>Protocol ID（协议标识符，2 2字节）：固定为 <code>00 00</code>，代表 Modbus 协议</p>
+</li>
+<li><p>Length（长度，2 字节）：表示后面还有多少个字节</p>
+</li>
+<li><p>Unit ID（单元标识符，1 字节）：类似于从机地址（Slave ID）</p>
+</li>
+</ul>
+<p>PDU（协议数据单元）:</p>
+<ul>
+<li><p>Function Code（功能码，1 字节）： 它告诉设备要做什么（读还是写）</p>
+</li>
+<li><p>Data（数据，可变长度）：具体读写的地址、数量或者具体的数值</p>
+</li>
+</ul>
+<p>我们重点关注功能码字段</p>
+<table>
+<thead>
+<tr>
+<th>功能码 (十进制)</th>
+<th>功能码 (十六进制)</th>
+<th>功能码名称 (英文)</th>
+<th>作用与含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>0x01</td>
+<td>Read Coils</td>
+<td>读线圈状态：读取输出位的开关状态（0或1）</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0x02</td>
+<td>Read Discrete Inputs</td>
+<td>读离散输入状态：读取只读的输入位状态（0或1）</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0x03</td>
+<td>Read Holding Registers</td>
+<td>读保持寄存器：读取可读写寄存器中的二进制数据（<strong>CTF 最常用</strong>）</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0x04</td>
+<td>Read Input Registers</td>
+<td>读输入寄存器：读取只读寄存器中的物理测量值</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0x05</td>
+<td>Write Single Coil</td>
+<td>写单个线圈：强制使能或关闭某一个输出位</td>
+</tr>
+<tr>
+<td>6</td>
+<td>0x06</td>
+<td>Write Single Register</td>
+<td>写单个寄存器：向某一个保持寄存器写入数据</td>
+</tr>
+<tr>
+<td>7</td>
+<td>0x07</td>
+<td>Read Exception Status</td>
+<td>读异常状态：快速读取设备的8个内部状态位</td>
+</tr>
+<tr>
+<td>8</td>
+<td>0x08</td>
+<td>Diagnostics</td>
+<td>诊断功能：提供一系列测试码，用于检查通信系统错误</td>
+</tr>
+<tr>
+<td>11</td>
+<td>0x0B</td>
+<td>Get Comm Event Counter</td>
+<td>获取通信事件计数：从设备状态字中获取状态计数</td>
+</tr>
+<tr>
+<td>12</td>
+<td>0x0C</td>
+<td>Get Comm Event Log</td>
+<td>获取通信事件日志：从设备中获取通信历史记录</td>
+</tr>
+<tr>
+<td>15</td>
+<td>0x0F</td>
+<td>Write Multiple Coils</td>
+<td>写多个线圈：批量强制设置多个输出位</td>
+</tr>
+<tr>
+<td>16</td>
+<td>0x10</td>
+<td>Write Multiple Registers</td>
+<td>写多个寄存器：批量向一串寄存器写入数据（<strong>CTF 最常用</strong>）</td>
+</tr>
+<tr>
+<td>17</td>
+<td>0x11</td>
+<td>Report Slave ID</td>
+<td>报告从机ID：描述设备的类型、运行状态等信息</td>
+</tr>
+<tr>
+<td>20</td>
+<td>0x14</td>
+<td>Read File Record</td>
+<td>读文件记录：读取大容量存储器中的文件型数据</td>
+</tr>
+<tr>
+<td>21</td>
+<td>0x15</td>
+<td>Write File Record</td>
+<td>写文件记录：向大容量存储器中写入文件型数据</td>
+</tr>
+<tr>
+<td>22</td>
+<td>0x16</td>
+<td>Mask Write Register</td>
+<td>屏蔽写寄存器：使用AND&#x2F;OR掩码修改寄存器中的特定位</td>
+</tr>
+<tr>
+<td>23</td>
+<td>0x17</td>
+<td>Read&#x2F;Write Multiple Registers</td>
+<td>读&#x2F;写多个寄存器：在一个通信周期内同时进行读和写操作</td>
+</tr>
+<tr>
+<td>24</td>
+<td>0x18</td>
+<td>Read FIFO Queue</td>
+<td>读FIFO队列：读取先进先出队列中的数据</td>
+</tr>
+<tr>
+<td>43</td>
+<td>0x2B</td>
+<td>Encapsulated Interface Transport</td>
+<td>封装接口传输：最常用于43&#x2F;14（0x2B&#x2F;0x0E）来读取设备厂商、型号等识别信息</td>
+</tr>
+</tbody></table>
+<p>WireShark 过滤语法 <code>modbus.func_code == 16</code></p>
+<p><img src="https://pic1.imgdb.cn/item/6a30209bb755a1449d6a3e85.png"></p>
+<p>解码拿到 flag</p>
+<p><img src="https://pic1.imgdb.cn/item/6a3020b5b755a1449d6a3ea2.png"></p>
+<h3 id="工业协议分析-1（TCP-协议）"><a href="#工业协议分析-1（TCP-协议）" class="headerlink" title="工业协议分析 1（TCP 协议）"></a>工业协议分析 1（TCP 协议）</h3><p>链接: <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1899iWcrAYhmYy9gXr8vFrQ?pwd=sdvm">https://pan.baidu.com/s/1899iWcrAYhmYy9gXr8vFrQ?pwd=sdvm</a> 提取码: sdvm</p>
+<p>题目：工业网络中存在异常，尝试通过分析 PCAP 流量包，分析出流量数据中的异常点，并拿到 FLAG</p>
+<p>打开流量包按长度过滤，有个 TCP 流量包长度过长，发现是传送的图片</p>
+<p><img src="https://pic1.imgdb.cn/item/6a30a9ffb755a1449d6b8825.png"></p>
+<p>CyberChef 直接解密拿到 flag</p>
+<p><img src="https://pic1.imgdb.cn/item/6a30aa80b755a1449d6b8838.png"></p>
+<h3 id="工业协议分析-2（UDP-协议）"><a href="#工业协议分析-2（UDP-协议）" class="headerlink" title="工业协议分析 2（UDP 协议）"></a>工业协议分析 2（UDP 协议）</h3><p>链接: <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1GoH9e7nUHRmUNajZtoUy-Q?pwd=xiui">https://pan.baidu.com/s/1GoH9e7nUHRmUNajZtoUy-Q?pwd=xiui</a> 提取码: xiui </p>
+<p>题目：在进行工业企业检查评估工作中，发现了疑似感染恶意软件的上位机。现已提取出上位机通信流量，尝试分析出异常点，获取 FLAG</p>
+<p>按照长度排行，就这几个流量包长度唯一</p>
+<p><img src="https://pic1.imgdb.cn/item/6a30ab9ab755a1449d6b8851.png"></p>
+<p>对 648 流量提取出字符串 666c61677b37466f4d3253746b6865507a7d 转为 ASCII 码得到 flag</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;7FoM2StkhePz&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="组态软件安全分析（工程文件取证）"><a href="#组态软件安全分析（工程文件取证）" class="headerlink" title="组态软件安全分析（工程文件取证）"></a>组态软件安全分析（工程文件取证）</h3><p>链接: <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1V3HSE3mPUAJppBtSW2qDrQ?pwd=evmx">https://pan.baidu.com/s/1V3HSE3mPUAJppBtSW2qDrQ?pwd=evmx</a> 提取码: evmx</p>
+<p>题目：一些组态软件中进行会配置连接很多 PLC 设备信息。我们在 SCADA 工程中写入了 flag 字段，请获取该工程 flag</p>
+<p>这类工控组态软件为了方便传输，其工程文件（如 .PCZ、.VDZ 等）本质上都是标准的 ZIP 压缩包</p>
+<p>直接解压缩，提示需要输入密码不用管</p>
+<p><img src="https://pic1.imgdb.cn/item/6a30af41b755a1449d6ba8a3.png"></p>
+<p>使用 <code>grep</code> 指令找到 flag</p>
+<p><img src="https://pic1.imgdb.cn/item/6a30afc2b755a1449d6ba918.png"></p>
+<h3 id="工控蜜罐日志分析（日志分析）"><a href="#工控蜜罐日志分析（日志分析）" class="headerlink" title="工控蜜罐日志分析（日志分析）"></a>工控蜜罐日志分析（日志分析）</h3><p>链接: <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1coYqNSqS5-zRn-KL48r3Vw?pwd=rjiv">https://pan.baidu.com/s/1coYqNSqS5-zRn-KL48r3Vw?pwd=rjiv</a> 提取码: rjiv </p>
+<p>题目：工控安全分析人员在互联网上部署了工控仿真蜜罐，通过蜜罐可抓取并分析互联网上针对工业资产的扫描行为，将存在高危扫描行为的 IP 加入防火墙黑名单可有效减少工业企业对于互联网的攻击面。分析出日志中针对西门子私有通信协议扫描最多的 IP，分析该扫描组织。FLAG 为该 IP 的域名</p>
+<p>使用 Python 脚本识别，最终的域名为 scan-42.security.ipip.net</p>
+<h3 id="隐信道数据安全分析（MP3-Private-Bit-隐写）"><a href="#隐信道数据安全分析（MP3-Private-Bit-隐写）" class="headerlink" title="隐信道数据安全分析（MP3 Private Bit 隐写）"></a>隐信道数据安全分析（MP3 Private Bit 隐写）</h3><p>链接: <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1q7SA4Yl3NyS5JFtKUnjtNw?pwd=92c4">https://pan.baidu.com/s/1q7SA4Yl3NyS5JFtKUnjtNw?pwd=92c4</a> 提取码: 92c4</p>
+<p>题目：安全分析人员截获间谍发出的秘密邮件，该邮件只有一个 mp3 文件，安全人员怀疑间谍通过某种 private 的方式将信息传递出去，尝试分析该文件，获取藏在文件中的数据？</p>
+<p>MP3 音频文件是由无数个 “音频帧” 组成的。每个帧都有一个 4 字节的帧头（Header）</p>
+<p>在帧头的结构中，第 23 个比特位（Bit 23）被称为 Private Bit（私有位）。这个位在官方标准中没有定义具体用途，完全由用户自定义</p>
+<p>编写脚本，首先是定义对照表</p>
+<p>比特率：</p>
+<ul>
+<li><p>索引 1 → 32 kbps</p>
+</li>
+<li><p>索引 9 → 128 kbps</p>
+</li>
+</ul>
+<p>采样率：</p>
+<ul>
+<li><p>索引 0 → 44100 Hz（CD 音质）</p>
+</li>
+<li><p>索引 1 → 48000 Hz（常见视频音轨）</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">BITRATE_TABLE = [<span class="number">0</span>, <span class="number">32</span>, <span class="number">40</span>, <span class="number">48</span>, <span class="number">56</span>, <span class="number">64</span>, <span class="number">80</span>, <span class="number">96</span>, <span class="number">112</span>, <span class="number">128</span>, <span class="number">160</span>, <span class="number">192</span>, <span class="number">224</span>, <span class="number">256</span>, <span class="number">320</span>, -<span class="number">1</span>] <span class="comment"># 比特率</span></span><br><span class="line">SAMPLERATE_TABLE = [<span class="number">44100</span>, <span class="number">48000</span>, <span class="number">32000</span>, -<span class="number">1</span>] <span class="comment"># 采样率</span></span><br></pre></td></tr></table></figure>
+
+<p>许多 MP3 文件在音频数据前附加了 ID3v2 标签（存储歌名、艺术家、封面等信息），我们需要识别跳过这个</p>
+<p>结构：ID3v2 头部固定 10 字节：</p>
+<ul>
+<li><p>第 0-2 字节：标识符 “ID3”（ASCII）</p>
+</li>
+<li><p>第 3-4 字节：版本号</p>
+</li>
+<li><p>第 5 字节：标志位</p>
+</li>
+<li><p>第 6-9 字节：标签总长度（不包含头部的 10 字节），采用同步安全整数编码（每个字节只使用低 7 位，最高位恒为 0）</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检查文件前 3 字节是否为 b&#x27;ID3&#x27;</span></span><br><span class="line"><span class="comment"># 若存在，读取第 6-9 字节，通过掩码 0x7F 取出每个字节的低 7 位，然后按大端序组合成一个 28 位整数</span></span><br><span class="line">id3_size = (byte6 &amp; <span class="number">0x7F</span>) &lt;&lt; <span class="number">21</span> |</span><br><span class="line">           (byte7 &amp; <span class="number">0x7F</span>) &lt;&lt; <span class="number">14</span> |</span><br><span class="line">           (byte8 &amp; <span class="number">0x7F</span>) &lt;&lt; <span class="number">7</span>  |</span><br><span class="line">           (byte9 &amp; <span class="number">0x7F</span>)</span><br></pre></td></tr></table></figure>
+
+<p>因此，要完全跳过整个 ID3v2 标签，需要移动的字节总数 &#x3D; 头部 10 字节 + 标签数据 size 字节</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pointer = <span class="number">10</span> + id3_size</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这两行是 MP3 帧头解析所需的对照表，用于将帧头中存储的索引值转换为实际的比特率和采样率</span></span><br><span class="line"><span class="comment"># 比特率：</span></span><br><span class="line">  <span class="comment"># 索引 1 → 32 kbps</span></span><br><span class="line">  <span class="comment"># 索引 9 → 128 kbps</span></span><br><span class="line"><span class="comment"># 采样率：</span></span><br><span class="line">  <span class="comment"># 索引 0 → 44100 Hz（CD 音质）</span></span><br><span class="line">  <span class="comment"># 索引 1 → 48000 Hz（常见视频音轨）</span></span><br><span class="line">BITRATE_TABLE = [<span class="number">0</span>, <span class="number">32</span>, <span class="number">40</span>, <span class="number">48</span>, <span class="number">56</span>, <span class="number">64</span>, <span class="number">80</span>, <span class="number">96</span>, <span class="number">112</span>, <span class="number">128</span>, <span class="number">160</span>, <span class="number">192</span>, <span class="number">224</span>, <span class="number">256</span>, <span class="number">320</span>, -<span class="number">1</span>] <span class="comment"># 比特率</span></span><br><span class="line">SAMPLERATE_TABLE = [<span class="number">44100</span>, <span class="number">48000</span>, <span class="number">32000</span>, -<span class="number">1</span>] <span class="comment"># 采样率</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">bits_to_bytes</span>(<span class="params">bit_str</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;将 01 字符串每 8 位转换为 ASCII 字符&quot;&quot;&quot;</span></span><br><span class="line">    byte_arr = <span class="built_in">bytearray</span>()</span><br><span class="line">    <span class="comment"># 每 8 位一组，转换为一个字节</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="built_in">len</span>(bit_str), <span class="number">8</span>):</span><br><span class="line">        byte_bits = bit_str[i:i+<span class="number">8</span>]</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(byte_bits) &lt; <span class="number">8</span>:   <span class="comment"># 不足 8 位的丢弃</span></span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        byte_arr.append(<span class="built_in">int</span>(byte_bits, <span class="number">2</span>))</span><br><span class="line">    <span class="keyword">return</span> byte_arr</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">extract_private_bits</span>(<span class="params">filename</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;从 MP3 文件的每一帧中提取 private bit，拼接成二进制字符串&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(filename, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        data = f.read()</span><br><span class="line">    </span><br><span class="line">    pointer = <span class="number">0</span></span><br><span class="line">    file_size = <span class="built_in">len</span>(data)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 1. 自动识别并跳过 ID3v2 头部标签</span></span><br><span class="line">    <span class="comment"># 许多 MP3 文件在音频数据前附加了 ID3v2 标签（存储歌名、艺术家、封面等信息）</span></span><br><span class="line">    <span class="keyword">if</span> data.startswith(<span class="string">b&#x27;ID3&#x27;</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;[+] 检测到 ID3v2 标签，正在计算大小并跳过...&quot;</span>)</span><br><span class="line">        <span class="comment"># ID3v2 头部大小存储为 4 个 7 位字节（每个字节最高位为 0）</span></span><br><span class="line">        id3_size = ((data[<span class="number">6</span>] &amp; <span class="number">0x7F</span>) &lt;&lt; <span class="number">21</span>) | \</span><br><span class="line">                   ((data[<span class="number">7</span>] &amp; <span class="number">0x7F</span>) &lt;&lt; <span class="number">14</span>) | \</span><br><span class="line">                   ((data[<span class="number">8</span>] &amp; <span class="number">0x7F</span>) &lt;&lt; <span class="number">7</span>)  | \</span><br><span class="line">                   (data[<span class="number">9</span>] &amp; <span class="number">0x7F</span>)</span><br><span class="line">        pointer = <span class="number">10</span> + id3_size   <span class="comment"># 跳过 ID3 头部和标签数据</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;[+] ID3v2 标签大小: <span class="subst">&#123;pointer&#125;</span> 字节&quot;</span>)</span><br><span class="line"></span><br><span class="line">    private_bits = <span class="string">&quot;&quot;</span></span><br><span class="line">    frame_count = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 2. 开始精准按帧步进解析</span></span><br><span class="line">    <span class="keyword">while</span> pointer &lt; file_size - <span class="number">4</span>:</span><br><span class="line">        <span class="comment"># 检查是否满足帧头条件：首字节 0xFF，次字节高 3 位为 111</span></span><br><span class="line">        <span class="keyword">if</span> data[pointer] == <span class="number">0xFF</span> <span class="keyword">and</span> (data[pointer+<span class="number">1</span>] &amp; <span class="number">0xE0</span>) == <span class="number">0xE0</span>:</span><br><span class="line">            byte1 = data[pointer+<span class="number">2</span>]</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 解析帧头中的关键字段</span></span><br><span class="line">            bitrate_idx = (byte1 &gt;&gt; <span class="number">4</span>) &amp; <span class="number">0x0F</span>      <span class="comment"># 比特率索引</span></span><br><span class="line">            samplerate_idx = (byte1 &gt;&gt; <span class="number">2</span>) &amp; <span class="number">0x03</span>   <span class="comment"># 采样率索引</span></span><br><span class="line">            padding = (byte1 &gt;&gt; <span class="number">1</span>) &amp; <span class="number">0x01</span>          <span class="comment"># 填充位</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 无效索引则跳过当前字节继续查找帧头</span></span><br><span class="line">            <span class="keyword">if</span> bitrate_idx == <span class="number">0</span> <span class="keyword">or</span> bitrate_idx == <span class="number">15</span> <span class="keyword">or</span> samplerate_idx == <span class="number">3</span>:</span><br><span class="line">                pointer += <span class="number">1</span></span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">                </span><br><span class="line">            <span class="comment"># 查表得到实际的比特率和采样率</span></span><br><span class="line">            bitrate = BITRATE_TABLE[bitrate_idx] * <span class="number">1000</span></span><br><span class="line">            samplerate = SAMPLERATE_TABLE[samplerate_idx]</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 提取 Private Bit（帧头第 2 字节的最低位）</span></span><br><span class="line">            private_bit = byte1 &amp; <span class="number">0x01</span></span><br><span class="line">            private_bits += <span class="built_in">str</span>(private_bit)   <span class="comment"># 拼接所有帧的 private bit</span></span><br><span class="line">            frame_count += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 计算当前帧的总长度：公式 144 * 比特率 / 采样率 + 填充字节</span></span><br><span class="line">            frame_size = <span class="built_in">int</span>(<span class="number">144</span> * bitrate / samplerate) + padding</span><br><span class="line">            pointer += frame_size   <span class="comment"># 跳过整个帧，继续解析下一帧</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            pointer += <span class="number">1</span>   <span class="comment"># 未找到帧头，前进 1 字节继续扫描</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;[+] 扫描完毕，共成功解析 <span class="subst">&#123;frame_count&#125;</span> 个有效音频帧。&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> private_bits</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    target_file = sys.argv[<span class="number">1</span>]</span><br><span class="line">        </span><br><span class="line">    raw_bits = extract_private_bits(target_file)</span><br><span class="line">        </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;\n[*] 提取到的原始二进制前64位: <span class="subst">&#123;raw_bits[:<span class="number">64</span>]&#125;</span>...&quot;</span>)</span><br><span class="line"></span><br><span class="line">    flag_bytes = bits_to_bytes(raw_bits)</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;\n&quot;</span> + <span class="string">&quot;=&quot;</span>*<span class="number">20</span> + <span class="string">&quot; 尝试转码结果 &quot;</span> + <span class="string">&quot;=&quot;</span>*<span class="number">20</span>)</span><br><span class="line">    <span class="built_in">print</span>(flag_bytes[:<span class="number">500</span>].decode(<span class="string">&#x27;utf-8&#x27;</span>, errors=<span class="string">&#x27;replace&#x27;</span>))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;=&quot;</span>*<span class="number">54</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;extracted_data.bin&quot;</span>, <span class="string">&quot;wb&quot;</span>) <span class="keyword">as</span> out_f:</span><br><span class="line">        out_f.write(flag_bytes)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;[+] 完整二进制流已同步保存至本地: extracted_data.bin&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/6a30b83fb755a1449d6bafbc.png"></p>
+<p><code>FLAG{pr1v4t3_bi7}</code></p>
+
     </div>
     <footer class="article-footer">
         <a class="article-category-link" href="/categories/CTF/" title="CTF" data-aos="zoom-in">CTF</a>
@@ -292,10 +516,10 @@
       </div>
       <div>
         <span class="icon-brush"></span>
-        146.5k
+        149.1k
         &nbsp;|&nbsp;
         <span class="icon-coffee"></span>
-        12:14
+        12:25
       </div>
       <div>
         <span class="icon-eye"></span>
@@ -317,7 +541,7 @@
   <div class="sidebar-wrap">
         <div class="sidebar-toc-sidebar"><h3 class="toc-title">文章目录</h3>
 <div class="sidebar-toc-wrapper toc-div-class" >
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#2019-%E5%B7%A5%E4%B8%9A%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%8A%80%E8%83%BD%E5%A4%A7%E8%B5%9B-%E6%B7%B1%E5%9C%B3%E7%AB%99%E8%B5%9B-WriteUp"><span class="toc-number">1.</span> <span class="toc-text">2019 工业信息安全技能大赛-深圳站赛 WriteUp</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Misc"><span class="toc-number">1.1.</span> <span class="toc-text">Misc</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E6%80%81%E8%BD%AF%E4%BB%B6%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90"><span class="toc-number">1.1.1.</span> <span class="toc-text">组态软件安全分析</span></a></li></ol></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#2019-%E5%B7%A5%E4%B8%9A%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%8A%80%E8%83%BD%E5%A4%A7%E8%B5%9B-%E6%B7%B1%E5%9C%B3%E7%AB%99%E8%B5%9B-WriteUp"><span class="toc-number">1.</span> <span class="toc-text">2019 工业信息安全技能大赛-深圳站赛 WriteUp</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Misc"><span class="toc-number">1.1.</span> <span class="toc-text">Misc</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Modbus-%E5%8D%8F%E8%AE%AE%E5%88%86%E6%9E%90%EF%BC%88Modbus-%E5%8D%8F%E8%AE%AE%EF%BC%89"><span class="toc-number">1.1.1.</span> <span class="toc-text">Modbus 协议分析（Modbus 协议）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E4%B8%9A%E5%8D%8F%E8%AE%AE%E5%88%86%E6%9E%90-1%EF%BC%88TCP-%E5%8D%8F%E8%AE%AE%EF%BC%89"><span class="toc-number">1.1.2.</span> <span class="toc-text">工业协议分析 1（TCP 协议）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E4%B8%9A%E5%8D%8F%E8%AE%AE%E5%88%86%E6%9E%90-2%EF%BC%88UDP-%E5%8D%8F%E8%AE%AE%EF%BC%89"><span class="toc-number">1.1.3.</span> <span class="toc-text">工业协议分析 2（UDP 协议）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E6%80%81%E8%BD%AF%E4%BB%B6%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%EF%BC%88%E5%B7%A5%E7%A8%8B%E6%96%87%E4%BB%B6%E5%8F%96%E8%AF%81%EF%BC%89"><span class="toc-number">1.1.4.</span> <span class="toc-text">组态软件安全分析（工程文件取证）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E6%8E%A7%E8%9C%9C%E7%BD%90%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90%EF%BC%88%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90%EF%BC%89"><span class="toc-number">1.1.5.</span> <span class="toc-text">工控蜜罐日志分析（日志分析）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9A%90%E4%BF%A1%E9%81%93%E6%95%B0%E6%8D%AE%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%EF%BC%88MP3-Private-Bit-%E9%9A%90%E5%86%99%EF%BC%89"><span class="toc-number">1.1.6.</span> <span class="toc-text">隐信道数据安全分析（MP3 Private Bit 隐写）</span></a></li></ol></li></ol></li></ol>
 </div>
 </div>
         <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
@@ -449,9 +673,9 @@
           url: "http://example.com/2019/04/14/2019%20%E5%B7%A5%E4%B8%9A%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%8A%80%E8%83%BD%E5%A4%A7%E8%B5%9B-%E6%B7%B1%E5%9C%B3%E7%AB%99/",
           excerpt: "",
           description: "",
-          stripContent: "2019 工业信息安全技能大赛-深圳站赛 WriteUp组织架构  指导单位：由国家工业信息安全发展研究中心、中国网络空间安全协会竞评演练工作委员会、中国网络空间安全人才教育联盟、中国中文信息学会评测工作委员会共同指导  主办与承办：由鹏城实验室主办，其网络空间安全研究中心具体承办  技术支持：烽台科技（北京）有限公司（灯塔实验室）为大赛提供技术支持   Misc组态软件安全分析",
+          stripContent: "2019 工业信息安全技能大赛-深圳站赛 WriteUp组织架构  指导单位：由国家工业信息安全发展研究中心、中国网络空间安全协会竞评演练工作委员会、中国网络空间安全人才教育联盟、中国中文信息学会评测工作委员会共同指导  主办与承办：由鹏城实验室主办，其网络空间安全研究中心具体承办  技术支持：烽台科技（北京）有限公司（灯塔实验室）为大赛提供技术支持   MiscModbus 协议分析（Modbus 协议）链接: https://pan.baidu.com/s/1RcC1VTPusecH9OqT",
           date: "Sun Apr 14 2019 13:18:00 GMT+0800",
-          updated: "Mon Jun 15 2026 21:54:57 GMT+0800",
+          updated: "Tue Jun 16 2026 11:06:25 GMT+0800",
           cover: "/images/banner.webp",
         };
       </script>
